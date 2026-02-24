@@ -142,6 +142,14 @@ export function formatConversationTime(iso: string): string {
   return formatMessageTime(iso);
 }
 
+export function getConversationById(id: string): Conversation | undefined {
+  return FAKE_CONVERSATIONS.find((c) => c.id === id);
+}
+
+export function getMessagesByConversationId(conversationId: string): Message[] {
+  return FAKE_MESSAGES[conversationId] ?? [];
+}
+
 export function formatMessageDate(iso: string): string {
   return formatMessageTime(iso);
 }

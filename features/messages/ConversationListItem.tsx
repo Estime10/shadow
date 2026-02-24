@@ -1,28 +1,23 @@
+import Link from "next/link";
 import type { Conversation } from "@/types/message";
 import { formatConversationTime } from "./fakeData";
 
 type Props = {
   conversation: Conversation;
   isSelected: boolean;
-  onSelect: () => void;
 };
 
 function getInitial(name: string): string {
   return name.slice(0, 1).toUpperCase();
 }
 
-export function ConversationListItem({
-  conversation,
-  isSelected,
-  onSelect,
-}: Props) {
+export function ConversationListItem({ conversation, isSelected }: Props) {
   const { participant, lastMessage, unreadCount } = conversation;
   const isFromMe = lastMessage.senderId === "me";
 
   return (
-    <button
-      type="button"
-      onClick={onSelect}
+    <Link
+      href={`/messages/${conversation.id}`}
       className={`flex w-full items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-[var(--surface-hover)] ${
         isSelected ? "bg-[var(--surface)]" : ""
       }`}
@@ -53,6 +48,6 @@ export function ConversationListItem({
           {unreadCount > 99 ? "99+" : unreadCount}
         </span>
       ) : null}
-    </button>
+    </Link>
   );
 }

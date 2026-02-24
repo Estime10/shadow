@@ -46,6 +46,16 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* Safe area pour notch / barre de statut iOS (mobile-first) */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .safe-area-top {
+    padding-top: env(safe-area-inset-top);
+  }
+}
+
 .font-display {
   font-family: var(--font-oswald), ui-sans-serif, system-ui, sans-serif;
 }

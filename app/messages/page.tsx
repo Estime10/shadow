@@ -13,8 +13,7 @@ export default function MessagesPage() {
       <AppHeader />
 
       <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col px-0 lg:min-h-0 lg:px-0">
-        <div className="flex shrink-0 items-center gap-2 px-4 py-3 lg:px-6">
-          <div className="h-1 w-8 bg-[var(--accent)]" />
+        <div className="flex shrink-0 justify-center px-4 py-3 lg:px-6">
           <h1 className="font-display text-xl font-bold uppercase tracking-wider text-[var(--text)]">
             Messages
           </h1>
