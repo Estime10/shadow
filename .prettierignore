@@ -1,0 +1,14 @@
+# Dependencies & build
+node_modules
+.next
+out
+build
+.pnp.*
+
+# Lock & cache
+pnpm-lock.yaml
+*.lock
+
+# Generated
+next-env.d.ts
+coverage
