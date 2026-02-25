@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 import type { LoginResult } from "@/types/auth";
 import { loginSchema } from "../schema/schema";
+import { createClient } from "@/lib/supabase/server";
 
 export async function loginAction(formData: FormData): Promise<LoginResult> {
   const raw = {
@@ -17,6 +18,19 @@ export async function loginAction(formData: FormData): Promise<LoginResult> {
     return { success: false, error: message };
   }
 
-  // TODO: appeler Supabase / API auth réelle
+  const supabase = await createClient();
+  const { error } = await supabase.auth.signInWithPassword({
+    email: parsed.data.email,
+    password: parsed.data.password,
+  });
+
+  if (error) {
+    const message =
+      error.message === "Invalid login credentials"
+        ? "Email ou mot de passe incorrect."
+        : error.message;
+    return { success: false, error: message };
+  }
+
   redirect("/");
 }

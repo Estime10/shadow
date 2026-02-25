@@ -13,7 +13,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       <div className="flex flex-col gap-1.5">
         <label
           htmlFor={inputId}
-          className="font-display text-xs font-bold uppercase tracking-wider text-[var(--text-muted)]"
+          className="font-display text-xs font-bold uppercase tracking-wider text-(--text-muted)"
         >
           {label}
         </label>
@@ -22,11 +22,11 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           id={inputId}
           aria-invalid={Boolean(error)}
           aria-describedby={error ? `${inputId}-error` : undefined}
-          className={`w-full bg-[var(--surface)] px-3 py-2.5 text-[var(--text)] placeholder:text-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] disabled:opacity-50 ${error ? "ring-2 ring-[var(--error)]" : ""} ${className}`}
+          className={`w-full rounded-lg border-2 border-(--border) bg-surface px-3 py-2.5 text-(--text) placeholder:text-(--text-muted) focus:outline-none focus:border-(--border-focus) focus:ring-2 focus:ring-(--accent)/20 disabled:opacity-50 ${error ? "border-(--error) ring-2 ring-(--error)/30" : ""} ${className}`}
           {...props}
         />
         {error ? (
-          <p id={`${inputId}-error`} className="text-sm text-[var(--error)]" role="alert">
+          <p id={`${inputId}-error`} className="text-sm text-(--error)" role="alert">
             {error}
           </p>
         ) : null}

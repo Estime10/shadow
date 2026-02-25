@@ -7,17 +7,28 @@ export const metadata = createPageMetadata({
   description: "Connectez-vous à votre compte",
 });
 
-export default function LoginPage() {
+type LoginPageProps = {
+  searchParams: Promise<{ registered?: string }>;
+};
+
+export default async function LoginPage({ searchParams }: LoginPageProps) {
+  const { registered } = await searchParams;
+
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-[var(--bg)] px-4 py-12">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-(--bg) px-4 py-12">
       <div className="mb-8 flex w-full max-w-md justify-center">
         <Link
           href="/"
-          className="font-display text-xs font-bold uppercase tracking-wider text-[var(--text-muted)] hover:text-[var(--accent)] transition-colors"
+          className="font-display text-xs font-bold uppercase tracking-wider text-(--text-muted) hover:text-accent transition-colors"
         >
           ← Retour à l’accueil
         </Link>
       </div>
+      {registered === "1" ? (
+        <p className="mb-4 w-full max-w-md text-center text-sm text-accent" role="status">
+          Compte créé. Connectez-vous.
+        </p>
+      ) : null}
       <LoginForm />
     </div>
   );
