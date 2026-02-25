@@ -2,6 +2,7 @@ import { FeatureCard } from "@/components/home/FeatureCard/FeatureCard";
 import { MessageIcon } from "@/components/icons/MessageIcon/MessageIcon";
 import { CalendarIcon } from "@/components/icons/CalendarIcon/CalendarIcon";
 import { createPageMetadata } from "@/lib/metadata/createPageMetadata";
+import { getCurrentUserProfile } from "@/lib/supabase/getCurrentUserProfile";
 
 export const metadata = createPageMetadata({
   title: "Accueil",
@@ -9,12 +10,15 @@ export const metadata = createPageMetadata({
     "Messages éphémères 24h, calendrier partagé et notifications. App privée installable en PWA.",
 });
 
-export default function HomePage() {
+export default async function HomePage() {
+  const profile = await getCurrentUserProfile();
+  const displayName = profile?.username ?? "ghost";
+
   return (
     <>
       <section className="shrink-0 lg:mb-4">
-        <h1 className="font-display text-2xl font-bold uppercase tracking-wider text-[var(--text)] md:text-3xl">
-          What it do <span className="text-[var(--accent)]">( ghost )</span>
+        <h1 className="font-display text-2xl font-bold uppercase tracking-wider text-(--text) md:text-3xl">
+          What it do <span className="text-accent">( {displayName} )</span>
         </h1>
       </section>
 

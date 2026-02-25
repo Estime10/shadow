@@ -31,7 +31,17 @@ export async function updateSession(request: NextRequest) {
   });
 
   // Rafraîchir la session (obligatoire pour garder l'utilisateur connecté).
-  await supabase.auth.getClaims();
+  const { data } = await supabase.auth.getClaims();
+  const user = data?.claims;
+
+  const pathname = request.nextUrl.pathname;
+  const isPublicRoute = pathname === "/login" || pathname === "/register";
+
+  if (!user && !isPublicRoute) {
+    const loginUrl = request.nextUrl.clone();
+    loginUrl.pathname = "/login";
+    return NextResponse.redirect(loginUrl);
+  }
 
   return supabaseResponse;
 }

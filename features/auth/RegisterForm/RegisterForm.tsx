@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { isRedirectError } from "next/dist/client/components/redirect";
+import { isRedirectError } from "next/dist/client/components/redirect-error";
 import { Button } from "@/components/ui/Button/Button";
 import { Input } from "@/components/ui/Input/Input";
 import { Card, CardHeader, CardTitle } from "@/components/ui/Card/Card";
@@ -73,10 +73,7 @@ export function RegisterForm() {
       </form>
       <p className="mt-6 text-center text-sm text-(--text-muted)">
         Déjà un compte ?{" "}
-        <Link
-          href="/login"
-          className="font-display font-bold uppercase tracking-wider text-accent hover:underline"
-        >
+        <Link href="/login" className="font-display font-bold uppercase tracking-wider text-accent">
           Se connecter
         </Link>
       </p>

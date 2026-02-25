@@ -19,8 +19,8 @@ export function AppNav() {
             <Link
               key={item.href}
               href={item.href}
-              className={`relative flex flex-col items-center gap-0.5 px-4 pt-2 pb-3 font-display text-xs font-bold uppercase tracking-wider transition-colors ${
-                isActive ? "text-accent" : "text-(--text-muted) hover:text-(--text)"
+              className={`relative flex flex-col items-center gap-0.5 px-4 pt-2 pb-3 font-display text-xs font-bold uppercase tracking-wider text-(--text) ${
+                isActive ? "text-accent" : ""
               }`}
               aria-current={isActive ? "page" : undefined}
             >

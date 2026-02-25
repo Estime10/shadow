@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { isRedirectError } from "next/dist/client/components/redirect";
+import { isRedirectError } from "next/dist/client/components/redirect-error";
 import { Button } from "@/components/ui/Button/Button";
 import { Input } from "@/components/ui/Input/Input";
 import { Card, CardHeader, CardTitle } from "@/components/ui/Card/Card";
@@ -31,7 +31,7 @@ export function LoginForm() {
   return (
     <Card className="w-full max-w-md">
       <CardHeader>
-        <div className="mb-2 h-1 w-10 bg-[var(--accent)]" />
+        <div className="mb-2 h-1 w-10 bg-accent" />
         <CardTitle>Connexion</CardTitle>
       </CardHeader>
       <form action={handleSubmit} className="flex flex-col gap-5">
@@ -53,7 +53,7 @@ export function LoginForm() {
           disabled={isPending}
         />
         {error ? (
-          <p className="text-sm text-[var(--error)]" role="alert">
+          <p className="text-sm text-(--error)" role="alert">
             {error}
           </p>
         ) : null}
@@ -61,11 +61,11 @@ export function LoginForm() {
           {isPending ? "Connexion…" : "Se connecter"}
         </Button>
       </form>
-      <p className="mt-6 text-center text-sm text-[var(--text-muted)]">
+      <p className="mt-6 text-center text-sm text-(--text-muted)">
         Pas de compte ?{" "}
         <Link
           href="/register"
-          className="font-display font-bold uppercase tracking-wider text-[var(--accent)] hover:underline"
+          className="font-display font-bold uppercase tracking-wider text-accent"
         >
           S&apos;inscrire
         </Link>

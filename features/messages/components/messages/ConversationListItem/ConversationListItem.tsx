@@ -13,7 +13,7 @@ export function ConversationListItem({ conversation, isSelected }: ConversationL
   return (
     <Link
       href={`/messages/${conversation.id}`}
-      className={`mx-2 flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left transition-colors hover:bg-(--surface-hover) ${
+      className={`mx-2 flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left ${
         isSelected ? "bg-surface" : ""
       }`}
     >

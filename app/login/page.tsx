@@ -19,7 +19,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
       <div className="mb-8 flex w-full max-w-md justify-center">
         <Link
           href="/"
-          className="font-display text-xs font-bold uppercase tracking-wider text-(--text-muted) hover:text-accent transition-colors"
+          className="font-display text-xs font-bold uppercase tracking-wider text-(--text)"
         >
           ← Retour à l’accueil
         </Link>

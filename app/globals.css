@@ -3,15 +3,15 @@
 /* ——— Street design system ——— */
 :root {
   --bg: #0a0a0a;
-  --surface: #111111;
-  --surface-hover: #1a1a1a;
-  --text: #f0f0f0;
-  --text-muted: #737373;
+  --surface: #171717;
+  --surface-hover: #262626;
+  --text: #fafafa;
+  --text-muted: #d4d4d4;
   --accent: rgba(255, 255, 255, 0.5);
   --accent-dim: rgba(255, 255, 255, 0.35);
   --accent-solid: rgba(255, 255, 255, 0.9);
-  --border: #262626;
-  --border-focus: rgba(255, 255, 255, 0.4);
+  --border: #404040;
+  --border-focus: rgba(255, 255, 255, 0.5);
   --shadow-accent: 0 0 24px rgba(255, 255, 255, 0.06);
   --shadow-accent-nav: 0 -4px 20px rgba(255, 255, 255, 0.05);
   --shadow-accent-header: 0 4px 20px rgba(255, 255, 255, 0.05);

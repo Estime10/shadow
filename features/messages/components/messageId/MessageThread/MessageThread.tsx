@@ -4,16 +4,16 @@ import type { MessageThreadProps } from "../../../types/props";
 
 export function MessageThread({ conversation, messages, showHeader = true }: MessageThreadProps) {
   return (
-    <div className="flex min-h-0 flex-1 flex-col bg-[var(--bg)]">
+    <div className="flex min-h-0 flex-1 flex-col bg-(--bg)">
       {showHeader ? (
-        <div className="flex shrink-0 items-center gap-3 bg-[var(--surface)] px-4 py-3">
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 border-[var(--border)] bg-[var(--bg)] font-display text-xs font-bold uppercase text-[var(--accent)]">
+        <div className="flex shrink-0 items-center gap-3 px-4 py-3">
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 border-(--border) bg-(--bg) font-display text-xs font-bold uppercase text-accent">
             {conversation.participant.name.slice(0, 1).toUpperCase()}
           </span>
-          <span className="font-display text-sm font-bold uppercase tracking-wider text-[var(--text)]">
+          <span className="font-display text-sm font-bold uppercase tracking-wider text-(--text)">
             {conversation.participant.name}
           </span>
-          <span className="text-xs text-[var(--text-muted)]">· 24h</span>
+          <span className="text-xs text-(--text-muted)">· 24h</span>
         </div>
       ) : null}
 
