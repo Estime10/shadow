@@ -2,9 +2,9 @@
 
 import { useCallback, useRef } from "react";
 import { Send } from "lucide-react";
-import { NAV_BOTTOM_PX } from "@/lib/config/layout";
 import { useKeyboardHeight } from "@/lib/hooks/useKeyboardHeight/useKeyboardHeight";
 import { createMessageAction } from "@/features/messages/actions";
+import { MAX_MESSAGE_LENGTH } from "@/features/messages/constants";
 
 type MessageInputProps = {
   conversationId: string;
@@ -22,19 +22,20 @@ export function MessageInput({ conversationId }: MessageInputProps) {
 
   return (
     <div
-      className="fixed left-0 right-0 z-20 border-t-2 border-(--border) transition-[bottom] duration-150 ease-out"
+      className="fixed left-0 right-0 z-20 border-t-2 border-(--border) bg-(--bg) transition-[bottom] duration-150 ease-out"
       style={{
-        bottom: `calc(${NAV_BOTTOM_PX + keyboardHeight}px + env(safe-area-inset-bottom, 0px))`,
+        bottom: 0,
+        paddingBottom: `calc(env(safe-area-inset-bottom, 0px) + ${keyboardHeight}px)`,
         paddingLeft: "env(safe-area-inset-left, 0px)",
         paddingRight: "env(safe-area-inset-right, 0px)",
       }}
     >
-      <div className="safe-area-bottom px-4 py-3">
+      <div className="bg-(--bg) px-3 py-1.5">
         <form
           action={async (formData) => {
             await createMessageAction(formData);
           }}
-          className="flex items-end gap-2 rounded-xl border-2 border-(--border) bg-(--bg) px-3 py-2 focus-within:border-accent transition-colors"
+          className="flex items-end gap-1.5 rounded-lg border-2 border-(--border) bg-(--bg) px-2.5 py-1.5 focus-within:border-accent transition-colors"
         >
           <input type="hidden" name="conversationId" value={conversationId} />
           <textarea
@@ -43,16 +44,17 @@ export function MessageInput({ conversationId }: MessageInputProps) {
             onFocus={handleFocus}
             placeholder="Écris un message…"
             rows={1}
-            className="min-h-[40px] max-h-32 flex-1 resize-none bg-transparent font-display text-sm text-(--text) placeholder:text-(--text-muted) focus:outline-none"
+            maxLength={MAX_MESSAGE_LENGTH}
+            className="min-h-[28px] max-h-24 flex-1 resize-none bg-transparent font-display text-sm text-(--text) placeholder:text-(--text-muted) focus:outline-none py-1"
             aria-label="Message"
             required
           />
           <button
             type="submit"
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent text-(--bg)"
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent text-(--bg)"
             aria-label="Envoyer"
           >
-            <Send className="h-4 w-4" aria-hidden />
+            <Send className="h-3.5 w-3.5" aria-hidden />
           </button>
         </form>
       </div>
