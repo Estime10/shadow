@@ -13,7 +13,7 @@ export function MessageThread({
   return (
     <div className="flex min-h-0 flex-1 flex-col bg-(--bg)">
       {showHeader ? (
-        <div className="flex shrink-0 items-center gap-3 px-4 py-3">
+        <div className="flex shrink-0 items-center gap-3 content-px py-3">
           <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 border-(--border) bg-(--bg) font-display text-xs font-bold uppercase text-accent">
             {getInitial(conversation.participant.name)}
           </span>
@@ -25,7 +25,7 @@ export function MessageThread({
       ) : null}
 
       <div
-        className="flex-1 space-y-3 overflow-y-auto p-4"
+        className="flex-1 space-y-3 overflow-y-auto content-px pt-4"
         style={{ paddingBottom: "calc(9rem + env(safe-area-inset-bottom, 0px))" }}
       >
         {messages.length === 0 ? (

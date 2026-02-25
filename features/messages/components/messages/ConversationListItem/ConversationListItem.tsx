@@ -31,7 +31,7 @@ export function ConversationListItem({
   return (
     <Link
       href={href}
-      className={`mx-2 flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left ${
+      className={`mx-2 flex w-full items-center gap-3 rounded-xl content-px py-3 text-left ${
         isSelected ? "bg-surface" : ""
       }`}
     >

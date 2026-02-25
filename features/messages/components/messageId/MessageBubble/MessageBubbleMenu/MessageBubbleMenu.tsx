@@ -18,7 +18,7 @@ export function MessageBubbleMenu({ messageId, onEdit, onClose }: MessageBubbleM
           onEdit();
           onClose();
         }}
-        className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm hover:bg-(--bg)"
+        className="flex w-full items-center gap-2 content-px py-2 text-left text-sm hover:bg-(--bg)"
       >
         <Pencil className="h-3.5 w-3.5" /> Modifier
       </button>
@@ -30,7 +30,7 @@ export function MessageBubbleMenu({ messageId, onEdit, onClose }: MessageBubbleM
         <input type="hidden" name="messageId" value={messageId} />
         <button
           type="submit"
-          className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-red-600 hover:bg-(--bg)"
+          className="flex w-full items-center gap-2 content-px py-2 text-left text-sm text-red-600 hover:bg-(--bg)"
         >
           <Trash2 className="h-3.5 w-3.5" /> Supprimer
         </button>

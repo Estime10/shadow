@@ -15,7 +15,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
   const { registered } = await searchParams;
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-(--bg) px-4 py-12">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-(--bg) content-px py-12">
       <div className="mb-8 flex w-full max-w-md justify-center">
         <Link
           href="/"

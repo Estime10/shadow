@@ -18,6 +18,33 @@
   --error: #ff3b3b;
   --background: var(--bg);
   --foreground: var(--text);
+
+  /* Padding horizontal commun à toute l’app (header, contenu, input…) */
+  --content-px: 1rem;
+  --content-px-lg: 1.5rem;
+
+  /* Largeur max du contenu : header, nav, main, tout aligné (64rem = max-w-5xl) */
+  --content-max-w: 64rem;
+}
+
+/* Classe utilitaire : même padding horizontal partout, responsive (lg = 1024px) */
+.content-px {
+  padding-left: var(--content-px);
+  padding-right: var(--content-px);
+}
+@media (min-width: 1024px) {
+  .content-px {
+    padding-left: var(--content-px-lg);
+    padding-right: var(--content-px-lg);
+  }
+}
+
+/* Conteneur centré avec largeur max = alignement header / nav / titres */
+.content-max-w {
+  width: 100%;
+  max-width: var(--content-max-w);
+  margin-left: auto;
+  margin-right: auto;
 }
 
 @theme inline {

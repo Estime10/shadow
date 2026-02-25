@@ -22,7 +22,7 @@ export function MessageInput({ conversationId }: MessageInputProps) {
 
   return (
     <div
-      className="fixed left-0 right-0 z-20 border-t-2 border-(--border) bg-(--bg) transition-[bottom] duration-150 ease-out"
+      className="fixed left-0 right-0 z-20 bg-(--bg) transition-[bottom] duration-150 ease-out"
       style={{
         bottom: 0,
         paddingBottom: `calc(env(safe-area-inset-bottom, 0px) + ${keyboardHeight}px)`,
@@ -30,12 +30,12 @@ export function MessageInput({ conversationId }: MessageInputProps) {
         paddingRight: "env(safe-area-inset-right, 0px)",
       }}
     >
-      <div className="bg-(--bg) px-3 py-1.5">
+      <div className="bg-(--bg) content-px py-1.5">
         <form
           action={async (formData) => {
             await createMessageAction(formData);
           }}
-          className="flex items-end gap-1.5 rounded-lg border-2 border-(--border) bg-(--bg) px-2.5 py-1.5 focus-within:border-accent transition-colors"
+          className="flex items-end gap-1.5 rounded-lg border-2 border-(--border) bg-(--bg) content-px py-1.5 focus-within:border-accent transition-colors"
         >
           <input type="hidden" name="conversationId" value={conversationId} />
           <textarea

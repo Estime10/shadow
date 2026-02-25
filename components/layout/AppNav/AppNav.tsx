@@ -12,7 +12,7 @@ export function AppNav() {
       className="safe-area-bottom fixed bottom-0 left-0 right-0 z-10 rounded-t-xl border-t-2 border-accent bg-(--bg)/95 shadow-(--shadow-accent-nav) backdrop-blur"
       aria-label="Navigation principale"
     >
-      <div className="mx-auto flex max-w-3xl items-center justify-around px-2 py-2">
+      <div className="content-max-w flex items-center justify-around content-px py-2">
         {mainNavItems.map((item) => {
           const isActive = pathname === item.href;
           return (

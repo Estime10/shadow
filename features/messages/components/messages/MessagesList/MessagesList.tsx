@@ -13,14 +13,14 @@ export function MessagesList({
   setModalOpen,
 }: MessagesListProps) {
   return (
-    <div className="flex h-full min-h-0 flex-col gap-4 px-4 lg:flex-row lg:px-6">
+    <div className="flex h-full min-h-0 flex-col gap-4 content-px lg:flex-row">
       <aside className="flex flex-1 flex-col bg-surface lg:max-w-sm lg:rounded-r-xl min-h-0">
-        <div className="shrink-0 px-4 py-3">
+        <div className="shrink-0 content-px py-3">
           <h2 className="font-display text-xs font-bold uppercase tracking-widest text-(--text-muted)">
             Conversations
           </h2>
         </div>
-        <div className="flex-1 overflow-y-auto px-4 pb-2">
+        <div className="flex-1 overflow-y-auto content-px pb-2">
           {conversations.length === 0 ? (
             <ConversationsEmptyCard onOpenCreateConversation={() => setModalOpen(true)} />
           ) : (

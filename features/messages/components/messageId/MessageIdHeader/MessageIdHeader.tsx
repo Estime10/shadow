@@ -4,7 +4,7 @@ import type { MessageIdHeaderProps } from "@/features/messages/types";
 
 export function MessageIdHeader({ conversation }: MessageIdHeaderProps) {
   return (
-    <div className="flex shrink-0 items-center justify-between px-4 py-3 lg:px-6">
+    <div className="flex shrink-0 items-center justify-between content-px py-3">
       <Link
         href="/messages"
         className="flex items-center gap-2 text-accent"

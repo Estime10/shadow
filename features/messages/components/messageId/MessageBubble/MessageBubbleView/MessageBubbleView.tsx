@@ -26,7 +26,7 @@ export function MessageBubbleView({
 }: MessageBubbleViewProps) {
   return (
     <div
-      className={`relative w-full max-w-[min(85%,20rem)] rounded-2xl px-4 py-2.5 min-w-0 ${
+      className={`relative w-full max-w-[min(85%,20rem)] rounded-2xl content-px py-2.5 min-w-0 ${
         isSent
           ? "rounded-br-md bg-(--accent)/15 text-(--text)"
           : "rounded-bl-md bg-surface text-(--text)"

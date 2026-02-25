@@ -83,7 +83,7 @@ export function CreateConversationModal({
                   <X className="h-5 w-5" aria-hidden />
                 </button>
               </div>
-              <div className="mt-3 flex items-center gap-2 rounded-lg border-2 border-(--border) bg-(--bg) px-3 py-2">
+              <div className="mt-3 flex items-center gap-2 rounded-lg border-2 border-(--border) bg-(--bg) content-px py-2">
                 <Search className="h-4 w-4 shrink-0 text-(--text-muted)" aria-hidden />
                 <input
                   ref={searchInputRef}
@@ -108,7 +108,7 @@ export function CreateConversationModal({
                       <button
                         type="button"
                         onClick={() => onSelectUser(profile)}
-                        className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left transition-colors hover:bg-(--bg) focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                        className="flex w-full items-center gap-3 rounded-xl content-px py-3 text-left transition-colors hover:bg-(--bg) focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                       >
                         <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 border-(--border) bg-(--bg) font-display text-sm font-bold uppercase text-accent">
                           {getInitial(profile.username)}

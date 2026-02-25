@@ -23,7 +23,7 @@ export function MessageBubbleEditForm({
         action={async (formData) => {
           await updateMessageAction(formData);
         }}
-        className="flex w-full max-w-[min(85%,20rem)] flex-col gap-2 rounded-2xl rounded-br-md bg-(--accent)/15 px-4 py-2.5"
+        className="flex w-full max-w-[min(85%,20rem)] flex-col gap-2 rounded-2xl rounded-br-md bg-(--accent)/15 content-px py-2.5"
       >
         <input type="hidden" name="messageId" value={messageId} />
         <textarea

@@ -5,7 +5,7 @@ import type { MessagesHeaderProps } from "@/features/messages/types";
 
 export function MessagesHeader({ onOpenCreateConversation }: MessagesHeaderProps) {
   return (
-    <div className="shrink-0 px-4 py-3 lg:px-6">
+    <div className="shrink-0 content-px py-3">
       <div className="flex items-center justify-between gap-4">
         <div>
           <div className="mb-2 h-1 w-12 bg-accent" />
