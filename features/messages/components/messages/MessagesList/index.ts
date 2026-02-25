@@ -1,1 +1,1 @@
-export { MessagesList } from "./MessagesList/MessagesList";
+export { MessagesList } from "./MessagesList";

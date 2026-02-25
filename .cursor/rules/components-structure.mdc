@@ -1,0 +1,16 @@
+---
+description: Structure des composants - orchestrateur à la racine, sous-composants en sous-dossiers
+globs: features/**/*.tsx
+alwaysApply: false
+---
+
+# Structure des composants
+
+Pour **tous** les composants du projet :
+
+- **Fichier principal (orchestrateur)** : reste à la **racine** du dossier du composant (`NomDuComposant.tsx`). Il orchestre l’état et compose les sous-composants.
+- **Sous-composants** : chaque sous-composant vit dans **son propre sous-dossier** :
+  - `NomDuComposant/SousComposant/SousComposant.tsx`
+  - Pas d'index : importer directement `./SousComposant/SousComposant.tsx`
+
+Ne pas mettre les sous-composants en fichiers plats à côté de l’orchestrateur. Importer directement le fichier du composant.

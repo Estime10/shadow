@@ -1,7 +1,7 @@
 "use client";
 
-import { MessageBubbleContent } from "./MessageBubbleContent";
-import { MessageBubbleFooter } from "./MessageBubbleFooter";
+import { MessageBubbleContent } from "../MessageBubbleContent/MessageBubbleContent";
+import { MessageBubbleFooter } from "../MessageBubbleFooter/MessageBubbleFooter";
 
 type MessageBubbleViewProps = {
   text: string;

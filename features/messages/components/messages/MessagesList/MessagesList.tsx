@@ -1,8 +1,8 @@
 "use client";
 
-import { ConversationListItem } from "../../ConversationListItem/ConversationListItem";
-import { ConversationEmptyState } from "../../ConversationEmptyState";
-import { ConversationsEmptyCard } from "../ConversationsEmptyCard/ConversationsEmptyCard";
+import { ConversationListItem } from "../ConversationListItem/ConversationListItem";
+import { ConversationEmptyState } from "../ConversationEmptyState";
+import { ConversationsEmptyCard } from "./ConversationsEmptyCard/ConversationsEmptyCard";
 import type { MessagesListProps } from "@/features/messages/types";
 
 export function MessagesList({

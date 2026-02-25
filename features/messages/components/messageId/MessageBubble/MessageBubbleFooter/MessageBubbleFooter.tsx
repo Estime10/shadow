@@ -3,7 +3,7 @@
 import { useRef, useEffect } from "react";
 import { MoreVertical } from "lucide-react";
 import { formatRelativeTime } from "@/lib/functions";
-import { MessageBubbleMenu } from "./MessageBubbleMenu";
+import { MessageBubbleMenu } from "../MessageBubbleMenu/MessageBubbleMenu";
 
 type MessageBubbleFooterProps = {
   createdAt: string;

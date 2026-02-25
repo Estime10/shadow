@@ -1,1 +1,1 @@
-export { ConversationEmptyState } from "./ConversationEmptyState/ConversationEmptyState";
+export { ConversationEmptyState } from "./ConversationEmptyState";

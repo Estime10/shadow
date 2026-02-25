@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import type { MessageBubbleProps } from "@/features/messages/types";
-import { MessageBubbleEditForm } from "./MessageBubbleEditForm";
-import { MessageBubbleView } from "./MessageBubbleView";
+import { MessageBubbleEditForm } from "./MessageBubbleEditForm/MessageBubbleEditForm";
+import { MessageBubbleView } from "./MessageBubbleView/MessageBubbleView";
 
 export function MessageBubble({ message, currentUserId }: MessageBubbleProps) {
   const isSent = currentUserId != null && message.senderId === currentUserId;

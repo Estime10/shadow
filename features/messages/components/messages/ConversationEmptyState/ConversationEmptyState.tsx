@@ -7,8 +7,8 @@ import type { ConversationEmptyStateProps } from "@/features/messages/types";
 import { findOrCreateConversationAction } from "@/features/messages/actions";
 import { useFilteredOtherProfiles } from "@/features/messages/hooks";
 import { EMPTY_LAST_MESSAGE_TEXT } from "@/features/messages/constants";
-import { useCreateConversationModal } from "../useCreateConversationModal/useCreateConversationModal";
-import { CreateConversationModal } from "../CreateConversationModal/CreateConversationModal";
+import { useCreateConversationModal } from "./useCreateConversationModal/useCreateConversationModal";
+import { CreateConversationModal } from "./CreateConversationModal/CreateConversationModal";
 
 export function ConversationEmptyState({
   profiles,
