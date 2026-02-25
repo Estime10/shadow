@@ -25,7 +25,7 @@ export function MessageThread({
       ) : null}
 
       <div
-        className="flex-1 space-y-3 overflow-y-auto content-px pt-4"
+        className="flex-1 space-y-3 overflow-x-hidden overflow-y-auto content-px pt-4"
         style={{ paddingBottom: "calc(9rem + env(safe-area-inset-bottom, 0px))" }}
       >
         {messages.length === 0 ? (
