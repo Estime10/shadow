@@ -7,4 +7,5 @@ import type { Conversation, Message } from "@/types/message";
 export type MessageIdPageContent = {
   conversation: Conversation;
   messages: Message[];
+  currentUserId: string | null;
 };

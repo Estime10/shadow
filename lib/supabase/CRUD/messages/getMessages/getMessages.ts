@@ -1,0 +1,27 @@
+import { createClient } from "../../../server";
+import { mapMessageRowToMessage } from "../mappers/mappers";
+
+/**
+ * Récupère les messages d'une conversation (ou tous si conversationId non fourni, pour compat).
+ */
+export async function getMessages(conversationId: string | null, limit = 100) {
+  const supabase = await createClient();
+  const now = new Date().toISOString();
+
+  let query = supabase
+    .from("messages")
+    .select("id, user_id, conversation_id, text, media_url, media_type, created_at, expires_at")
+    .or(`expires_at.is.null,expires_at.gte.${now}`)
+    .order("created_at", { ascending: true })
+    .limit(limit);
+
+  if (conversationId) {
+    query = query.eq("conversation_id", conversationId);
+  }
+
+  const { data, error } = await query;
+
+  if (error) return [];
+
+  return (data ?? []).map(mapMessageRowToMessage);
+}

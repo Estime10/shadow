@@ -2,7 +2,12 @@ import { MessageBubble } from "../MessageBubble/MessageBubble";
 import { MessageInput } from "../MessageInput/MessageInput";
 import type { MessageThreadProps } from "../../../types/props";
 
-export function MessageThread({ conversation, messages, showHeader = true }: MessageThreadProps) {
+export function MessageThread({
+  conversation,
+  messages,
+  currentUserId,
+  showHeader = true,
+}: MessageThreadProps) {
   return (
     <div className="flex min-h-0 flex-1 flex-col bg-(--bg)">
       {showHeader ? (
@@ -21,12 +26,20 @@ export function MessageThread({ conversation, messages, showHeader = true }: Mes
         className="flex-1 space-y-3 overflow-y-auto p-4"
         style={{ paddingBottom: "calc(9rem + env(safe-area-inset-bottom, 0px))" }}
       >
-        {messages.map((msg) => (
-          <MessageBubble key={msg.id} message={msg} />
-        ))}
+        {messages.length === 0 ? (
+          <div className="flex flex-1 flex-col items-center justify-center py-12">
+            <p className="font-display text-sm font-medium uppercase tracking-wider text-(--text-muted)">
+              Aucun message
+            </p>
+          </div>
+        ) : (
+          messages.map((msg) => (
+            <MessageBubble key={msg.id} message={msg} currentUserId={currentUserId} />
+          ))
+        )}
       </div>
 
-      <MessageInput />
+      <MessageInput conversationId={conversation.id} />
     </div>
   );
 }

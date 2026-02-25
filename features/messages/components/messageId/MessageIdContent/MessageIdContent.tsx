@@ -1,10 +1,15 @@
 import { MessageThread } from "../MessageThread/MessageThread";
 import type { MessageIdContentProps } from "../../../types/props";
 
-export function MessageIdContent({ conversation, messages }: MessageIdContentProps) {
+export function MessageIdContent({ conversation, messages, currentUserId }: MessageIdContentProps) {
   return (
     <div className="flex-1 min-h-0">
-      <MessageThread conversation={conversation} messages={messages} showHeader={false} />
+      <MessageThread
+        conversation={conversation}
+        messages={messages}
+        currentUserId={currentUserId}
+        showHeader={false}
+      />
     </div>
   );
 }

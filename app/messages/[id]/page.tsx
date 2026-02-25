@@ -1,11 +1,7 @@
 import { notFound } from "next/navigation";
 import { MessageIdHeader } from "@/features/messages/components/messageId/MessageIdHeader/MessageIdHeader";
 import { MessageIdContent } from "@/features/messages/components/messageId/MessageIdContent/MessageIdContent";
-import {
-  getConversationById,
-  getMessagesByConversationId,
-} from "@/features/messages/data/fakeData";
-import type { MessageIdPageContent } from "@/features/messages/types/content";
+import { getConversationWithMessages } from "@/features/messages/data/getConversationWithMessages";
 import { createPageMetadata } from "@/lib/metadata/createPageMetadata";
 
 type PageProps = {
@@ -14,25 +10,30 @@ type PageProps = {
 
 export async function generateMetadata({ params }: PageProps) {
   const { id } = await params;
-  const conversation = getConversationById(id);
+  const data = await getConversationWithMessages(id);
+  if (!data) {
+    return createPageMetadata({ title: "Messages", description: "Messages éphémères 24h" });
+  }
   return createPageMetadata({
-    title: conversation ? `${conversation.participant.name} — Messages` : "Messages",
+    title: `${data.conversation.participant.name} — Messages`,
     description: "Messages éphémères 24h",
   });
 }
 
 export default async function MessageIdPage({ params }: PageProps) {
   const { id } = await params;
-  const conversation = getConversationById(id);
-  if (!conversation) notFound();
+  const data = await getConversationWithMessages(id);
+  if (!data) notFound();
 
-  const messages = getMessagesByConversationId(id);
-  const content: MessageIdPageContent = { conversation, messages };
-
+  const { conversation, messages, currentUserId } = data;
   return (
     <>
-      <MessageIdHeader conversation={content.conversation} />
-      <MessageIdContent {...content} />
+      <MessageIdHeader conversation={conversation} />
+      <MessageIdContent
+        conversation={conversation}
+        messages={messages}
+        currentUserId={currentUserId}
+      />
     </>
   );
 }

@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { LogOut } from "lucide-react";
 import { logoutAction } from "@/features/auth/logout/logoutAction/logoutAction";
-import type { CurrentUserProfile } from "@/lib/supabase/getCurrentUserProfile";
+import type { CurrentUserProfile } from "@/lib/supabase/CRUD";
 import { ConfirmModal } from "@/components/ui/ConfirmModal/ConfirmModal";
 
 type HeaderAuthProps = {

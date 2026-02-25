@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { APP_NAME } from "@/types/navigation";
-import { getCurrentUserProfile } from "@/lib/supabase/getCurrentUserProfile";
+import { getCurrentUserProfile } from "@/lib/supabase/CRUD";
 import { HeaderAuth } from "./HeaderAuth/HeaderAuth";
 
 export async function AppHeader() {

@@ -53,6 +53,7 @@ create table public.messages (
   expires_at timestamptz
 );
 
+create index if not exists idx_messages_user_id on public.messages(user_id);
 create index if not exists idx_messages_expires_at on public.messages(expires_at);
 create index if not exists idx_messages_created_at on public.messages(created_at desc);
 
@@ -68,6 +69,7 @@ create table public.events (
   created_at timestamptz not null default now()
 );
 
+create index if not exists idx_events_created_by on public.events(created_by);
 create index if not exists idx_events_event_date on public.events(event_date);
 
 -- -----------------------------------------------------------------------------

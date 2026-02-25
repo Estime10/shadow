@@ -2,7 +2,7 @@ import { FeatureCard } from "@/components/home/FeatureCard/FeatureCard";
 import { MessageIcon } from "@/components/icons/MessageIcon/MessageIcon";
 import { CalendarIcon } from "@/components/icons/CalendarIcon/CalendarIcon";
 import { createPageMetadata } from "@/lib/metadata/createPageMetadata";
-import { getCurrentUserProfile } from "@/lib/supabase/getCurrentUserProfile";
+import { getCurrentUserProfile } from "@/lib/supabase/CRUD";
 
 export const metadata = createPageMetadata({
   title: "Accueil",

@@ -1,5 +1,6 @@
-import { MessagesHeader } from "@/features/messages/components/messages/MessagesHeader/MessagesHeader";
-import { MessagesContent } from "@/features/messages/components/messages/MessagesContent/MessagesContent";
+import { MessagesView } from "@/features/messages/components/messages/MessagesView/MessagesView";
+import { getConversationsForList } from "@/features/messages/data/getConversationsForList";
+import { getAllProfiles } from "@/lib/supabase/CRUD";
 import { createPageMetadata } from "@/lib/metadata/createPageMetadata";
 
 export const metadata = createPageMetadata({
@@ -7,11 +8,12 @@ export const metadata = createPageMetadata({
   description: "Messages éphémères 24h",
 });
 
-export default function MessagesPage() {
+export default async function MessagesPage() {
+  const [{ conversations, currentUserId }, profiles] = await Promise.all([
+    getConversationsForList(),
+    getAllProfiles(),
+  ]);
   return (
-    <>
-      <MessagesHeader />
-      <MessagesContent />
-    </>
+    <MessagesView conversations={conversations} currentUserId={currentUserId} profiles={profiles} />
   );
 }

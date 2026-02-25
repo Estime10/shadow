@@ -1,13 +1,6 @@
-import { createClient } from "./server";
+import { createClient } from "../../../server";
+import type { CurrentUserProfile } from "../types/types";
 
-export type CurrentUserProfile = {
-  id: string;
-  username: string | null;
-};
-
-/**
- * Dérive un libellé d'affichage à partir de l'email (partie avant @).
- */
 function emailToDisplayName(email: string | undefined): string | null {
   if (!email) return null;
   const part = email.split("@")[0];
@@ -16,8 +9,7 @@ function emailToDisplayName(email: string | undefined): string | null {
 
 /**
  * Récupère le profil (public.users) de l'utilisateur connecté.
- * Si la ligne n'existe pas (ex. user créé avant le trigger) ou username est vide,
- * utilise l'email comme fallback pour afficher un libellé.
+ * Fallback sur l'email si pas de ligne ou username vide.
  */
 export async function getCurrentUserProfile(): Promise<CurrentUserProfile | null> {
   const supabase = await createClient();
