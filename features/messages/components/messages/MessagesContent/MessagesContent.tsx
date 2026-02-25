@@ -1,5 +1,5 @@
 import { MessagesList } from "../MessagesList";
-import type { MessagesListProps } from "../../../types/props";
+import type { MessagesListProps } from "@/features/messages/types";
 
 export function MessagesContent({
   conversations,

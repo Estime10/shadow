@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import type { MessageIdHeaderProps } from "../../../types/props";
+import type { MessageIdHeaderProps } from "@/features/messages/types";
 
 export function MessageIdHeader({ conversation }: MessageIdHeaderProps) {
   return (

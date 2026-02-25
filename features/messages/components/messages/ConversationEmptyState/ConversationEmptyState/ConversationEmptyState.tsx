@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useMemo, useRef } from "react";
+import { useState, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import type { Profile } from "@/lib/supabase/CRUD";
-import type { ConversationEmptyStateProps } from "../../../types/props";
+import type { ConversationEmptyStateProps } from "@/features/messages/types";
 import { findOrCreateConversationAction } from "@/features/messages/actions";
-import { getOtherProfiles } from "../getOtherProfiles/getOtherProfiles";
-import { filterProfilesBySearch } from "../filterProfilesBySearch/filterProfilesBySearch";
+import { useFilteredOtherProfiles } from "@/features/messages/hooks";
+import { EMPTY_LAST_MESSAGE_TEXT } from "@/features/messages/constants";
 import { useCreateConversationModal } from "../useCreateConversationModal/useCreateConversationModal";
 import { CreateConversationModal } from "../CreateConversationModal/CreateConversationModal";
 
@@ -21,22 +21,17 @@ export function ConversationEmptyState({
   const [searchQuery, setSearchQuery] = useState("");
   const searchInputRef = useRef<HTMLInputElement>(null);
 
-  async function handleSelectUser(profile: Profile) {
-    const { conversationId, error } = await findOrCreateConversationAction(profile.id);
-    if (error) return;
-    setModalOpen(false);
-    router.push(`/messages/${conversationId}`);
-  }
-
-  const otherProfiles = useMemo(
-    () => getOtherProfiles(profiles, currentUserId),
-    [profiles, currentUserId]
+  const handleSelectUser = useCallback(
+    async (profile: Profile) => {
+      const { conversationId, error } = await findOrCreateConversationAction(profile.id);
+      if (error) return;
+      setModalOpen(false);
+      router.push(`/messages/${conversationId}`);
+    },
+    [router, setModalOpen]
   );
 
-  const filteredProfiles = useMemo(
-    () => filterProfilesBySearch(otherProfiles, searchQuery),
-    [otherProfiles, searchQuery]
-  );
+  const filteredProfiles = useFilteredOtherProfiles(profiles, currentUserId, searchQuery);
 
   useCreateConversationModal({
     modalOpen,
@@ -50,7 +45,7 @@ export function ConversationEmptyState({
       {!hidePanel ? (
         <div className="hidden flex-1 items-center justify-center bg-(--bg) lg:flex">
           <p className="font-display text-sm font-medium uppercase tracking-wider text-(--text-muted)">
-            Aucun message
+            {EMPTY_LAST_MESSAGE_TEXT}
           </p>
         </div>
       ) : null}

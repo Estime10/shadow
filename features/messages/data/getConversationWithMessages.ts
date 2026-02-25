@@ -5,8 +5,11 @@ import {
   getMessages,
   getProfiles,
 } from "@/lib/supabase/CRUD";
-
-const FALLBACK_PARTICIPANT_NAME = "Ghost";
+import {
+  buildLastMessageFromMessage,
+  getOtherUserIdFromConvRow,
+  getParticipantDisplayName,
+} from "./helpers";
 
 /**
  * Charge une conversation par id + messages + l'autre participant (nom).
@@ -25,15 +28,14 @@ export async function getConversationWithMessages(conversationId: string): Promi
 
   if (!convRow) return null;
 
-  const otherId = convRow.user_1_id === currentUserId ? convRow.user_2_id : convRow.user_1_id;
+  const otherId = getOtherUserIdFromConvRow(convRow, currentUserId);
   const [profiles, messages] = await Promise.all([
     getProfiles([otherId]),
     getMessages(conversationId, 100),
   ]);
-  const otherProfile = profiles[0];
-  const participantName = otherProfile?.username?.trim() ?? FALLBACK_PARTICIPANT_NAME;
-
+  const participantName = getParticipantDisplayName(profiles[0]?.username);
   const lastMessage = messages[messages.length - 1];
+
   const conversation: Conversation = {
     id: convRow.id,
     participant: {
@@ -41,17 +43,7 @@ export async function getConversationWithMessages(conversationId: string): Promi
       name: participantName,
       avatar: null,
     },
-    lastMessage: lastMessage
-      ? {
-          text: lastMessage.text,
-          createdAt: lastMessage.createdAt,
-          senderId: lastMessage.senderId,
-        }
-      : {
-          text: "Aucun message",
-          createdAt: new Date().toISOString(),
-          senderId: "",
-        },
+    lastMessage: buildLastMessageFromMessage(lastMessage, new Date().toISOString()),
     unreadCount: 0,
   };
 

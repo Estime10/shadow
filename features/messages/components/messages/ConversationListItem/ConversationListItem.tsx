@@ -1,10 +1,8 @@
 import Link from "next/link";
 import { formatRelativeTime } from "@/lib/functions";
-import type { ConversationListItemProps } from "../../../types/props";
-
-function getInitial(name: string): string {
-  return name.slice(0, 1).toUpperCase();
-}
+import type { ConversationListItemProps } from "@/features/messages/types";
+import { getInitial } from "@/features/messages/utils";
+import { FALLBACK_USERNAME, EMPTY_LAST_MESSAGE_TEXT } from "@/features/messages/constants";
 
 function getLastMessageSenderLabel(
   senderId: string,
@@ -13,7 +11,7 @@ function getLastMessageSenderLabel(
 ): string {
   if (currentUserId != null && senderId === currentUserId) return "Moi: ";
   const sender = profiles.find((p) => p.id === senderId);
-  const name = sender?.username?.trim() ?? "Sans pseudo";
+  const name = sender?.username?.trim() ?? FALLBACK_USERNAME;
   return `${name}: `;
 }
 
@@ -25,7 +23,7 @@ export function ConversationListItem({
 }: ConversationListItemProps) {
   const { participant, lastMessage, unreadCount } = conversation;
   const isFromMe = currentUserId != null && lastMessage.senderId === currentUserId;
-  const isEmpty = lastMessage.text === "Aucun message";
+  const isEmpty = lastMessage.text === EMPTY_LAST_MESSAGE_TEXT;
   const senderLabel = getLastMessageSenderLabel(lastMessage.senderId, currentUserId, profiles);
 
   const href = `/messages/${conversation.id}`;
@@ -38,7 +36,7 @@ export function ConversationListItem({
       }`}
     >
       <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-(--border) bg-(--bg) font-display text-sm font-bold uppercase text-accent">
-        {participant.avatar ? null : getInitial(participant.name)}
+        {participant.avatar ? null : getInitial(participant.name ?? null)}
       </span>
       <div className="min-w-0 flex-1">
         <div className="flex items-center justify-between gap-2">

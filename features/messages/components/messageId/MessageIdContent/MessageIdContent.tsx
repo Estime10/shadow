@@ -1,5 +1,5 @@
 import { MessageThread } from "../MessageThread/MessageThread";
-import type { MessageIdContentProps } from "../../../types/props";
+import type { MessageIdContentProps } from "@/features/messages/types";
 
 export function MessageIdContent({ conversation, messages, currentUserId }: MessageIdContentProps) {
   return (

@@ -5,8 +5,8 @@ import {
   getProfiles,
   ROOM_CONVERSATION_ID,
 } from "@/lib/supabase/CRUD";
-
-const FALLBACK_PARTICIPANT_NAME = "Ghost";
+import { FALLBACK_PARTICIPANT_NAME } from "../constants";
+import { buildLastMessageFromMessage, getParticipantDisplayName } from "./helpers";
 
 /**
  * IDs des expéditeurs qui ne sont pas l'utilisateur connecté.
@@ -42,18 +42,14 @@ export async function getRoomConversation(withUserId?: string | null): Promise<{
   if (withUserId && withUserId !== currentUserId) {
     participantId = withUserId;
     const withProfiles = await getProfiles([withUserId]);
-    const withProfile = withProfiles[0];
-    participantName =
-      withProfile?.username?.trim() || (withProfile ? "Utilisateur" : FALLBACK_PARTICIPANT_NAME);
+    participantName = getParticipantDisplayName(withProfiles[0]?.username);
   } else if (otherIds.length > 0) {
     const profiles = await getProfiles(otherIds);
     const lastMessageFromOther =
       lastMessage && currentUserId && lastMessage.senderId !== currentUserId;
     participantId = lastMessageFromOther ? lastMessage.senderId : otherIds[0];
     const participantProfile = profiles.find((p) => p.id === participantId) ?? null;
-    participantName =
-      participantProfile?.username?.trim() ||
-      (participantId ? "Utilisateur" : FALLBACK_PARTICIPANT_NAME);
+    participantName = getParticipantDisplayName(participantProfile?.username);
   }
 
   const conversation: Conversation = {
@@ -63,17 +59,7 @@ export async function getRoomConversation(withUserId?: string | null): Promise<{
       name: participantName,
       avatar: null,
     },
-    lastMessage: lastMessage
-      ? {
-          text: lastMessage.text,
-          createdAt: lastMessage.createdAt,
-          senderId: lastMessage.senderId,
-        }
-      : {
-          text: "Aucun message",
-          createdAt: new Date().toISOString(),
-          senderId: "",
-        },
+    lastMessage: buildLastMessageFromMessage(lastMessage ?? null, new Date().toISOString()),
     unreadCount: 0,
   };
 

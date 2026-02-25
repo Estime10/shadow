@@ -5,8 +5,11 @@ import {
   getMessages,
   getProfiles,
 } from "@/lib/supabase/CRUD";
-
-const FALLBACK_PARTICIPANT_NAME = "Ghost";
+import {
+  buildLastMessageFromMessage,
+  getOtherUserIdFromConvRow,
+  getParticipantDisplayName,
+} from "./helpers";
 
 /**
  * Liste des conversations pour la sidebar (avec dernier message et nom de l'autre).
@@ -25,33 +28,21 @@ export async function getConversationsForList(): Promise<{
     return { conversations: [], currentUserId };
   }
 
-  const otherIds = convRows.map((row) =>
-    row.user_1_id === currentUserId ? row.user_2_id : row.user_1_id
-  );
+  const otherIds = convRows.map((row) => getOtherUserIdFromConvRow(row, currentUserId));
   const profiles = await getProfiles(otherIds);
   const profileMap = new Map(profiles.map((p) => [p.id, p]));
 
   const conversations: Conversation[] = await Promise.all(
     convRows.map(async (row) => {
-      const otherId = row.user_1_id === currentUserId ? row.user_2_id : row.user_1_id;
+      const otherId = getOtherUserIdFromConvRow(row, currentUserId);
       const messages = await getMessages(row.id, 1);
       const lastMessage = messages[messages.length - 1];
-      const name = profileMap.get(otherId)?.username?.trim() ?? FALLBACK_PARTICIPANT_NAME;
+      const name = getParticipantDisplayName(profileMap.get(otherId)?.username);
 
       return {
         id: row.id,
         participant: { id: otherId, name, avatar: null },
-        lastMessage: lastMessage
-          ? {
-              text: lastMessage.text,
-              createdAt: lastMessage.createdAt,
-              senderId: lastMessage.senderId,
-            }
-          : {
-              text: "Aucun message",
-              createdAt: row.created_at,
-              senderId: "",
-            },
+        lastMessage: buildLastMessageFromMessage(lastMessage, row.created_at),
         unreadCount: 0,
       };
     })

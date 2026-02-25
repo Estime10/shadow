@@ -1,6 +1,7 @@
 "use client";
 
 import { MessageCirclePlus } from "lucide-react";
+import { EMPTY_LAST_MESSAGE_TEXT } from "@/features/messages/constants";
 
 type ConversationsEmptyCardProps = {
   onOpenCreateConversation: () => void;
@@ -10,7 +11,7 @@ export function ConversationsEmptyCard({ onOpenCreateConversation }: Conversatio
   return (
     <div className="flex flex-col items-center gap-3 pt-2">
       <p className="font-display text-sm font-medium uppercase tracking-wider text-(--text-muted)">
-        Aucun message
+        {EMPTY_LAST_MESSAGE_TEXT}
       </p>
       <button
         type="button"

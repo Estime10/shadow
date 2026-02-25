@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
-import { MessageIdHeader } from "@/features/messages/components/messageId/MessageIdHeader/MessageIdHeader";
-import { MessageIdContent } from "@/features/messages/components/messageId/MessageIdContent/MessageIdContent";
-import { getConversationWithMessages } from "@/features/messages/data/getConversationWithMessages";
+import { MessageIdHeader, MessageIdContent } from "@/features/messages/components";
+import { getConversationWithMessages } from "@/features/messages/data";
+import type { MessageIdPageContent } from "@/features/messages/types";
 import { createPageMetadata } from "@/lib/metadata/createPageMetadata";
 
 type PageProps = {
@@ -25,15 +25,11 @@ export default async function MessageIdPage({ params }: PageProps) {
   const data = await getConversationWithMessages(id);
   if (!data) notFound();
 
-  const { conversation, messages, currentUserId } = data;
+  const content: MessageIdPageContent = data;
   return (
     <>
-      <MessageIdHeader conversation={conversation} />
-      <MessageIdContent
-        conversation={conversation}
-        messages={messages}
-        currentUserId={currentUserId}
-      />
+      <MessageIdHeader conversation={content.conversation} />
+      <MessageIdContent {...content} />
     </>
   );
 }

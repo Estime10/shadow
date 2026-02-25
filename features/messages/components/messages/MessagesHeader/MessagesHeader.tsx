@@ -1,7 +1,7 @@
 "use client";
 
 import { MessageCirclePlus } from "lucide-react";
-import type { MessagesHeaderProps } from "../../../types/props";
+import type { MessagesHeaderProps } from "@/features/messages/types";
 
 export function MessagesHeader({ onOpenCreateConversation }: MessagesHeaderProps) {
   return (

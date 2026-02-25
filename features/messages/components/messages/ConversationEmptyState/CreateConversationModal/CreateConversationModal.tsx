@@ -5,7 +5,8 @@ import { Search, X } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ANIMATION_DURATION_MODAL, ANIMATION_EASING } from "@/lib/config/animations";
 import type { Profile } from "@/lib/supabase/CRUD";
-import { getInitial } from "../getInitial/getInitial";
+import { getInitial } from "@/features/messages/utils";
+import { FALLBACK_USERNAME } from "@/features/messages/constants";
 
 type CreateConversationModalProps = {
   open: boolean;
@@ -113,7 +114,7 @@ export function CreateConversationModal({
                           {getInitial(profile.username)}
                         </span>
                         <span className="min-w-0 truncate font-display text-sm font-bold uppercase tracking-wider text-(--text)">
-                          {profile.username ?? "Sans pseudo"}
+                          {profile.username ?? FALLBACK_USERNAME}
                         </span>
                       </button>
                     </li>

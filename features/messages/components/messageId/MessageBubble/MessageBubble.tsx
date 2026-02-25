@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { MoreVertical, Pencil, Trash2 } from "lucide-react";
 import { formatRelativeTime } from "@/lib/functions";
 import { updateMessageAction, deleteMessageAction } from "@/features/messages/actions";
-import type { MessageBubbleProps } from "../../../types/props";
+import type { MessageBubbleProps } from "@/features/messages/types";
 
 export function MessageBubble({ message, currentUserId }: MessageBubbleProps) {
   const isSent = currentUserId != null && message.senderId === currentUserId;
@@ -34,7 +34,9 @@ export function MessageBubble({ message, currentUserId }: MessageBubbleProps) {
     return (
       <div className="flex w-full justify-end">
         <form
-          action={updateMessageAction}
+          action={async (formData) => {
+            await updateMessageAction(formData);
+          }}
           className="flex max-w-[85%] flex-col gap-2 rounded-2xl rounded-br-md bg-(--accent)/15 px-4 py-2.5"
         >
           <input type="hidden" name="messageId" value={message.id} />
@@ -97,7 +99,11 @@ export function MessageBubble({ message, currentUserId }: MessageBubbleProps) {
                 >
                   <Pencil className="h-3.5 w-3.5" /> Modifier
                 </button>
-                <form action={deleteMessageAction}>
+                <form
+                  action={async (formData) => {
+                    await deleteMessageAction(formData);
+                  }}
+                >
                   <input type="hidden" name="messageId" value={message.id} />
                   <button
                     type="submit"

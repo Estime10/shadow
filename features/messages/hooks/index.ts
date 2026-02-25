@@ -1,0 +1,1 @@
+export { useFilteredOtherProfiles } from "./useFilteredOtherProfiles";

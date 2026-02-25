@@ -1,6 +1,8 @@
 import { MessageBubble } from "../MessageBubble/MessageBubble";
 import { MessageInput } from "../MessageInput/MessageInput";
-import type { MessageThreadProps } from "../../../types/props";
+import type { MessageThreadProps } from "@/features/messages/types";
+import { getInitial } from "@/features/messages/utils";
+import { EMPTY_LAST_MESSAGE_TEXT } from "@/features/messages/constants";
 
 export function MessageThread({
   conversation,
@@ -13,7 +15,7 @@ export function MessageThread({
       {showHeader ? (
         <div className="flex shrink-0 items-center gap-3 px-4 py-3">
           <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 border-(--border) bg-(--bg) font-display text-xs font-bold uppercase text-accent">
-            {conversation.participant.name.slice(0, 1).toUpperCase()}
+            {getInitial(conversation.participant.name)}
           </span>
           <span className="font-display text-sm font-bold uppercase tracking-wider text-(--text)">
             {conversation.participant.name}
@@ -29,7 +31,7 @@ export function MessageThread({
         {messages.length === 0 ? (
           <div className="flex flex-1 flex-col items-center justify-center py-12">
             <p className="font-display text-sm font-medium uppercase tracking-wider text-(--text-muted)">
-              Aucun message
+              {EMPTY_LAST_MESSAGE_TEXT}
             </p>
           </div>
         ) : (
