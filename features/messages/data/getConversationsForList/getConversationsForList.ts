@@ -9,7 +9,7 @@ import {
   buildLastMessageFromMessage,
   getOtherUserIdFromConvRow,
   getParticipantDisplayName,
-} from "./helpers";
+} from "../helpers/helpers";
 
 /**
  * Liste des conversations pour la sidebar (avec dernier message et nom de l'autre).

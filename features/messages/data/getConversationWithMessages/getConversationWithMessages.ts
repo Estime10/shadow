@@ -9,7 +9,7 @@ import {
   buildLastMessageFromMessage,
   getOtherUserIdFromConvRow,
   getParticipantDisplayName,
-} from "./helpers";
+} from "../helpers/helpers";
 
 /**
  * Charge une conversation par id + messages + l'autre participant (nom).
@@ -31,7 +31,7 @@ export async function getConversationWithMessages(conversationId: string): Promi
   const otherId = getOtherUserIdFromConvRow(convRow, currentUserId);
   const [profiles, messages] = await Promise.all([
     getProfiles([otherId]),
-    getMessages(conversationId, 100),
+    getMessages(convRow.id, 100),
   ]);
   const participantName = getParticipantDisplayName(profiles[0]?.username);
   const lastMessage = messages[messages.length - 1];

@@ -1,5 +1,5 @@
 import { MessagesList } from "../MessagesList";
-import type { MessagesListProps } from "@/features/messages/types";
+import type { MessagesContentProps } from "@/features/messages/types";
 
 export function MessagesContent({
   conversations,
@@ -7,7 +7,7 @@ export function MessagesContent({
   profiles,
   modalOpen,
   setModalOpen,
-}: MessagesListProps) {
+}: MessagesContentProps) {
   return (
     <div className="flex-1 min-h-0">
       <MessagesList

@@ -1,3 +1,3 @@
-export { getConversationsForList } from "./getConversationsForList";
-export { getConversationWithMessages } from "./getConversationWithMessages";
-export { getRoomConversation } from "./getRoomConversation";
+export { getConversationWithMessages } from "./getConversationWithMessages/getConversationWithMessages";
+export { getRoomConversation } from "./getRoomConversation/getRoomConversation";
+export { getConversationsForList } from "./getConversationsForList/getConversationsForList";

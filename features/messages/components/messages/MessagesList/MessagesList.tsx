@@ -3,7 +3,7 @@
 import { ConversationListItem } from "../ConversationListItem/ConversationListItem";
 import { ConversationEmptyState } from "../ConversationEmptyState";
 import { ConversationsEmptyCard } from "./ConversationsEmptyCard/ConversationsEmptyCard";
-import type { MessagesListProps } from "@/features/messages/types";
+import type { MessagesContentProps } from "@/features/messages/types";
 
 export function MessagesList({
   conversations,
@@ -11,7 +11,7 @@ export function MessagesList({
   profiles,
   modalOpen,
   setModalOpen,
-}: MessagesListProps) {
+}: MessagesContentProps) {
   return (
     <div className="flex h-full min-h-0 flex-col gap-4 content-px lg:flex-row">
       <aside className="flex flex-1 flex-col bg-surface lg:max-w-sm lg:rounded-r-xl min-h-0">
@@ -42,7 +42,7 @@ export function MessagesList({
         currentUserId={currentUserId}
         modalOpen={modalOpen}
         setModalOpen={setModalOpen}
-        hidePanel={conversations.length === 0}
+        hidePanel
       />
     </div>
   );

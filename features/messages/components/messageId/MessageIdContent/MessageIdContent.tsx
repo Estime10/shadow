@@ -1,7 +1,7 @@
 import { MessageThread } from "../MessageThread/MessageThread";
-import type { MessageIdContentProps } from "@/features/messages/types";
+import type { MessageIdPageContent } from "@/features/messages/types";
 
-export function MessageIdContent({ conversation, messages, currentUserId }: MessageIdContentProps) {
+export function MessageIdContent({ conversation, messages, currentUserId }: MessageIdPageContent) {
   return (
     <div className="flex-1 min-h-0">
       <MessageThread

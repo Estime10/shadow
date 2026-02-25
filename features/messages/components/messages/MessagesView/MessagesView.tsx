@@ -3,9 +3,9 @@
 import { useState } from "react";
 import { MessagesHeader } from "../MessagesHeader/MessagesHeader";
 import { MessagesContent } from "../MessagesContent/MessagesContent";
-import type { MessagesViewProps } from "@/features/messages/types";
+import type { MessagesPageContent } from "@/features/messages/types";
 
-export function MessagesView({ conversations, currentUserId, profiles }: MessagesViewProps) {
+export function MessagesView({ conversations, currentUserId, profiles }: MessagesPageContent) {
   const [modalOpen, setModalOpen] = useState(false);
 
   return (
