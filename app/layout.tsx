@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Oswald, Space_Mono } from "next/font/google";
+import { AppNav } from "@/components/layout/AppNav/AppNav";
+import type { LayoutChildrenProps } from "@/types/layout";
 import "./globals.css";
 
 export const viewport: Viewport = {
@@ -29,17 +31,14 @@ export const metadata: Metadata = {
     "App privée : messages éphémères 24h, calendrier partagé, notifications realtime. Installable en PWA.",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: Readonly<LayoutChildrenProps>) {
   return (
     <html lang="fr" className="dark">
       <body
         className={`${oswald.variable} ${spaceMono.variable} antialiased min-h-screen bg-[var(--bg)] text-[var(--text)]`}
       >
-        {children}
+        <div className="flex min-h-screen flex-col pb-20">{children}</div>
+        <AppNav />
       </body>
     </html>
   );

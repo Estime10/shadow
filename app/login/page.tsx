@@ -1,10 +1,11 @@
 import Link from "next/link";
-import { LoginForm } from "@/features/auth/LoginForm";
+import { LoginForm } from "@/features/auth/LoginForm/LoginForm";
+import { createPageMetadata } from "@/lib/metadata/createPageMetadata";
 
-export const metadata = {
+export const metadata = createPageMetadata({
   title: "Connexion",
   description: "Connectez-vous à votre compte",
-};
+});
 
 export default function LoginPage() {
   return (
