@@ -33,7 +33,12 @@ export function MessageInput({ conversationId }: MessageInputProps) {
       <div className="bg-(--bg) content-px py-1.5">
         <form
           action={async (formData) => {
-            await createMessageAction(formData);
+            const result = await createMessageAction(formData);
+            if (!result.error) {
+              console.log("[messages] event envoi texte", {
+                conversationId: formData.get("conversationId"),
+              });
+            }
           }}
           className="flex items-end gap-1.5 rounded-lg border-2 border-(--border) bg-(--bg) content-px py-1.5 focus-within:border-accent transition-colors"
         >

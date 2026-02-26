@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { MessageIdHeader, MessageIdContent } from "@/features/messages/components";
+import { MessageIdHeader, MessageIdContent, ThreadRealtime } from "@/features/messages/components";
 import { getConversationWithMessages, getRoomConversation } from "@/features/messages/data";
 import type { MessageIdPageContent } from "@/features/messages/types";
 import { createPageMetadata } from "@/lib/metadata/createPageMetadata";
@@ -44,6 +44,7 @@ export default async function MessageIdPage({ params, searchParams }: PageProps)
   return (
     <>
       <MessageIdHeader conversation={content.conversation} />
+      <ThreadRealtime conversationId={content.conversation.id} />
       <MessageIdContent {...content} />
     </>
   );

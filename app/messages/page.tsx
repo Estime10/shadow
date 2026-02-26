@@ -4,6 +4,8 @@ import { getAllProfiles } from "@/lib/supabase/CRUD";
 import type { MessagesPageContent } from "@/features/messages/types";
 import { createPageMetadata } from "@/lib/metadata/createPageMetadata";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = createPageMetadata({
   title: "Messages",
   description: "Messages éphémères 24h",

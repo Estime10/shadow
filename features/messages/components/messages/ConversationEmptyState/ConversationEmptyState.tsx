@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useCallback, useRef } from "react";
-import { useRouter } from "next/navigation";
 import type { Profile } from "@/lib/supabase/CRUD";
 import type { ConversationEmptyStateProps } from "@/features/messages/types";
 import { findOrCreateConversationAction } from "@/features/messages/actions";
@@ -17,18 +16,17 @@ export function ConversationEmptyState({
   setModalOpen,
   hidePanel = false,
 }: ConversationEmptyStateProps) {
-  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   const handleSelectUser = useCallback(
     async (profile: Profile) => {
       const { conversationId, error } = await findOrCreateConversationAction(profile.id);
-      if (error) return;
+      if (error || !conversationId) return;
       setModalOpen(false);
-      router.push(`/messages/${conversationId}`);
+      window.location.assign(`/messages/${conversationId}`);
     },
-    [router, setModalOpen]
+    [setModalOpen]
   );
 
   const filteredProfiles = useFilteredOtherProfiles(profiles, currentUserId, searchQuery);

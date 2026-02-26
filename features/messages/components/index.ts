@@ -7,6 +7,7 @@ export { ConversationEmptyState } from "./messages/ConversationEmptyState";
 export { ConversationsEmptyCard } from "./messages/MessagesList/ConversationsEmptyCard/ConversationsEmptyCard";
 export { MessageIdHeader } from "./messageId/MessageIdHeader/MessageIdHeader";
 export { MessageIdContent } from "./messageId/MessageIdContent/MessageIdContent";
+export { ThreadRealtime } from "./messageId/ThreadRealtime/ThreadRealtime";
 export { MessageThread } from "./messageId/MessageThread/MessageThread";
 export { MessageInput } from "./messageId/MessageInput/MessageInput";
 export { MessageBubble } from "./messageId/MessageBubble/MessageBubble";
