@@ -53,8 +53,12 @@ create policy "messages_insert_own"
   to authenticated
   with check (user_id = (select auth.uid()));
 
--- Optionnel : autoriser la suppression de ses propres messages (ex. "retirer pour tous")
--- create policy "messages_delete_own" on public.messages for delete to authenticated using (user_id = auth.uid());
+-- Suppression : seul l'auteur du message peut supprimer
+drop policy if exists "messages_delete_own" on public.messages;
+create policy "messages_delete_own"
+  on public.messages for delete
+  to authenticated
+  using (user_id = (select auth.uid()));
 
 -- =============================================================================
 -- public.events

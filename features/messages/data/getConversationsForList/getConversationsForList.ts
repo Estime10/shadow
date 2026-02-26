@@ -35,9 +35,9 @@ export async function getConversationsForList(): Promise<{
   const conversationsWithMessages = await Promise.all(
     convRows.map(async (row) => {
       const otherId = getOtherUserIdFromConvRow(row, currentUserId);
-      const messages = await getMessages(row.id, 1);
+      const messages = await getMessages(row.id, 1, "desc");
       if (messages.length === 0) return null;
-      const lastMessage = messages[messages.length - 1];
+      const lastMessage = messages[0];
       const name = getParticipantDisplayName(profileMap.get(otherId)?.username);
 
       return {

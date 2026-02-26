@@ -7,6 +7,7 @@ export { getCurrentUserProfile } from "./profiles/getCurrentUserProfile/getCurre
 export { getProfiles, getAllProfiles } from "./profiles/getProfiles/getProfiles";
 export type { CurrentUserProfile, Profile, ProfileRow } from "./profiles/types/types";
 
+export { deleteConversation } from "./conversations/deleteConversation/deleteConversation";
 export { findOrCreateConversation } from "./conversations/findOrCreateConversation/findOrCreateConversation";
 export { getConversationById } from "./conversations/getConversationById/getConversationById";
 export { getConversationsForUser } from "./conversations/getConversationsForUser/getConversationsForUser";

@@ -9,6 +9,7 @@ type MessageBubbleFooterProps = {
   createdAt: string;
   isSent: boolean;
   messageId: string;
+  conversationId: string;
   menuOpen: boolean;
   onEdit: () => void;
   onMenuToggle: () => void;
@@ -19,6 +20,7 @@ export function MessageBubbleFooter({
   createdAt,
   isSent,
   messageId,
+  conversationId,
   menuOpen,
   onEdit,
   onMenuToggle,
@@ -58,6 +60,7 @@ export function MessageBubbleFooter({
           {menuOpen ? (
             <MessageBubbleMenu
               messageId={messageId}
+              conversationId={conversationId}
               onEdit={onEdit}
               onClose={() => setMenuOpen(false)}
             />

@@ -6,6 +6,7 @@ import { MAX_MESSAGE_LENGTH } from "@/features/messages/constants";
 
 export async function updateMessageAction(formData: FormData): Promise<{ error: string | null }> {
   const messageId = (formData.get("messageId") as string)?.trim();
+  const conversationId = (formData.get("conversationId") as string)?.trim();
   const text = (formData.get("text") as string)?.trim();
   if (!messageId || !text) return { error: "Données invalides" };
   if (text.length > MAX_MESSAGE_LENGTH) return { error: "Message trop long" };
@@ -14,5 +15,6 @@ export async function updateMessageAction(formData: FormData): Promise<{ error: 
   if (error) return { error };
 
   revalidatePath("/messages");
+  if (conversationId) revalidatePath(`/messages/${conversationId}`);
   return { error: null };
 }

@@ -4,13 +4,14 @@ import { useMessagesRealtime } from "@/features/messages/hooks";
 
 type ThreadRealtimeProps = {
   conversationId: string;
+  currentUserId?: string | null;
 };
 
 /**
- * S'abonne aux nouveaux messages de cette conversation et déclenche un refresh du thread.
- * Rendu invisible (pas d'UI).
+ * S'abonne aux messages (INSERT/UPDATE/DELETE) et conversations (DELETE) pour cette conversation.
+ * currentUserId permet le même canal que la liste et une reconnexion cohérente après navigation.
  */
-export function ThreadRealtime({ conversationId }: ThreadRealtimeProps) {
-  useMessagesRealtime([conversationId]);
+export function ThreadRealtime({ conversationId, currentUserId }: ThreadRealtimeProps) {
+  useMessagesRealtime([conversationId], currentUserId);
   return null;
 }

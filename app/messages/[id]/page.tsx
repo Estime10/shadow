@@ -44,7 +44,10 @@ export default async function MessageIdPage({ params, searchParams }: PageProps)
   return (
     <>
       <MessageIdHeader conversation={content.conversation} />
-      <ThreadRealtime conversationId={content.conversation.id} />
+      <ThreadRealtime
+        conversationId={content.conversation.id}
+        currentUserId={content.currentUserId}
+      />
       <MessageIdContent {...content} />
     </>
   );

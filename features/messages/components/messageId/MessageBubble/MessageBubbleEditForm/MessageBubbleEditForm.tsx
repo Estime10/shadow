@@ -1,31 +1,40 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { updateMessageAction } from "@/features/messages/actions";
 import { MAX_MESSAGE_LENGTH } from "@/features/messages/constants";
 
 type MessageBubbleEditFormProps = {
   messageId: string;
+  conversationId: string;
   initialText: string;
   onCancel: () => void;
 };
 
 export function MessageBubbleEditForm({
   messageId,
+  conversationId,
   initialText,
   onCancel,
 }: MessageBubbleEditFormProps) {
+  const router = useRouter();
   const [editText, setEditText] = useState(initialText);
 
   return (
     <div className="flex w-full justify-end">
       <form
         action={async (formData) => {
-          await updateMessageAction(formData);
+          const { error } = await updateMessageAction(formData);
+          if (!error) {
+            onCancel();
+            router.refresh();
+          }
         }}
         className="flex w-full max-w-[min(85%,20rem)] flex-col gap-2 rounded-2xl rounded-br-md bg-(--accent)/15 content-px py-2.5"
       >
         <input type="hidden" name="messageId" value={messageId} />
+        <input type="hidden" name="conversationId" value={conversationId} />
         <textarea
           name="text"
           value={editText}

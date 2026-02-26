@@ -57,6 +57,14 @@ create policy "conversations_insert_own"
     user_1_id = (select auth.uid()) or user_2_id = (select auth.uid())
   );
 
+drop policy if exists "conversations_delete_participant" on public.conversations;
+create policy "conversations_delete_participant"
+  on public.conversations for delete
+  to authenticated
+  using (
+    user_1_id = (select auth.uid()) or user_2_id = (select auth.uid())
+  );
+
 -- Messages : lecture si je suis dans la conversation
 drop policy if exists "messages_select_authenticated" on public.messages;
 create policy "messages_select_authenticated"
@@ -87,3 +95,11 @@ create policy "messages_insert_own"
       )
     )
   );
+
+-- Messages : mise à jour de son propre message
+drop policy if exists "messages_update_own" on public.messages;
+create policy "messages_update_own"
+  on public.messages for update
+  to authenticated
+  using (user_id = (select auth.uid()))
+  with check (user_id = (select auth.uid()));

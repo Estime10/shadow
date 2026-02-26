@@ -19,6 +19,7 @@ export function MessageBubble({ message, currentUserId }: MessageBubbleProps) {
     return (
       <MessageBubbleEditForm
         messageId={message.id}
+        conversationId={message.conversationId}
         initialText={message.text}
         onCancel={() => setIsEditing(false)}
       />
@@ -31,6 +32,7 @@ export function MessageBubble({ message, currentUserId }: MessageBubbleProps) {
         text={message.text}
         createdAt={message.createdAt}
         messageId={message.id}
+        conversationId={message.conversationId}
         isSent={isSent}
         menuOpen={menuOpen}
         onEdit={handleEdit}
