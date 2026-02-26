@@ -32,10 +32,11 @@ export async function getConversationsForList(): Promise<{
   const profiles = await getProfiles(otherIds);
   const profileMap = new Map(profiles.map((p) => [p.id, p]));
 
-  const conversations: Conversation[] = await Promise.all(
+  const conversationsWithMessages = await Promise.all(
     convRows.map(async (row) => {
       const otherId = getOtherUserIdFromConvRow(row, currentUserId);
       const messages = await getMessages(row.id, 1);
+      if (messages.length === 0) return null;
       const lastMessage = messages[messages.length - 1];
       const name = getParticipantDisplayName(profileMap.get(otherId)?.username);
 
@@ -47,6 +48,8 @@ export async function getConversationsForList(): Promise<{
       };
     })
   );
+
+  const conversations = conversationsWithMessages.filter((c): c is Conversation => c !== null);
 
   return { conversations, currentUserId };
 }

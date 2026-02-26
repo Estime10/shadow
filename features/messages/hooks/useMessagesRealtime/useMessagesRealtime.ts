@@ -30,10 +30,7 @@ export function useMessagesRealtime(conversationIds: string[], currentUserId?: s
   const hasMessagesSub = idsKey.length > 0 || hasConversationsSub;
 
   useEffect(() => {
-    if (!hasConversationsSub && !hasMessagesSub) {
-      console.log("[messages] realtime: ni currentUserId ni conversationIds, subscription ignorée");
-      return;
-    }
+    if (!hasConversationsSub && !hasMessagesSub) return;
 
     const supabase = createClient();
     const idsSet = idsKey.length > 0 ? new Set(idsKey.split(",")) : null;
@@ -44,14 +41,6 @@ export function useMessagesRealtime(conversationIds: string[], currentUserId?: s
         : idsKey.length > 0
           ? `messages-realtime-thread-${idsKey}`
           : "messages-realtime";
-
-    console.log("[messages] realtime hook run", {
-      currentUserId: currentUserId ?? "(vide)",
-      conversationIdsCount: conversationIds.length,
-      subscribeConversations: hasConversationsSub,
-      subscribeMessages: hasMessagesSub,
-      channelName,
-    });
 
     const channelRef: { current: ReturnType<typeof supabase.channel> | null } = {
       current: null,
@@ -81,15 +70,7 @@ export function useMessagesRealtime(conversationIds: string[], currentUserId?: s
           (payload: { new: RealtimeConversationPayload }) => {
             const row = payload.new;
             const isMine = row?.user_1_id === currentUserId || row?.user_2_id === currentUserId;
-            console.log("[messages] event INSERT conversation (raw)", {
-              user_1_id: row?.user_1_id,
-              user_2_id: row?.user_2_id,
-              isMine,
-            });
-            if (isMine) {
-              console.log("[messages] event reception nouvelle conversation");
-              router.refresh();
-            }
+            if (isMine) router.refresh();
           }
         );
       }
@@ -104,22 +85,14 @@ export function useMessagesRealtime(conversationIds: string[], currentUserId?: s
           },
           (payload: { new: RealtimeMessagePayload }) => {
             const conversationId = payload.new?.conversation_id ?? null;
-            const match = idsSet === null || (conversationId != null && idsSet.has(conversationId));
-            console.log("[messages] event INSERT message (raw)", {
-              conversation_id: conversationId,
-              match,
-            });
             if (idsSet === null || (conversationId != null && idsSet.has(conversationId))) {
-              console.log("[messages] event reception texte", { conversationId });
               router.refresh();
             }
           }
         );
       }
 
-      ch.subscribe((status) => {
-        console.log("[messages] realtime subscription status", status);
-      });
+      ch.subscribe();
     };
 
     setup();
