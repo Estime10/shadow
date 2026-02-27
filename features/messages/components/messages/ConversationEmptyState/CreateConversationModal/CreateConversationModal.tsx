@@ -16,6 +16,8 @@ type CreateConversationModalProps = {
   searchInputRef: React.RefObject<HTMLInputElement | null>;
   filteredProfiles: Profile[];
   onSelectUser: (profile: Profile) => void | Promise<void>;
+  /** Id du profil en cours de création (désactive le bouton, évite double clic). */
+  creatingForProfileId?: string | null;
 };
 
 export function CreateConversationModal({
@@ -26,6 +28,7 @@ export function CreateConversationModal({
   searchInputRef,
   filteredProfiles,
   onSelectUser,
+  creatingForProfileId = null,
 }: CreateConversationModalProps) {
   const overlayRef = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion();
@@ -108,7 +111,8 @@ export function CreateConversationModal({
                       <button
                         type="button"
                         onClick={() => onSelectUser(profile)}
-                        className="flex w-full items-center gap-3 rounded-xl content-px py-3 text-left transition-colors hover:bg-(--bg) focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                        disabled={creatingForProfileId !== null}
+                        className="flex w-full items-center gap-3 rounded-xl content-px py-3 text-left transition-colors hover:bg-(--bg) focus:outline-none focus-visible:ring-2 focus-visible:ring-accent disabled:opacity-60 disabled:pointer-events-none"
                       >
                         <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 border-(--border) bg-(--bg) font-display text-sm font-bold uppercase text-accent">
                           {getInitial(profile.username)}

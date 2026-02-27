@@ -49,7 +49,9 @@ export async function getConversationsForList(): Promise<{
     })
   );
 
-  const conversations = conversationsWithMessages.filter((c): c is Conversation => c !== null);
+  const conversations = conversationsWithMessages.filter(
+    (c): c is NonNullable<typeof c> => c !== null
+  ) as Conversation[];
 
   return { conversations, currentUserId };
 }

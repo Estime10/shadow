@@ -1,15 +1,19 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useSWRConfig } from "swr";
 import { updateMessageAction } from "@/features/messages/actions";
 import { MAX_MESSAGE_LENGTH } from "@/features/messages/constants";
+import type { ThreadCacheKey } from "@/features/messages/hooks";
+
+const MESSAGES_LIST_KEY = "messages-list";
 
 type MessageBubbleEditFormProps = {
   messageId: string;
   conversationId: string;
   initialText: string;
   onCancel: () => void;
+  threadCacheKey?: ThreadCacheKey;
 };
 
 export function MessageBubbleEditForm({
@@ -17,8 +21,9 @@ export function MessageBubbleEditForm({
   conversationId,
   initialText,
   onCancel,
+  threadCacheKey,
 }: MessageBubbleEditFormProps) {
-  const router = useRouter();
+  const { mutate } = useSWRConfig();
   const [editText, setEditText] = useState(initialText);
 
   return (
@@ -28,7 +33,8 @@ export function MessageBubbleEditForm({
           const { error } = await updateMessageAction(formData);
           if (!error) {
             onCancel();
-            router.refresh();
+            void mutate(MESSAGES_LIST_KEY);
+            void mutate(threadCacheKey ?? ["thread", conversationId]);
           }
         }}
         className="flex w-full max-w-[min(85%,20rem)] flex-col gap-2 rounded-2xl rounded-br-md bg-(--accent)/15 content-px py-2.5"

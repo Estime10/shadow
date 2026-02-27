@@ -1,5 +1,6 @@
 "use client";
 
+import type { ThreadCacheKey } from "@/features/messages/hooks";
 import { MessageBubbleContent } from "../MessageBubbleContent/MessageBubbleContent";
 import { MessageBubbleFooter } from "../MessageBubbleFooter/MessageBubbleFooter";
 
@@ -13,6 +14,7 @@ type MessageBubbleViewProps = {
   onEdit: () => void;
   onMenuToggle: () => void;
   setMenuOpen: (open: boolean) => void;
+  threadCacheKey?: ThreadCacheKey;
 };
 
 export function MessageBubbleView({
@@ -25,6 +27,7 @@ export function MessageBubbleView({
   onEdit,
   onMenuToggle,
   setMenuOpen,
+  threadCacheKey,
 }: MessageBubbleViewProps) {
   return (
     <div
@@ -44,6 +47,7 @@ export function MessageBubbleView({
         onEdit={onEdit}
         onMenuToggle={onMenuToggle}
         setMenuOpen={setMenuOpen}
+        threadCacheKey={threadCacheKey}
       />
     </div>
   );

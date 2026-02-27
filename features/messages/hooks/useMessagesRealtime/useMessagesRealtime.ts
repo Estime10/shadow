@@ -1,10 +1,27 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { useRouter } from "next/navigation";
+import { useSWRConfig } from "swr";
 import { createClient } from "@/lib/supabase/client";
+import {
+  mapRealtimeMessageToMessage,
+  type RealtimeMessageRow,
+} from "@/features/messages/lib/mapRealtimeMessageToMessage";
+import type { MessageIdPageContent } from "@/features/messages/types";
+
+const MESSAGES_LIST_KEY = "messages-list";
 
 type RealtimeMessagePayload = {
+  conversation_id: string | null;
+  id: string;
+  user_id: string;
+  text: string | null;
+  created_at: string;
+  [key: string]: unknown;
+};
+
+type RealtimeMessageOldPayload = {
+  id: string;
   conversation_id: string | null;
   [key: string]: unknown;
 };
@@ -15,21 +32,44 @@ type RealtimeConversationPayload = {
   [key: string]: unknown;
 };
 
+/** Clé SWR du cache thread : ["thread", conversationId] ou ["thread", "room", withUserId]. */
+export type ThreadCacheKey = readonly [string, string, string?] | null;
+
+export type UseMessagesRealtimeOptions = {
+  /** Quand on est sur la page thread, passer la clé pour mettre à jour le cache à partir du payload (sans refetch). */
+  threadCacheKey?: ThreadCacheKey;
+};
+
+function isMessageForThread(
+  conversationId: string | null,
+  threadCacheKey: ThreadCacheKey
+): boolean {
+  if (!threadCacheKey || threadCacheKey.length < 2) return false;
+  const isRoom = threadCacheKey[1] === "room";
+  return isRoom ? conversationId == null : conversationId === threadCacheKey[1];
+}
+
 /**
- * S'abonne aux INSERT sur conversations et messages.
- * - conversations : quand quelqu'un crée une conversation avec moi → refresh (liste à jour).
- * - messages : quand un nouveau message arrive dans une de mes conversations → refresh.
- * Sur la liste avec 0 conversations on écoute quand même les messages (RLS ne livre que ceux de mes conversations).
- * Quand currentUserId est fourni, on lit les conversationIds via une ref pour ne pas recréer le canal
- * quand la liste passe à 0 (après DELETE), afin que User B reste abonné et reçoive l'INSERT de la nouvelle conversation.
+ * S'abonne aux INSERT/DELETE/UPDATE sur conversations et messages.
+ * Au lieu de router.refresh(), invalide ou met à jour le cache SWR :
+ * - liste : mutate("messages-list") pour refetch liste.
+ * - thread : si threadCacheKey fourni, met à jour le cache (ajout/suppression/édition) à partir du payload Realtime.
  */
-export function useMessagesRealtime(conversationIds: string[], currentUserId?: string | null) {
-  const router = useRouter();
+export function useMessagesRealtime(
+  conversationIds: string[],
+  currentUserId?: string | null,
+  options?: UseMessagesRealtimeOptions
+) {
+  const { mutate } = useSWRConfig();
   const idsKey = conversationIds.length > 0 ? conversationIds.slice().sort().join(",") : "";
   const hasConversationsSub = currentUserId != null && currentUserId !== "";
   const hasMessagesSub = idsKey.length > 0 || hasConversationsSub;
-
+  const threadCacheKeyRef = useRef<ThreadCacheKey>(options?.threadCacheKey ?? null);
   const idsSetRef = useRef<Set<string> | null>(null);
+
+  useEffect(() => {
+    threadCacheKeyRef.current = options?.threadCacheKey ?? null;
+  }, [options?.threadCacheKey]);
 
   useEffect(() => {
     idsSetRef.current = idsKey.length > 0 ? new Set(idsKey.split(",")) : null;
@@ -39,7 +79,6 @@ export function useMessagesRealtime(conversationIds: string[], currentUserId?: s
     if (!hasConversationsSub && !hasMessagesSub) return;
 
     const supabase = createClient();
-
     const channelName =
       typeof currentUserId === "string" && currentUserId.length > 0
         ? `messages-realtime-${currentUserId}`
@@ -51,6 +90,18 @@ export function useMessagesRealtime(conversationIds: string[], currentUserId?: s
       current: null,
     };
     let cancelled = false;
+
+    function revalidateList() {
+      void mutate(MESSAGES_LIST_KEY);
+    }
+
+    function updateThreadCache(
+      updater: (data: MessageIdPageContent | undefined) => MessageIdPageContent | undefined
+    ) {
+      const key = threadCacheKeyRef.current;
+      if (!key) return;
+      void mutate(key, updater, { revalidate: false });
+    }
 
     function subscribeChannel() {
       if (cancelled) return;
@@ -69,7 +120,7 @@ export function useMessagesRealtime(conversationIds: string[], currentUserId?: s
           (payload: { new: RealtimeConversationPayload }) => {
             const row = payload.new;
             const isMine = row?.user_1_id === currentUserId || row?.user_2_id === currentUserId;
-            if (isMine) router.refresh();
+            if (isMine) revalidateList();
           }
         );
         ch.on(
@@ -79,7 +130,7 @@ export function useMessagesRealtime(conversationIds: string[], currentUserId?: s
             schema: "public",
             table: "conversations",
           },
-          () => router.refresh()
+          () => revalidateList()
         );
       }
 
@@ -92,21 +143,49 @@ export function useMessagesRealtime(conversationIds: string[], currentUserId?: s
             table: "messages",
           },
           (payload: { new: RealtimeMessagePayload }) => {
-            const conversationId = payload.new?.conversation_id ?? null;
+            const row = payload.new;
+            const conversationId = row?.conversation_id ?? null;
             const set = idsSetRef.current;
             if (set === null || (conversationId != null && set.has(conversationId))) {
-              router.refresh();
+              revalidateList();
+            }
+            const key = threadCacheKeyRef.current;
+            if (key && isMessageForThread(conversationId, key)) {
+              const msg = mapRealtimeMessageToMessage(row as RealtimeMessageRow);
+              updateThreadCache((data) =>
+                data ? { ...data, messages: [...data.messages, msg] } : undefined
+              );
             }
           }
         );
-        ch.on(
+        // Supabase RealtimeChannel.on() overload resolution échoue avec ce filtre
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (ch as any).on(
           "postgres_changes",
           {
             event: "DELETE",
             schema: "public",
             table: "messages",
           },
-          () => router.refresh()
+          (payload: { old: RealtimeMessageOldPayload }) => {
+            revalidateList();
+            const key = threadCacheKeyRef.current;
+            const old = payload.old;
+            if (!key || !old?.id) return;
+            const convId = old.conversation_id ?? null;
+            const deletedId = old.id;
+            if (convId != null && isMessageForThread(convId, key)) {
+              updateThreadCache((data) =>
+                data
+                  ? { ...data, messages: data.messages.filter((m) => m.id !== deletedId) }
+                  : undefined
+              );
+            } else {
+              // Sans conversation_id dans payload (REPLICA IDENTITY pas FULL), on refetch le thread
+              // pour que l'autre onglet reçoive la liste à jour
+              void mutate(key);
+            }
+          }
         );
         ch.on(
           "postgres_changes",
@@ -115,7 +194,22 @@ export function useMessagesRealtime(conversationIds: string[], currentUserId?: s
             schema: "public",
             table: "messages",
           },
-          () => router.refresh()
+          (payload: { new: RealtimeMessagePayload }) => {
+            revalidateList();
+            const key = threadCacheKeyRef.current;
+            const row = payload.new;
+            const conversationId = row?.conversation_id ?? null;
+            if (!key || !isMessageForThread(conversationId, key)) return;
+            const updated = mapRealtimeMessageToMessage(row as RealtimeMessageRow);
+            updateThreadCache((data) =>
+              data
+                ? {
+                    ...data,
+                    messages: data.messages.map((m) => (m.id === updated.id ? updated : m)),
+                  }
+                : undefined
+            );
+          }
         );
       }
 
@@ -170,5 +264,5 @@ export function useMessagesRealtime(conversationIds: string[], currentUserId?: s
         channelRef.current = null;
       }
     };
-  }, [currentUserId, router]);
+  }, [currentUserId, mutate, hasConversationsSub, hasMessagesSub, idsKey]);
 }

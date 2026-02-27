@@ -2,6 +2,7 @@
 
 import { useRef, useEffect } from "react";
 import { MoreVertical } from "lucide-react";
+import type { ThreadCacheKey } from "@/features/messages/hooks";
 import { formatRelativeTime } from "@/lib/functions";
 import { MessageBubbleMenu } from "../MessageBubbleMenu/MessageBubbleMenu";
 
@@ -14,6 +15,7 @@ type MessageBubbleFooterProps = {
   onEdit: () => void;
   onMenuToggle: () => void;
   setMenuOpen: (open: boolean) => void;
+  threadCacheKey?: ThreadCacheKey;
 };
 
 export function MessageBubbleFooter({
@@ -25,6 +27,7 @@ export function MessageBubbleFooter({
   onEdit,
   onMenuToggle,
   setMenuOpen,
+  threadCacheKey,
 }: MessageBubbleFooterProps) {
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -63,6 +66,7 @@ export function MessageBubbleFooter({
               conversationId={conversationId}
               onEdit={onEdit}
               onClose={() => setMenuOpen(false)}
+              threadCacheKey={threadCacheKey}
             />
           ) : null}
         </>

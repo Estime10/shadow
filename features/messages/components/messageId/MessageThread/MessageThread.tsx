@@ -9,6 +9,7 @@ export function MessageThread({
   messages,
   currentUserId,
   showHeader = true,
+  threadCacheKey,
 }: MessageThreadProps) {
   return (
     <div className="flex min-h-0 flex-1 flex-col bg-(--bg)">
@@ -36,12 +37,17 @@ export function MessageThread({
           </div>
         ) : (
           messages.map((msg) => (
-            <MessageBubble key={msg.id} message={msg} currentUserId={currentUserId} />
+            <MessageBubble
+              key={msg.id}
+              message={msg}
+              currentUserId={currentUserId}
+              threadCacheKey={threadCacheKey}
+            />
           ))
         )}
       </div>
 
-      <MessageInput conversationId={conversation.id} />
+      <MessageInput conversationId={conversation.id} threadCacheKey={threadCacheKey} />
     </div>
   );
 }

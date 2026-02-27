@@ -2,17 +2,24 @@
 
 import { useCallback, useRef } from "react";
 import { Send } from "lucide-react";
+import { useSWRConfig } from "swr";
 import { useKeyboardHeight } from "@/lib/hooks/useKeyboardHeight/useKeyboardHeight";
 import { createMessageAction } from "@/features/messages/actions";
 import { MAX_MESSAGE_LENGTH } from "@/features/messages/constants";
+import type { ThreadCacheKey } from "@/features/messages/hooks";
+
+const MESSAGES_LIST_KEY = "messages-list";
 
 type MessageInputProps = {
   conversationId: string;
+  threadCacheKey?: ThreadCacheKey;
 };
 
-export function MessageInput({ conversationId }: MessageInputProps) {
+export function MessageInput({ conversationId, threadCacheKey }: MessageInputProps) {
   const keyboardHeight = useKeyboardHeight();
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
+  const { mutate } = useSWRConfig();
 
   const handleFocus = useCallback(() => {
     requestAnimationFrame(() => {
@@ -32,8 +39,14 @@ export function MessageInput({ conversationId }: MessageInputProps) {
     >
       <div className="bg-(--bg) content-px py-1.5">
         <form
+          ref={formRef}
           action={async (formData) => {
-            await createMessageAction(formData);
+            const { error } = await createMessageAction(formData);
+            if (!error) {
+              void mutate(MESSAGES_LIST_KEY);
+              void mutate(threadCacheKey ?? ["thread", conversationId]);
+              formRef.current?.reset();
+            }
           }}
           className="flex items-end gap-1.5 rounded-lg border-2 border-(--border) bg-(--bg) content-px py-1.5 focus-within:border-accent transition-colors"
         >

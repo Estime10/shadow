@@ -8,6 +8,7 @@ export { ConversationsEmptyCard } from "./messages/MessagesList/ConversationsEmp
 export { MessageIdHeader } from "./messageId/MessageIdHeader/MessageIdHeader";
 export { MessageIdContent } from "./messageId/MessageIdContent/MessageIdContent";
 export { ThreadRealtime } from "./messageId/ThreadRealtime/ThreadRealtime";
+export { ThreadWithCache } from "./messageId/ThreadWithCache/ThreadWithCache";
 export { MessageThread } from "./messageId/MessageThread/MessageThread";
 export { MessageInput } from "./messageId/MessageInput/MessageInput";
 export { MessageBubble } from "./messageId/MessageBubble/MessageBubble";

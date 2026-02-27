@@ -1,11 +1,11 @@
 import { notFound } from "next/navigation";
-import { MessageIdHeader, MessageIdContent, ThreadRealtime } from "@/features/messages/components";
+import { ThreadWithCache } from "@/features/messages/components";
 import { getConversationWithMessages, getRoomConversation } from "@/features/messages/data";
 import type { MessageIdPageContent } from "@/features/messages/types";
 import { createPageMetadata } from "@/lib/metadata/createPageMetadata";
 import { ROOM_CONVERSATION_ID } from "@/lib/supabase/CRUD";
 
-/** Toujours données fraîches (messages, conversation) — pas de cache. */
+/** Données initiales serveur ; cache SWR + Realtime pour mises à jour ciblées. */
 export const dynamic = "force-dynamic";
 
 type PageProps = {
@@ -40,15 +40,5 @@ export default async function MessageIdPage({ params, searchParams }: PageProps)
   const data = await getData(id, withUserId ?? null);
   if (!data) notFound();
 
-  const content: MessageIdPageContent = data;
-  return (
-    <>
-      <MessageIdHeader conversation={content.conversation} />
-      <ThreadRealtime
-        conversationId={content.conversation.id}
-        currentUserId={content.currentUserId}
-      />
-      <MessageIdContent {...content} />
-    </>
-  );
+  return <ThreadWithCache initial={data} conversationId={id} withUserId={withUserId ?? null} />;
 }

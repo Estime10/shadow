@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useCallback, useRef } from "react";
-import { useRouter } from "next/navigation";
 import type { Profile } from "@/lib/supabase/CRUD";
 import type { ConversationEmptyStateProps } from "@/features/messages/types";
 import { findOrCreateConversationAction } from "@/features/messages/actions";
@@ -17,18 +16,30 @@ export function ConversationEmptyState({
   setModalOpen,
   hidePanel = false,
 }: ConversationEmptyStateProps) {
-  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
+  const [creatingForProfileId, setCreatingForProfileId] = useState<string | null>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   const handleSelectUser = useCallback(
     async (profile: Profile) => {
-      const { conversationId, error } = await findOrCreateConversationAction(profile.id);
-      if (error || !conversationId) return;
+      if (creatingForProfileId) return;
+      setCreatingForProfileId(profile.id);
+      let conversationId: string | null = null;
+      let err: string | null = null;
+      try {
+        const result = await findOrCreateConversationAction(profile.id);
+        conversationId = result.conversationId ?? null;
+        err = result.error ?? null;
+      } finally {
+        setCreatingForProfileId(null);
+      }
+      if (err || !conversationId) return;
       setModalOpen(false);
-      router.replace(`/messages/${conversationId}`);
+      // router.replace() après une Server Action peut ne pas déclencher la navigation (Next.js).
+      // window.location garantit la redirection vers la conversation créée.
+      window.location.assign(`/messages/${conversationId}`);
     },
-    [router, setModalOpen]
+    [setModalOpen, creatingForProfileId]
   );
 
   const filteredProfiles = useFilteredOtherProfiles(profiles, currentUserId, searchQuery);
@@ -58,6 +69,7 @@ export function ConversationEmptyState({
         searchInputRef={searchInputRef}
         filteredProfiles={filteredProfiles}
         onSelectUser={handleSelectUser}
+        creatingForProfileId={creatingForProfileId}
       />
     </>
   );

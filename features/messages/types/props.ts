@@ -1,4 +1,5 @@
 import type { Conversation, Message } from "@/types/message";
+import type { ThreadCacheKey } from "@/features/messages/hooks";
 import type { MessagesPageContent, MessageIdPageContent } from "./content";
 
 /**
@@ -36,12 +37,15 @@ export type ConversationListItemProps = Pick<MessagesPageContent, "currentUserId
 /** Header thread : slice conversation du content [id] */
 export type MessageIdHeaderProps = Pick<MessageIdPageContent, "conversation">;
 
-/** Thread = content [id] + option affichage header */
+/** Thread = content [id] + option affichage header + clé cache SWR (invalidation après mutation). */
 export type MessageThreadProps = MessageIdPageContent & {
   showHeader?: boolean;
+  /** Clé SWR du thread (passée par ThreadWithCache) pour invalidation après delete/update. */
+  threadCacheKey?: ThreadCacheKey;
 };
 
-/** Bulle = un message + currentUser (slice du content) */
+/** Bulle = un message + currentUser (slice du content) + option threadCacheKey. */
 export type MessageBubbleProps = Pick<MessageIdPageContent, "currentUserId"> & {
   message: Message;
+  threadCacheKey?: ThreadCacheKey;
 };
