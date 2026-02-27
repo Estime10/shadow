@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Pencil, Trash2 } from "lucide-react";
 import { useSWRConfig } from "swr";
 import { ConfirmModal } from "@/components/ui/ConfirmModal/ConfirmModal";
@@ -26,7 +25,6 @@ export function MessageBubbleMenu({
   onClose,
   threadCacheKey,
 }: MessageBubbleMenuProps) {
-  const router = useRouter();
   const { mutate } = useSWRConfig();
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
 
@@ -34,26 +32,20 @@ export function MessageBubbleMenu({
     const formData = new FormData();
     formData.set("messageId", messageId);
     formData.set("conversationId", conversationId);
-    const { error, conversationDeleted } = await deleteMessageAction(formData);
+    const { error } = await deleteMessageAction(formData);
     setConfirmDeleteOpen(false);
     onClose();
     if (!error) {
-      if (conversationDeleted) {
-        void mutate(MESSAGES_LIST_KEY);
-        router.replace("/messages");
-      } else {
-        void mutate(MESSAGES_LIST_KEY);
-        const key = threadCacheKey ?? ["thread", conversationId];
-        // Mise à jour optimiste : retirer le message du cache tout de suite, puis revalider en arrière-plan
-        void mutate(
-          key,
-          (current: MessageIdPageContent | undefined) =>
-            current
-              ? { ...current, messages: current.messages.filter((m) => m.id !== messageId) }
-              : undefined,
-          { revalidate: true }
-        );
-      }
+      void mutate(MESSAGES_LIST_KEY);
+      const key = threadCacheKey ?? ["thread", conversationId];
+      void mutate(
+        key,
+        (current: MessageIdPageContent | undefined) =>
+          current
+            ? { ...current, messages: current.messages.filter((m) => m.id !== messageId) }
+            : undefined,
+        { revalidate: true }
+      );
     }
   }
 

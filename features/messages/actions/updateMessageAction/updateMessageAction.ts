@@ -2,15 +2,17 @@
 
 import { revalidatePath } from "next/cache";
 import { updateMessage } from "@/lib/supabase/CRUD";
-import { MAX_MESSAGE_LENGTH } from "@/features/messages/constants";
+import { parseUpdateMessageFormData } from "@/features/messages/schemas";
 
 export async function updateMessageAction(formData: FormData): Promise<{ error: string | null }> {
-  const messageId = (formData.get("messageId") as string)?.trim();
-  const conversationId = (formData.get("conversationId") as string)?.trim();
-  const text = (formData.get("text") as string)?.trim();
-  if (!messageId || !text) return { error: "Données invalides" };
-  if (text.length > MAX_MESSAGE_LENGTH) return { error: "Message trop long" };
+  const parsed = parseUpdateMessageFormData(formData);
+  if (!parsed.success) {
+    const first = parsed.error.flatten().fieldErrors;
+    const message = first.messageId?.[0] ?? first.text?.[0] ?? "Données invalides";
+    return { error: message };
+  }
 
+  const { messageId, text, conversationId } = parsed.data;
   const { error } = await updateMessage(messageId, text);
   if (error) return { error };
 

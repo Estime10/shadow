@@ -5,6 +5,7 @@ import Link from "next/link";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
 import { Button } from "@/components/ui/Button/Button";
 import { Input } from "@/components/ui/Input/Input";
+import { LoadingSpinner } from "@/components/ui/LoadingSpinner/LoadingSpinner";
 import { Card, CardHeader, CardTitle } from "@/components/ui/Card/Card";
 import { loginAction } from "../login/loginAction/loginAction";
 
@@ -58,7 +59,14 @@ export function LoginForm() {
           </p>
         ) : null}
         <Button type="submit" variant="primary" fullWidth disabled={isPending}>
-          {isPending ? "Connexion…" : "Se connecter"}
+          {isPending ? (
+            <>
+              <LoadingSpinner size={18} className="text-(--bg)" aria-label="Connexion en cours" />
+              <span className="ml-2">Connexion…</span>
+            </>
+          ) : (
+            "Se connecter"
+          )}
         </Button>
       </form>
       <p className="mt-6 text-center text-sm text-(--text-muted)">

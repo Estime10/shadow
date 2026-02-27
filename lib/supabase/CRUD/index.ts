@@ -14,6 +14,7 @@ export { getConversationsForUser } from "./conversations/getConversationsForUser
 export type { ConversationRow } from "./conversations/types/types";
 
 export { getMessages } from "./messages/getMessages/getMessages";
+export { getLastMessagesForConversations } from "./messages/getLastMessagesForConversations/getLastMessagesForConversations";
 export { createMessage } from "./messages/createMessage/createMessage";
 export { updateMessage } from "./messages/updateMessage/updateMessage";
 export { deleteMessage } from "./messages/deleteMessage/deleteMessage";

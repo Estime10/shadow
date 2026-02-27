@@ -1,13 +1,13 @@
 import { createClient } from "../../../server";
-import { deleteConversation } from "../../conversations/deleteConversation/deleteConversation";
 
 /**
- * Supprime un message (seul l'auteur peut). Si la conversation n'a plus aucun message, supprime aussi la conversation.
+ * Supprime un message (seul l'auteur peut).
+ * La conversation reste en base : réouvrir avec le même user réutilise la même conversation et le realtime fonctionne.
  */
 export async function deleteMessage(
   messageId: string,
-  conversationId?: string | null
-): Promise<{ ok: boolean; error: string | null; conversationDeleted?: boolean }> {
+  _conversationId?: string | null
+): Promise<{ ok: boolean; error: string | null }> {
   const supabase = await createClient();
   const {
     data: { user },
@@ -33,17 +33,5 @@ export async function deleteMessage(
     };
   }
 
-  let conversationDeleted = false;
-  if (conversationId) {
-    const { count } = await supabase
-      .from("messages")
-      .select("id", { count: "exact", head: true })
-      .eq("conversation_id", conversationId);
-    if (count === 0) {
-      const result = await deleteConversation(conversationId);
-      conversationDeleted = result.ok;
-    }
-  }
-
-  return { ok: true, error: null, conversationDeleted };
+  return { ok: true, error: null };
 }

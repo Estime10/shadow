@@ -2,7 +2,7 @@ import type { Conversation } from "@/types/message";
 import {
   getCurrentUserProfile,
   getConversationsForUser,
-  getMessages,
+  getLastMessagesForConversations,
   getProfiles,
 } from "@/lib/supabase/CRUD";
 import {
@@ -13,6 +13,7 @@ import {
 
 /**
  * Liste des conversations pour la sidebar (avec dernier message et nom de l'autre).
+ * Une seule requête messages pour tous les derniers messages (évite N+1).
  */
 export async function getConversationsForList(): Promise<{
   conversations: Conversation[];
@@ -28,30 +29,29 @@ export async function getConversationsForList(): Promise<{
     return { conversations: [], currentUserId };
   }
 
-  const otherIds = convRows.map((row) => getOtherUserIdFromConvRow(row, currentUserId));
-  const profiles = await getProfiles(otherIds);
+  const conversationIds = convRows.map((row) => row.id);
+  const [profiles, lastMessagesMap] = await Promise.all([
+    getProfiles(convRows.map((row) => getOtherUserIdFromConvRow(row, currentUserId))),
+    getLastMessagesForConversations(conversationIds),
+  ]);
   const profileMap = new Map(profiles.map((p) => [p.id, p]));
 
-  const conversationsWithMessages = await Promise.all(
-    convRows.map(async (row) => {
-      const otherId = getOtherUserIdFromConvRow(row, currentUserId);
-      const messages = await getMessages(row.id, 1, "desc");
-      if (messages.length === 0) return null;
-      const lastMessage = messages[0];
-      const name = getParticipantDisplayName(profileMap.get(otherId)?.username);
-
-      return {
-        id: row.id,
-        participant: { id: otherId, name, avatar: null },
-        lastMessage: buildLastMessageFromMessage(lastMessage, row.created_at),
-        unreadCount: 0,
-      };
-    })
-  );
+  const conversationsWithMessages = convRows.map((row) => {
+    const otherId = getOtherUserIdFromConvRow(row, currentUserId);
+    const lastMessage = lastMessagesMap.get(row.id) ?? null;
+    if (!lastMessage) return null;
+    const name = getParticipantDisplayName(profileMap.get(otherId)?.username);
+    return {
+      id: row.id,
+      participant: { id: otherId, name, avatar: null },
+      lastMessage: buildLastMessageFromMessage(lastMessage, row.created_at),
+      unreadCount: 0,
+    };
+  });
 
   const conversations = conversationsWithMessages.filter(
     (c): c is NonNullable<typeof c> => c !== null
-  ) as Conversation[];
+  );
 
   return { conversations, currentUserId };
 }

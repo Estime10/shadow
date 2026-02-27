@@ -5,6 +5,7 @@ import Link from "next/link";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
 import { Button } from "@/components/ui/Button/Button";
 import { Input } from "@/components/ui/Input/Input";
+import { LoadingSpinner } from "@/components/ui/LoadingSpinner/LoadingSpinner";
 import { Card, CardHeader, CardTitle } from "@/components/ui/Card/Card";
 import { registerAction } from "../register/registerAction/registerAction";
 
@@ -68,7 +69,14 @@ export function RegisterForm() {
           </p>
         ) : null}
         <Button type="submit" variant="primary" fullWidth disabled={isPending}>
-          {isPending ? "Inscription…" : "S'inscrire"}
+          {isPending ? (
+            <>
+              <LoadingSpinner size={18} className="text-(--bg)" aria-label="Inscription en cours" />
+              <span className="ml-2">Inscription…</span>
+            </>
+          ) : (
+            "S'inscrire"
+          )}
         </Button>
       </form>
       <p className="mt-6 text-center text-sm text-(--text-muted)">

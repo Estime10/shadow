@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import { Search, X } from "lucide-react";
+import { LoadingSpinner } from "@/components/ui/LoadingSpinner/LoadingSpinner";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ANIMATION_DURATION_MODAL, ANIMATION_EASING } from "@/lib/config/animations";
 import type { Profile } from "@/lib/supabase/CRUD";
@@ -106,23 +107,35 @@ export function CreateConversationModal({
                 </p>
               ) : (
                 <ul className="space-y-1" role="list">
-                  {filteredProfiles.map((profile) => (
-                    <li key={profile.id}>
-                      <button
-                        type="button"
-                        onClick={() => onSelectUser(profile)}
-                        disabled={creatingForProfileId !== null}
-                        className="flex w-full items-center gap-3 rounded-xl content-px py-3 text-left transition-colors hover:bg-(--bg) focus:outline-none focus-visible:ring-2 focus-visible:ring-accent disabled:opacity-60 disabled:pointer-events-none"
-                      >
-                        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 border-(--border) bg-(--bg) font-display text-sm font-bold uppercase text-accent">
-                          {getInitial(profile.username)}
-                        </span>
-                        <span className="min-w-0 truncate font-display text-sm font-bold uppercase tracking-wider text-(--text)">
-                          {profile.username ?? FALLBACK_USERNAME}
-                        </span>
-                      </button>
-                    </li>
-                  ))}
+                  {filteredProfiles.map((profile) => {
+                    const isCreating = creatingForProfileId === profile.id;
+                    return (
+                      <li key={profile.id}>
+                        <button
+                          type="button"
+                          onClick={() => onSelectUser(profile)}
+                          disabled={creatingForProfileId !== null}
+                          className="flex w-full items-center gap-3 rounded-xl content-px py-3 text-left transition-colors hover:bg-(--bg) focus:outline-none focus-visible:ring-2 focus-visible:ring-accent disabled:opacity-60 disabled:pointer-events-none"
+                        >
+                          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 border-(--border) bg-(--bg) font-display text-sm font-bold uppercase text-accent">
+                            {isCreating ? (
+                              <LoadingSpinner size={20} aria-label="Création de la conversation…" />
+                            ) : (
+                              getInitial(profile.username)
+                            )}
+                          </span>
+                          <span className="min-w-0 truncate font-display text-sm font-bold uppercase tracking-wider text-(--text)">
+                            {profile.username ?? FALLBACK_USERNAME}
+                          </span>
+                          {isCreating ? (
+                            <span className="ml-auto shrink-0 text-xs text-(--text-muted)">
+                              Création…
+                            </span>
+                          ) : null}
+                        </button>
+                      </li>
+                    );
+                  })}
                 </ul>
               )}
             </div>

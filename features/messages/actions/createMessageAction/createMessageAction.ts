@@ -2,14 +2,17 @@
 
 import { revalidatePath } from "next/cache";
 import { createMessage } from "@/lib/supabase/CRUD";
-import { MAX_MESSAGE_LENGTH } from "@/features/messages/constants";
+import { parseCreateMessageFormData } from "@/features/messages/schemas";
 
 export async function createMessageAction(formData: FormData): Promise<{ error: string | null }> {
-  const conversationId = (formData.get("conversationId") as string)?.trim();
-  const text = (formData.get("text") as string)?.trim();
-  if (!conversationId || !text) return { error: "Données invalides" };
-  if (text.length > MAX_MESSAGE_LENGTH) return { error: "Message trop long" };
+  const parsed = parseCreateMessageFormData(formData);
+  if (!parsed.success) {
+    const first = parsed.error.flatten().fieldErrors;
+    const message = first.conversationId?.[0] ?? first.text?.[0] ?? "Données invalides";
+    return { error: message };
+  }
 
+  const { conversationId, text } = parsed.data;
   const { error } = await createMessage(conversationId, text);
   if (error) return { error };
 
