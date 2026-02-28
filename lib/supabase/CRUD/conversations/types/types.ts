@@ -4,7 +4,9 @@
 
 export type ConversationRow = {
   id: string;
-  user_1_id: string;
-  user_2_id: string;
+  type: "direct" | "group";
+  user_1_id: string | null;
+  user_2_id: string | null;
+  group_id: string | null;
   created_at: string;
 };

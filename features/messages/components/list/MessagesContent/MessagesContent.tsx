@@ -7,6 +7,7 @@ export function MessagesContent({
   profiles,
   modalOpen,
   setModalOpen,
+  onOpenCreateConversation,
 }: MessagesContentProps) {
   return (
     <div className="flex-1 min-h-0">
@@ -16,6 +17,7 @@ export function MessagesContent({
         profiles={profiles}
         modalOpen={modalOpen}
         setModalOpen={setModalOpen}
+        onOpenCreateConversation={onOpenCreateConversation}
       />
     </div>
   );

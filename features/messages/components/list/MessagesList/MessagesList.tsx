@@ -12,7 +12,9 @@ export function MessagesList({
   profiles,
   modalOpen,
   setModalOpen,
+  onOpenCreateConversation,
 }: MessagesContentProps) {
+  const handleOpenCreate = onOpenCreateConversation ?? (() => setModalOpen(true));
   return (
     <div className="flex h-full min-h-0 flex-col gap-4 content-px overflow-x-hidden lg:flex-row">
       <aside className="flex min-w-0 flex-1 flex-col overflow-x-hidden bg-surface lg:max-w-sm lg:rounded-r-xl min-h-0">
@@ -23,7 +25,7 @@ export function MessagesList({
         </div>
         <div className="flex-1 overflow-x-hidden overflow-y-auto content-px pb-2">
           {conversations.length === 0 ? (
-            <ConversationsEmptyCard onOpenCreateConversation={() => setModalOpen(true)} />
+            <ConversationsEmptyCard onOpenCreateConversation={handleOpenCreate} />
           ) : (
             conversations.map((conv, i) => (
               <Fragment key={conv.id}>

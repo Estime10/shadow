@@ -16,10 +16,11 @@ export type MessagesHeaderProps = {
   onDisappearSettingChange?: (minutes: MessageDisappearAfterMinutes) => void;
 };
 
-/** Liste + empty state : content page + état modal */
+/** Liste + empty state : content page + état modal + callback pour ouvrir la modale de choix (direct/groupe) */
 export type MessagesContentProps = MessagesPageContent & {
   modalOpen: boolean;
   setModalOpen: (open: boolean) => void;
+  onOpenCreateConversation?: () => void;
 };
 
 /** Empty state : profils + currentUser + modal (slice du page content + état) */

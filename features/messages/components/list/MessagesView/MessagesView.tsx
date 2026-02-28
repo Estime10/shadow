@@ -35,6 +35,7 @@ export function MessagesView(initial: MessagesPageContent) {
         profiles={profiles}
         modalOpen={directModalOpen}
         setModalOpen={setDirectModalOpen}
+        onOpenCreateConversation={() => setChoiceModalOpen(true)}
       />
       <ConversationTypeChoiceModal
         open={choiceModalOpen}

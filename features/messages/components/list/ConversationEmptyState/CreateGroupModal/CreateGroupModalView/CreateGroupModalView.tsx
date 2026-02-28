@@ -10,6 +10,8 @@ type CreateGroupModalViewProps = {
   open: boolean;
   onClose: () => void;
   canSubmit: boolean;
+  creating?: boolean;
+  error?: string | null;
   onCreateGroup: () => void;
   children: React.ReactNode;
 };
@@ -18,6 +20,8 @@ export function CreateGroupModalView({
   open,
   onClose,
   canSubmit,
+  creating = false,
+  error = null,
   onCreateGroup,
   children,
 }: CreateGroupModalViewProps) {
@@ -62,7 +66,16 @@ export function CreateGroupModalView({
           >
             <CreateGroupModalHeader onClose={onClose} />
             <div className="flex min-h-0 flex-1 flex-col p-4">{children}</div>
-            <CreateGroupModalFooter canSubmit={canSubmit} onSubmit={onCreateGroup} />
+            {error ? (
+              <p className="shrink-0 px-4 pb-2 text-sm text-red-600" role="alert">
+                {error}
+              </p>
+            ) : null}
+            <CreateGroupModalFooter
+              canSubmit={canSubmit}
+              creating={creating}
+              onSubmit={onCreateGroup}
+            />
           </motion.div>
         </motion.div>
       ) : null}

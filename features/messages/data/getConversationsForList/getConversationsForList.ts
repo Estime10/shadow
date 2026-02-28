@@ -30,20 +30,23 @@ export async function getConversationsForList(): Promise<{
   }
 
   const conversationIds = convRows.map((row) => row.id);
+  const otherIds = convRows.map((row) => getOtherUserIdFromConvRow(row, currentUserId));
+  const validOtherIds = otherIds.filter((id): id is string => id != null);
   const [profiles, lastMessagesMap] = await Promise.all([
-    getProfiles(convRows.map((row) => getOtherUserIdFromConvRow(row, currentUserId))),
+    getProfiles(validOtherIds),
     getLastMessagesForConversations(conversationIds),
   ]);
   const profileMap = new Map(profiles.map((p) => [p.id, p]));
 
   const conversationsWithMessages = convRows.map((row) => {
     const otherId = getOtherUserIdFromConvRow(row, currentUserId);
+    if (otherId == null) return null;
     const lastMessage = lastMessagesMap.get(row.id) ?? null;
     if (!lastMessage) return null;
     const name = getParticipantDisplayName(profileMap.get(otherId)?.username);
     return {
       id: row.id,
-      participant: { id: otherId, name, avatar: null },
+      participant: { id: otherId, name, avatar: null as null },
       lastMessage: buildLastMessageFromMessage(lastMessage, row.created_at),
       unreadCount: 0,
     };

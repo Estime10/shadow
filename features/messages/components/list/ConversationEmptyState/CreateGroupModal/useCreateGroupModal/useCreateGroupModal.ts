@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import type { Profile } from "@/lib/supabase/CRUD";
 import { useFilteredOtherProfiles } from "@/lib/hooks/messages";
+import { createGroupConversationAction } from "@/features/messages/actions";
 
 const MIN_PARTICIPANTS = 2;
 
@@ -22,6 +23,8 @@ export type UseCreateGroupModalReturn = {
   toggleSelection: (profileId: string) => void;
   selectedCountLabel: string | null;
   canSubmit: boolean;
+  creating: boolean;
+  error: string | null;
   handleCreateGroup: () => void;
 };
 
@@ -38,13 +41,18 @@ export function useCreateGroupModal({
 }: UseCreateGroupModalParams): UseCreateGroupModalReturn {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [creating, setCreating] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   const filteredProfiles = useFilteredOtherProfiles(profiles, currentUserId, searchQuery);
 
   useEffect(() => {
     if (open) {
-      const t = setTimeout(() => searchInputRef.current?.focus(), 0);
+      const t = setTimeout(() => {
+        setError(null);
+        searchInputRef.current?.focus();
+      }, 0);
       return () => clearTimeout(t);
     }
   }, [open]);
@@ -58,14 +66,22 @@ export function useCreateGroupModal({
     });
   }, []);
 
-  const handleCreateGroup = useCallback(() => {
+  const handleCreateGroup = useCallback(async () => {
     if (selectedIds.size < MIN_PARTICIPANTS) return;
-    // TODO: appeler l'action de création de groupe
+    setError(null);
+    setCreating(true);
+    const result = await createGroupConversationAction(Array.from(selectedIds));
+    setCreating(false);
+    if (result.error) {
+      setError(result.error);
+      return;
+    }
     onClose();
-  }, [selectedIds.size, onClose]);
+    window.location.assign(`/messages/${result.conversationId}`);
+  }, [selectedIds, onClose]);
 
   const selectedCountLabel = buildSelectedCountLabel(selectedIds.size);
-  const canSubmit = selectedIds.size >= MIN_PARTICIPANTS;
+  const canSubmit = selectedIds.size >= MIN_PARTICIPANTS && !creating;
 
   return {
     searchQuery,
@@ -76,6 +92,8 @@ export function useCreateGroupModal({
     toggleSelection,
     selectedCountLabel,
     canSubmit,
+    creating,
+    error,
     handleCreateGroup,
   };
 }

@@ -30,12 +30,14 @@ export function buildLastMessageFromMessage(
 }
 
 /**
- * Déduit l'id de l'autre participant à partir d'une ligne conversation (user_1_id, user_2_id).
+ * Déduit l'id de l'autre participant à partir d'une ligne conversation directe (user_1_id, user_2_id).
+ * Retourne null pour une conversation groupe ou si les champs sont null.
  */
 export function getOtherUserIdFromConvRow(
   row: ConversationRow,
   currentUserId: string | null
-): string {
+): string | null {
+  if (row.user_1_id == null || row.user_2_id == null) return null;
   return row.user_1_id === currentUserId ? row.user_2_id : row.user_1_id;
 }
 

@@ -14,3 +14,7 @@ export {
   otherUserIdSchema,
   type OtherUserIdSchemaOutput,
 } from "./otherUserIdSchema/otherUserIdSchema";
+export {
+  parseCreateGroupPayload,
+  type CreateGroupSchemaOutput,
+} from "./createGroupSchema/createGroupSchema";

@@ -2,6 +2,7 @@ import type { Conversation, Message } from "@/types/message";
 import {
   getCurrentUserProfile,
   getConversationById,
+  getGroupById,
   getMessages,
   getProfiles,
   getReadAtByMessageIds,
@@ -13,8 +14,8 @@ import {
 } from "../helpers/helpers";
 
 /**
- * Charge une conversation par id + messages + l'autre participant (nom) + readMessageIds.
- * Utilisé par la page thread /messages/[id].
+ * Charge une conversation par id + messages + participant (nom) + readMessageIds.
+ * Utilisé par la page thread /messages/[id]. Gère direct (1:1) et group.
  */
 export async function getConversationWithMessages(conversationId: string): Promise<{
   conversation: Conversation;
@@ -30,8 +31,35 @@ export async function getConversationWithMessages(conversationId: string): Promi
 
   if (!convRow) return null;
 
-  const otherId = getOtherUserIdFromConvRow(convRow, currentUserId);
   const disappearMinutes = profile?.messageDisappearAfterMinutes ?? 30;
+
+  if (convRow.type === "group" && convRow.group_id) {
+    const [group, messages] = await Promise.all([
+      getGroupById(convRow.group_id),
+      getMessages(
+        convRow.id,
+        100,
+        "asc",
+        currentUserId ? { currentUserId, disappearAfterMinutes: disappearMinutes } : undefined
+      ),
+    ]);
+    if (!group) return null;
+    const lastMessage = messages[messages.length - 1];
+    const conversation: Conversation = {
+      id: convRow.id,
+      participant: {
+        id: group.id,
+        name: group.name,
+        avatar: null,
+      },
+      lastMessage: buildLastMessageFromMessage(lastMessage, new Date().toISOString()),
+      unreadCount: 0,
+    };
+    return { conversation, messages, currentUserId, readMessageIds: [] };
+  }
+
+  const otherId = getOtherUserIdFromConvRow(convRow, currentUserId);
+  if (otherId == null) return null;
   const [profiles, messages] = await Promise.all([
     getProfiles([otherId]),
     getMessages(
@@ -55,7 +83,6 @@ export async function getConversationWithMessages(conversationId: string): Promi
     unreadCount: 0,
   };
 
-  // "Lu" sur mes messages envoyés = l'autre participant a lu → on charge les lus par otherId
   const readMessageIds =
     otherId && messages.length > 0
       ? Array.from(

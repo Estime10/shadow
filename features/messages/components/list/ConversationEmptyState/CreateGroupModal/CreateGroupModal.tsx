@@ -29,6 +29,8 @@ export function CreateGroupModal({
     toggleSelection,
     selectedCountLabel,
     canSubmit,
+    creating,
+    error,
     handleCreateGroup,
   } = useCreateGroupModal({ open, profiles, currentUserId, onClose });
 
@@ -37,6 +39,8 @@ export function CreateGroupModal({
       open={open}
       onClose={onClose}
       canSubmit={canSubmit}
+      creating={creating}
+      error={error}
       onCreateGroup={handleCreateGroup}
     >
       <ProfileSelectListContent

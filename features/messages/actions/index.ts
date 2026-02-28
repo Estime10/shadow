@@ -2,6 +2,7 @@ export { createMessageAction } from "./createMessageAction/createMessageAction";
 export { updateMessageAction } from "./updateMessageAction/updateMessageAction";
 export { deleteMessageAction } from "./deleteMessageAction/deleteMessageAction";
 export { findOrCreateConversationAction } from "./findOrCreateConversationAction/findOrCreateConversationAction";
+export { createGroupConversationAction } from "./createGroupConversationAction/createGroupConversationAction";
 export { getMessagesListDataAction } from "./getMessagesListDataAction/getMessagesListDataAction";
 export { getThreadDataAction } from "./getThreadDataAction/getThreadDataAction";
 export { markMessagesAsReadAction } from "./markMessagesAsReadAction/markMessagesAsReadAction";

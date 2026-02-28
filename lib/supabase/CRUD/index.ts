@@ -21,9 +21,12 @@ export type { MessageReadRow } from "./messageReads/types/types";
 
 export { deleteConversation } from "./conversations/deleteConversation/deleteConversation";
 export { findOrCreateConversation } from "./conversations/findOrCreateConversation/findOrCreateConversation";
+export { createGroupConversation } from "./conversations/createGroupConversation/createGroupConversation";
 export { getConversationById } from "./conversations/getConversationById/getConversationById";
 export { getConversationsForUser } from "./conversations/getConversationsForUser/getConversationsForUser";
 export type { ConversationRow } from "./conversations/types/types";
+export { getGroupById } from "./groups/getGroupById/getGroupById";
+export type { GroupRow } from "./groups/getGroupById/getGroupById";
 
 export { getMessages } from "./messages/getMessages/getMessages";
 export type { GetMessagesVisibilityOptions } from "./messages/getMessages/getMessages";
