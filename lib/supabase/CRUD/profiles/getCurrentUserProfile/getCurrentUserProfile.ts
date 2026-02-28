@@ -24,14 +24,17 @@ export async function getCurrentUserProfile(): Promise<CurrentUserProfile | null
 
   const { data: profile } = await supabase
     .from("users")
-    .select("id, username")
+    .select("id, username, message_disappear_after_minutes")
     .eq("id", user.id)
     .maybeSingle();
 
   const fallbackUsername = emailToDisplayName(user.email ?? undefined);
+  const disappearMinutes = profile?.message_disappear_after_minutes ?? 30;
+  const validMinutes = [15, 30, 45, 60].includes(disappearMinutes) ? disappearMinutes : 30;
 
   return {
     id: profile?.id ?? user.id,
     username: profile?.username?.trim() || fallbackUsername || null,
+    messageDisappearAfterMinutes: validMinutes,
   };
 }

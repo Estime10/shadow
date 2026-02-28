@@ -7,9 +7,13 @@ import type { MessagesPageContent, MessageIdPageContent } from "./content";
  * Pas d’alias : si un composant reçoit exactement le content, il utilise MessagesPageContent ou MessageIdPageContent.
  */
 
-/** Header liste : callback (état modal dans MessagesView) */
+import type { MessageDisappearAfterMinutes } from "@/lib/supabase/CRUD/profiles/types/types";
+
+/** Header liste : callback (état modal dans MessagesView) + réglage disparition après lecture */
 export type MessagesHeaderProps = {
   onOpenCreateConversation?: () => void;
+  messageDisappearAfterMinutes?: number;
+  onDisappearSettingChange?: (minutes: MessageDisappearAfterMinutes) => void;
 };
 
 /** Liste + empty state : content page + état modal */
@@ -44,8 +48,10 @@ export type MessageThreadProps = MessageIdPageContent & {
   threadCacheKey?: ThreadCacheKey;
 };
 
-/** Bulle = un message + currentUser (slice du content) + option threadCacheKey. */
+/** Bulle = un message + currentUser (slice du content) + option threadCacheKey + readByRecipient pour "Lu". */
 export type MessageBubbleProps = Pick<MessageIdPageContent, "currentUserId"> & {
   message: Message;
   threadCacheKey?: ThreadCacheKey;
+  /** true si l'autre participant a lu ce message (affiche "Lu" sur mes messages envoyés). */
+  readByRecipient?: boolean;
 };

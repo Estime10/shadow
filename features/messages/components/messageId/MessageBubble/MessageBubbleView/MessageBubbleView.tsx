@@ -10,6 +10,7 @@ type MessageBubbleViewProps = {
   messageId: string;
   conversationId: string;
   isSent: boolean;
+  readByRecipient?: boolean;
   menuOpen: boolean;
   onEdit: () => void;
   onMenuToggle: () => void;
@@ -23,6 +24,7 @@ export function MessageBubbleView({
   messageId,
   conversationId,
   isSent,
+  readByRecipient = false,
   menuOpen,
   onEdit,
   onMenuToggle,
@@ -41,6 +43,7 @@ export function MessageBubbleView({
       <MessageBubbleFooter
         createdAt={createdAt}
         isSent={isSent}
+        readByRecipient={readByRecipient}
         messageId={messageId}
         conversationId={conversationId}
         menuOpen={menuOpen}

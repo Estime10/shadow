@@ -1,15 +1,24 @@
 import { createClient } from "../../../server";
+import { getReadAtByMessageIds } from "../../messageReads/getReadAtByMessageIds/getReadAtByMessageIds";
 import { mapMessageRowToMessage } from "../mappers/mappers";
+import type { Message } from "@/types/message";
+
+export type GetMessagesVisibilityOptions = {
+  currentUserId: string;
+  disappearAfterMinutes: number;
+};
 
 /**
  * Récupère les messages d'une conversation (ou tous si conversationId non fourni, pour compat).
  * orderByCreatedAt: 'asc' = plus ancien en premier (thread), 'desc' = plus récent en premier (ex. dernier message pour la liste).
+ * Si options est fourni, les messages déjà lus par currentUserId et "expirés" (read_at + disappearAfterMinutes <= now) sont exclus.
  */
 export async function getMessages(
   conversationId: string | null,
   limit = 100,
-  orderByCreatedAt: "asc" | "desc" = "asc"
-) {
+  orderByCreatedAt: "asc" | "desc" = "asc",
+  options?: GetMessagesVisibilityOptions
+): Promise<Message[]> {
   const supabase = await createClient();
   const now = new Date().toISOString();
 
@@ -28,5 +37,31 @@ export async function getMessages(
 
   if (error) return [];
 
-  return (data ?? []).map(mapMessageRowToMessage);
+  const messages = (data ?? []).map(mapMessageRowToMessage);
+
+  if (!options || options.disappearAfterMinutes <= 0) return messages;
+
+  const messageIds = messages.map((m) => m.id);
+  const readAtMap = await getReadAtByMessageIds(messageIds, options.currentUserId);
+  const nowMs = Date.now();
+  const disappearMs = options.disappearAfterMinutes * 60 * 1000;
+
+  const filtered = messages.filter((m) => {
+    const readAt = readAtMap.get(m.id);
+    if (!readAt) return true;
+    return new Date(readAt).getTime() + disappearMs > nowMs;
+  });
+
+  const hidden = messages.length - filtered.length;
+  if (hidden > 0) {
+    const { log } = await import("@/lib/logger/logger");
+    log("messages", "getMessages: messages masqués (disparus après lecture)", {
+      conversationId,
+      total: messages.length,
+      hidden,
+      disappearAfterMinutes: options.disappearAfterMinutes,
+    });
+  }
+
+  return filtered;
 }

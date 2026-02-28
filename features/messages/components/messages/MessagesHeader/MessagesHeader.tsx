@@ -1,9 +1,14 @@
 "use client";
 
 import { MessageCirclePlus } from "lucide-react";
+import { MESSAGE_DISAPPEAR_MINUTES_OPTIONS } from "@/lib/supabase/CRUD/profiles/types/types";
 import type { MessagesHeaderProps } from "@/features/messages/types";
 
-export function MessagesHeader({ onOpenCreateConversation }: MessagesHeaderProps) {
+export function MessagesHeader({
+  onOpenCreateConversation,
+  messageDisappearAfterMinutes = 30,
+  onDisappearSettingChange,
+}: MessagesHeaderProps) {
   return (
     <div className="shrink-0 content-px py-3">
       <div className="flex items-center justify-between gap-4">
@@ -25,6 +30,29 @@ export function MessagesHeader({ onOpenCreateConversation }: MessagesHeaderProps
           </button>
         ) : null}
       </div>
+      {onDisappearSettingChange ? (
+        <div className="mt-3 flex flex-wrap items-center gap-2">
+          <label
+            htmlFor="message-disappear-setting"
+            className="font-display text-xs font-medium uppercase tracking-wider text-(--text-muted)"
+          >
+            Disparition après lecture :
+          </label>
+          <select
+            id="message-disappear-setting"
+            value={messageDisappearAfterMinutes}
+            onChange={(e) => onDisappearSettingChange(Number(e.target.value) as 15 | 30 | 45 | 60)}
+            className="rounded-lg border-2 border-(--border) bg-(--bg) px-2 py-1.5 font-display text-sm text-(--text) focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+            aria-label="Délai avant disparition du message après lecture"
+          >
+            {MESSAGE_DISAPPEAR_MINUTES_OPTIONS.map((min) => (
+              <option key={min} value={min}>
+                {min} min
+              </option>
+            ))}
+          </select>
+        </div>
+      ) : null}
     </div>
   );
 }

@@ -37,7 +37,11 @@ export async function findOrCreateConversation(
 
   const { data: inserted, error } = await supabase
     .from("conversations")
-    .insert({ user_1_id: user1, user_2_id: user2 })
+    .insert({
+      type: "direct",
+      user_1_id: user1,
+      user_2_id: user2,
+    })
     .select("id")
     .single();
 

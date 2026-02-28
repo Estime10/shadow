@@ -5,7 +5,12 @@ import type { MessageBubbleProps } from "@/features/messages/types";
 import { MessageBubbleEditForm } from "./MessageBubbleEditForm/MessageBubbleEditForm";
 import { MessageBubbleView } from "./MessageBubbleView/MessageBubbleView";
 
-export function MessageBubble({ message, currentUserId, threadCacheKey }: MessageBubbleProps) {
+export function MessageBubble({
+  message,
+  currentUserId,
+  readByRecipient = false,
+  threadCacheKey,
+}: MessageBubbleProps) {
   const isSent = currentUserId != null && message.senderId === currentUserId;
   const [menuOpen, setMenuOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -35,6 +40,7 @@ export function MessageBubble({ message, currentUserId, threadCacheKey }: Messag
         messageId={message.id}
         conversationId={message.conversationId}
         isSent={isSent}
+        readByRecipient={readByRecipient}
         menuOpen={menuOpen}
         onEdit={handleEdit}
         onMenuToggle={() => setMenuOpen((o) => !o)}

@@ -18,11 +18,13 @@ export function ConversationEmptyState({
 }: ConversationEmptyStateProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [creatingForProfileId, setCreatingForProfileId] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   const handleSelectUser = useCallback(
     async (profile: Profile) => {
       if (creatingForProfileId) return;
+      setError(null);
       setCreatingForProfileId(profile.id);
       let conversationId: string | null = null;
       let err: string | null = null;
@@ -33,10 +35,11 @@ export function ConversationEmptyState({
       } finally {
         setCreatingForProfileId(null);
       }
-      if (err || !conversationId) return;
+      if (err || !conversationId) {
+        setError(err ?? "Impossible de créer la conversation");
+        return;
+      }
       setModalOpen(false);
-      // router.replace() après une Server Action peut ne pas déclencher la navigation (Next.js).
-      // window.location garantit la redirection vers la conversation créée.
       window.location.assign(`/messages/${conversationId}`);
     },
     [setModalOpen, creatingForProfileId]
@@ -63,13 +66,17 @@ export function ConversationEmptyState({
 
       <CreateConversationModal
         open={modalOpen}
-        onClose={() => setModalOpen(false)}
+        onClose={() => {
+          setModalOpen(false);
+          setError(null);
+        }}
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
         searchInputRef={searchInputRef}
         filteredProfiles={filteredProfiles}
         onSelectUser={handleSelectUser}
         creatingForProfileId={creatingForProfileId}
+        error={error}
       />
     </>
   );

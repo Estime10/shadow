@@ -4,11 +4,13 @@ import { useRef, useEffect } from "react";
 import { MoreVertical } from "lucide-react";
 import type { ThreadCacheKey } from "@/features/messages/hooks";
 import { formatRelativeTime } from "@/lib/functions";
+import { log } from "@/lib/logger/logger";
 import { MessageBubbleMenu } from "../MessageBubbleMenu/MessageBubbleMenu";
 
 type MessageBubbleFooterProps = {
   createdAt: string;
   isSent: boolean;
+  readByRecipient?: boolean;
   messageId: string;
   conversationId: string;
   menuOpen: boolean;
@@ -21,6 +23,7 @@ type MessageBubbleFooterProps = {
 export function MessageBubbleFooter({
   createdAt,
   isSent,
+  readByRecipient = false,
   messageId,
   conversationId,
   menuOpen,
@@ -30,6 +33,13 @@ export function MessageBubbleFooter({
   threadCacheKey,
 }: MessageBubbleFooterProps) {
   const menuRef = useRef<HTMLDivElement>(null);
+  if (isSent) {
+    log("message-read", "MessageBubbleFooter: bulle envoyée", {
+      messageId,
+      readByRecipient,
+      afficheLu: isSent && readByRecipient,
+    });
+  }
 
   useEffect(() => {
     if (!menuOpen) return;
@@ -50,6 +60,14 @@ export function MessageBubbleFooter({
       <span className={`text-[10px] shrink-0 ${isSent ? "text-accent" : "text-(--text-muted)"}`}>
         {formatRelativeTime(createdAt)}
       </span>
+      {isSent && readByRecipient ? (
+        <span
+          className="shrink-0 text-[10px] font-medium uppercase tracking-wider text-(--text-muted)"
+          title="Lu"
+        >
+          Lu
+        </span>
+      ) : null}
       {isSent ? (
         <>
           <button
