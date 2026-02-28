@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { useSWRConfig } from "swr";
 import { updateMessageAction } from "@/features/messages/actions";
-import { MAX_MESSAGE_LENGTH } from "@/features/messages/constants";
-import type { ThreadCacheKey } from "@/features/messages/hooks";
+import { MAX_MESSAGE_LENGTH } from "@/features/messages/constants/constants";
+import type { ThreadCacheKey } from "@/lib/hooks/messages";
 
 const MESSAGES_LIST_KEY = "messages-list";
 

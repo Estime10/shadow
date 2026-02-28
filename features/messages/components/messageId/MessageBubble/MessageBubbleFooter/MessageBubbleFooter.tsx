@@ -2,7 +2,7 @@
 
 import { useRef, useEffect } from "react";
 import { MoreVertical } from "lucide-react";
-import type { ThreadCacheKey } from "@/features/messages/hooks";
+import type { ThreadCacheKey } from "@/lib/hooks/messages";
 import { formatRelativeTime } from "@/lib/functions";
 import { MessageBubbleMenu } from "../MessageBubbleMenu/MessageBubbleMenu";
 

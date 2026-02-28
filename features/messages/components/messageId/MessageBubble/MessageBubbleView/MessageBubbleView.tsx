@@ -1,6 +1,6 @@
 "use client";
 
-import type { ThreadCacheKey } from "@/features/messages/hooks";
+import type { ThreadCacheKey } from "@/lib/hooks/messages";
 import { MessageBubbleContent } from "../MessageBubbleContent/MessageBubbleContent";
 import { MessageBubbleFooter } from "../MessageBubbleFooter/MessageBubbleFooter";
 

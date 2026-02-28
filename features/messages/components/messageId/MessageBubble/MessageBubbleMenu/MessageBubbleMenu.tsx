@@ -5,7 +5,7 @@ import { Pencil, Trash2 } from "lucide-react";
 import { useSWRConfig } from "swr";
 import { ConfirmModal } from "@/components/ui/ConfirmModal/ConfirmModal";
 import { deleteMessageAction } from "@/features/messages/actions";
-import type { ThreadCacheKey } from "@/features/messages/hooks";
+import type { ThreadCacheKey } from "@/lib/hooks/messages";
 import type { MessageIdPageContent } from "@/features/messages/types";
 
 const MESSAGES_LIST_KEY = "messages-list";

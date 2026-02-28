@@ -1,10 +1,10 @@
-export { MessagesView } from "./messages/MessagesView/MessagesView";
-export { MessagesContent } from "./messages/MessagesContent/MessagesContent";
-export { MessagesHeader } from "./messages/MessagesHeader/MessagesHeader";
-export { MessagesList } from "./messages/MessagesList";
-export { ConversationListItem } from "./messages/ConversationListItem/ConversationListItem";
-export { ConversationEmptyState } from "./messages/ConversationEmptyState";
-export { ConversationsEmptyCard } from "./messages/MessagesList/ConversationsEmptyCard/ConversationsEmptyCard";
+export { MessagesView } from "./list/MessagesView/MessagesView";
+export { MessagesContent } from "./list/MessagesContent/MessagesContent";
+export { MessagesHeader } from "./list/MessagesHeader/MessagesHeader";
+export { MessagesList } from "./list/MessagesList/MessagesList";
+export { ConversationListItem } from "./list/ConversationListItem/ConversationListItem";
+export { ConversationEmptyState } from "./list/ConversationEmptyState/ConversationEmptyState";
+export { ConversationsEmptyCard } from "./list/MessagesList/ConversationsEmptyCard/ConversationsEmptyCard";
 export { MessageIdHeader } from "./messageId/MessageIdHeader/MessageIdHeader";
 export { MessageIdContent } from "./messageId/MessageIdContent/MessageIdContent";
 export { ThreadRealtime } from "./messageId/ThreadRealtime/ThreadRealtime";

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMessagesRealtime, type ThreadCacheKey } from "@/features/messages/hooks";
+import { useMessagesRealtime, type ThreadCacheKey } from "@/lib/hooks/messages";
 
 type ThreadRealtimeProps = {
   conversationId: string;

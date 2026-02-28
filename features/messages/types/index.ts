@@ -1,4 +1,4 @@
-export type { MessagesPageContent, MessageIdPageContent } from "./content";
+export type { MessagesPageContent, MessageIdPageContent } from "./content/content";
 export type {
   MessagesHeaderProps,
   MessagesContentProps,
@@ -7,4 +7,4 @@ export type {
   MessageIdHeaderProps,
   MessageThreadProps,
   MessageBubbleProps,
-} from "./props";
+} from "./props/props";

@@ -5,8 +5,8 @@ import { Send } from "lucide-react";
 import { useSWRConfig } from "swr";
 import { useKeyboardHeight } from "@/lib/hooks/useKeyboardHeight/useKeyboardHeight";
 import { createMessageAction } from "@/features/messages/actions";
-import { MAX_MESSAGE_LENGTH } from "@/features/messages/constants";
-import type { ThreadCacheKey } from "@/features/messages/hooks";
+import { MAX_MESSAGE_LENGTH } from "@/features/messages/constants/constants";
+import type { ThreadCacheKey } from "@/lib/hooks/messages";
 
 const MESSAGES_LIST_KEY = "messages-list";
 

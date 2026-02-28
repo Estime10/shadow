@@ -32,7 +32,7 @@ Dernière analyse : respect de la structure **orchestrateur à la racine + sous-
 - `features/messages/data/index.ts` – ré-export des fonctions data
 - `features/messages/types/index.ts` – ré-export des types
 - `features/messages/utils/index.ts` – ré-export des utils
-- `features/messages/hooks/index.ts` – ré-export des hooks
+- `lib/hooks/messages/` – hooks messages (useClientUserId, useFilteredOtherProfiles, useMessagesRealtime)
 - `features/messages/components/index.ts` – ré-export des composants (point d’entrée feature)
 - `features/messages/components/messages/ConversationEmptyState/index.ts` – ré-export de l’orchestrateur (pour `from "../ConversationEmptyState"`)
 - `features/messages/components/messages/MessagesList/index.ts` – idem

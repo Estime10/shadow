@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { MESSAGE_TRUNCATE_THRESHOLD } from "@/features/messages/constants";
+import { MESSAGE_TRUNCATE_THRESHOLD } from "@/features/messages/constants/constants";
 
 type MessageBubbleContentProps = {
   text: string;

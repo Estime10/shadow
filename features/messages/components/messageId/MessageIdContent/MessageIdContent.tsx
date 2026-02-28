@@ -1,4 +1,4 @@
-import type { ThreadCacheKey } from "@/features/messages/hooks";
+import type { ThreadCacheKey } from "@/lib/hooks/messages";
 import { MessageThread } from "../MessageThread/MessageThread";
 import type { MessageIdPageContent } from "@/features/messages/types";
 
