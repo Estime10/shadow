@@ -1,4 +1,5 @@
 import { SectionWithTitle } from "@/components/layout/SectionWithTitle/SectionWithTitle";
+import { CalendarView } from "@/features/calendar/components";
 import { createPageMetadata } from "@/lib/metadata/createPageMetadata";
 
 export const metadata = createPageMetadata({
@@ -9,7 +10,7 @@ export const metadata = createPageMetadata({
 export default function CalendarPage() {
   return (
     <SectionWithTitle title="Calendrier">
-      Événements partagés et rappels. (À brancher sur Supabase.)
+      <CalendarView />
     </SectionWithTitle>
   );
 }
