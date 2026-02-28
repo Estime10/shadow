@@ -5,7 +5,6 @@ import useSWR from "swr";
 import { MessageIdHeader, MessageIdContent, ThreadRealtime } from "@/features/messages/components";
 import { getThreadDataAction, markMessagesAsReadAction } from "@/features/messages/actions";
 import { ROOM_CONVERSATION_ID } from "@/features/messages/constants";
-import { log } from "@/lib/logger/logger";
 import type { MessageIdPageContent } from "@/features/messages/types";
 
 export type ThreadWithCacheProps = {
@@ -49,23 +48,7 @@ export function ThreadWithCache({ initial, conversationId, withUserId }: ThreadW
     const ids = content.messages
       .filter((m) => m.senderId !== content.currentUserId)
       .map((m) => m.id);
-    log("message-read", "ThreadWithCache: marquer comme lu (messages reçus)", {
-      count: ids.length,
-      conversationId,
-    });
-    markMessagesAsReadAction(ids).then((result) => {
-      log("message-read", "ThreadWithCache: markMessagesAsReadAction result", {
-        ok: result.ok,
-        error: result.ok ? undefined : result.error,
-      });
-      if (!result.ok) {
-        log(
-          "message-read",
-          "ThreadWithCache: persistance « lu » en échec — exécuter la migration 005_message_reads.sql dans Supabase.",
-          { error: result.error }
-        );
-      }
-    });
+    void markMessagesAsReadAction(ids);
   }, [content.currentUserId, content.messages, conversationId, threadKey, mutate]);
 
   return (

@@ -1,5 +1,4 @@
 import { createClient } from "../../../server";
-import { log } from "@/lib/logger/logger";
 
 /**
  * Marque un message comme lu pour l'utilisateur connecté.
@@ -15,7 +14,6 @@ export async function insertMessageRead(
   } = await supabase.auth.getUser();
 
   if (authError || !user) {
-    log("message-read", "insertMessageRead: non authentifié");
     return { ok: false, error: "Non authentifié" };
   }
 
@@ -25,14 +23,9 @@ export async function insertMessageRead(
   });
 
   if (error) {
-    if (error.code === "23505") {
-      log("message-read", "insertMessageRead: déjà lu (ignoré)", { messageId });
-      return { ok: true, error: null };
-    }
-    log("message-read", "insertMessageRead: erreur", { messageId, error: error.message });
+    if (error.code === "23505") return { ok: true, error: null };
     return { ok: false, error: error.message };
   }
 
-  log("message-read", "insertMessageRead: ok", { messageId, userId: user.id });
   return { ok: true, error: null };
 }

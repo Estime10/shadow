@@ -1,5 +1,4 @@
 import { createClient } from "../../../server";
-import { log } from "@/lib/logger/logger";
 import type { MessageDisappearAfterMinutes } from "../types/types";
 
 const ALLOWED_MINUTES: MessageDisappearAfterMinutes[] = [15, 30, 45, 60];
@@ -12,7 +11,6 @@ export async function updateUserMessageDisappearSetting(
   minutes: MessageDisappearAfterMinutes
 ): Promise<{ ok: boolean; error: string | null }> {
   if (!ALLOWED_MINUTES.includes(minutes)) {
-    log("messages-settings", "updateUserMessageDisappearSetting: valeur invalide", { minutes });
     return { ok: false, error: "Valeur invalide (15, 30, 45 ou 60)" };
   }
 
@@ -23,7 +21,6 @@ export async function updateUserMessageDisappearSetting(
   } = await supabase.auth.getUser();
 
   if (authError || !user) {
-    log("messages-settings", "updateUserMessageDisappearSetting: non authentifié");
     return { ok: false, error: "Non authentifié" };
   }
 
@@ -33,9 +30,7 @@ export async function updateUserMessageDisappearSetting(
     .eq("id", user.id);
 
   if (error) {
-    log("messages-settings", "updateUserMessageDisappearSetting: erreur", { error: error.message });
     return { ok: false, error: error.message };
   }
-  log("messages-settings", "updateUserMessageDisappearSetting: ok", { userId: user.id, minutes });
   return { ok: true, error: null };
 }

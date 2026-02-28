@@ -52,16 +52,5 @@ export async function getMessages(
     return new Date(readAt).getTime() + disappearMs > nowMs;
   });
 
-  const hidden = messages.length - filtered.length;
-  if (hidden > 0) {
-    const { log } = await import("@/lib/logger/logger");
-    log("messages", "getMessages: messages masqués (disparus après lecture)", {
-      conversationId,
-      total: messages.length,
-      hidden,
-      disappearAfterMinutes: options.disappearAfterMinutes,
-    });
-  }
-
   return filtered;
 }

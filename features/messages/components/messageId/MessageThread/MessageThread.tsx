@@ -1,6 +1,5 @@
 import { MessageBubble } from "../MessageBubble/MessageBubble";
 import { MessageInput } from "../MessageInput/MessageInput";
-import { log } from "@/lib/logger/logger";
 import { EMPTY_LAST_MESSAGE_TEXT } from "@/features/messages/constants";
 import type { MessageThreadProps } from "@/features/messages/types";
 import { getInitial } from "@/features/messages/utils";
@@ -13,15 +12,6 @@ export function MessageThread({
   showHeader = true,
   threadCacheKey,
 }: MessageThreadProps) {
-  const sentCount = messages.filter(
-    (m) => currentUserId != null && m.senderId === currentUserId
-  ).length;
-  log("message-read", "MessageThread: readMessageIds reçus", {
-    readMessageIdsLength: readMessageIds.length,
-    readMessageIdsSample: readMessageIds.slice(0, 5),
-    messagesCount: messages.length,
-    sentMessagesCount: sentCount,
-  });
   return (
     <div className="flex min-h-0 flex-1 flex-col bg-(--bg)">
       {showHeader ? (

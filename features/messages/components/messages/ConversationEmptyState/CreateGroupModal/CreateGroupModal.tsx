@@ -1,44 +1,67 @@
 "use client";
 
-import { useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { X } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ANIMATION_DURATION_MODAL, ANIMATION_EASING } from "@/lib/config/animations";
 import type { Profile } from "@/lib/supabase/CRUD";
+import { useFilteredOtherProfiles } from "@/features/messages/hooks";
 import { ProfileSelectListContent } from "@/features/messages/components/ProfileSelectListContent/ProfileSelectListContent";
 import { getInitial } from "@/features/messages/utils";
 import { FALLBACK_USERNAME } from "@/features/messages/constants";
 
-type CreateConversationModalProps = {
+type CreateGroupModalProps = {
   open: boolean;
   onClose: () => void;
-  searchQuery: string;
-  onSearchChange: (value: string) => void;
-  searchInputRef: React.RefObject<HTMLInputElement | null>;
-  filteredProfiles: Profile[];
-  onSelectUser: (profile: Profile) => void | Promise<void>;
-  creatingForProfileId?: string | null;
-  error?: string | null;
+  profiles: Profile[];
+  currentUserId: string | null;
 };
 
-export function CreateConversationModal({
+export function CreateGroupModal({
   open,
   onClose,
-  searchQuery,
-  onSearchChange,
-  searchInputRef,
-  filteredProfiles,
-  onSelectUser,
-  creatingForProfileId = null,
-  error = null,
-}: CreateConversationModalProps) {
+  profiles,
+  currentUserId,
+}: CreateGroupModalProps) {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const overlayRef = useRef<HTMLDivElement>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
   const reduced = useReducedMotion();
   const duration = reduced ? 0 : ANIMATION_DURATION_MODAL;
+
+  const filteredProfiles = useFilteredOtherProfiles(profiles, currentUserId, searchQuery);
+
+  useEffect(() => {
+    if (open) {
+      const t = setTimeout(() => searchInputRef.current?.focus(), 0);
+      return () => clearTimeout(t);
+    }
+  }, [open]);
 
   function handleOverlayClick(e: React.MouseEvent) {
     if (e.target === overlayRef.current) onClose();
   }
+
+  function toggleSelection(profileId: string) {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(profileId)) next.delete(profileId);
+      else next.add(profileId);
+      return next;
+    });
+  }
+
+  function handleCreateGroup() {
+    if (selectedIds.size < 2) return;
+    // TODO: appeler l'action de création de groupe
+    onClose();
+  }
+
+  const selectedCountLabel =
+    selectedIds.size > 0
+      ? `${selectedIds.size} participant${selectedIds.size > 1 ? "s" : ""} sélectionné${selectedIds.size > 1 ? "s" : ""}`
+      : null;
 
   return (
     <AnimatePresence>
@@ -47,7 +70,7 @@ export function CreateConversationModal({
           ref={overlayRef}
           role="dialog"
           aria-modal="true"
-          aria-labelledby="create-conversation-modal-title"
+          aria-labelledby="create-group-modal-title"
           className="fixed inset-0 z-10000 grid min-h-dvh place-items-center p-4"
           onClick={handleOverlayClick}
           initial={{ opacity: 0 }}
@@ -74,10 +97,10 @@ export function CreateConversationModal({
             <div className="shrink-0 border-b-2 border-(--border) p-4">
               <div className="flex items-center justify-between gap-2">
                 <h2
-                  id="create-conversation-modal-title"
+                  id="create-group-modal-title"
                   className="font-display text-lg font-bold uppercase tracking-wider text-(--text)"
                 >
-                  Créer une conversation
+                  Créer un groupe
                 </h2>
                 <button
                   type="button"
@@ -91,17 +114,28 @@ export function CreateConversationModal({
             </div>
             <div className="flex min-h-0 flex-1 flex-col p-4">
               <ProfileSelectListContent
-                mode="direct"
+                mode="group"
                 searchQuery={searchQuery}
-                onSearchChange={onSearchChange}
+                onSearchChange={setSearchQuery}
                 searchInputRef={searchInputRef}
                 filteredProfiles={filteredProfiles}
                 getInitial={getInitial}
                 fallbackUsername={FALLBACK_USERNAME}
-                onSelectUser={onSelectUser}
-                creatingForProfileId={creatingForProfileId}
-                error={error}
+                selectedIds={selectedIds}
+                onToggleSelection={toggleSelection}
+                selectedCountLabel={selectedCountLabel}
               />
+            </div>
+            <div className="shrink-0 border-t-2 border-(--border) p-4">
+              <button
+                type="button"
+                onClick={handleCreateGroup}
+                disabled={selectedIds.size < 2}
+                title={selectedIds.size < 2 ? "Sélectionnez au moins 2 participants" : undefined}
+                className="w-full rounded-xl border-2 border-accent bg-(--accent)/15 py-3 font-display text-sm font-bold uppercase tracking-wider text-accent transition-colors hover:bg-(--accent)/25 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent disabled:border-(--border) disabled:bg-(--bg) disabled:text-(--text-muted) disabled:opacity-60"
+              >
+                Créer le groupe
+              </button>
             </div>
           </motion.div>
         </motion.div>

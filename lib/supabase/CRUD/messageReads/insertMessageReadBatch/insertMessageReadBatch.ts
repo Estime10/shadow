@@ -1,5 +1,4 @@
 import { createClient } from "../../../server";
-import { log } from "@/lib/logger/logger";
 
 /**
  * Marque plusieurs messages comme lus pour l'utilisateur connecté.
@@ -15,7 +14,6 @@ export async function insertMessageReadBatch(
   } = await supabase.auth.getUser();
 
   if (authError || !user) {
-    log("message-read", "insertMessageReadBatch: non authentifié");
     return { ok: false, error: "Non authentifié", inserted: 0 };
   }
 
@@ -34,18 +32,9 @@ export async function insertMessageReadBatch(
     .select("id");
 
   if (error) {
-    log("message-read", "insertMessageReadBatch: erreur", {
-      error: error.message,
-      count: messageIds.length,
-    });
     return { ok: false, error: error.message, inserted: 0 };
   }
 
   const inserted = data?.length ?? 0;
-  log("message-read", "insertMessageReadBatch: ok", {
-    userId: user.id,
-    messageCount: messageIds.length,
-    inserted,
-  });
   return { ok: true, error: null, inserted };
 }
