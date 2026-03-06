@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import useSWR from "swr";
-import { useClientUserId, useMessagesRealtime } from "@/lib/hooks/messages";
+import { useClientUserId } from "../useClientUserId/useClientUserId";
+import { useMessagesRealtime } from "../useMessagesRealtime/useMessagesRealtime";
 import {
   getMessagesListDataAction,
   updateUserMessageDisappearSettingAction,

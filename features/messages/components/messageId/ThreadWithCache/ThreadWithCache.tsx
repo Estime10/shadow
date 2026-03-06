@@ -1,7 +1,7 @@
 "use client";
 
 import { MessageIdHeader, MessageIdContent, ThreadRealtime } from "@/features/messages/components";
-import { useThreadWithCache } from "./useThreadWithCache/useThreadWithCache";
+import { useThreadWithCache } from "@/lib/hooks/messages";
 import type { MessageIdPageContent } from "@/features/messages/types";
 
 export type ThreadWithCacheProps = {

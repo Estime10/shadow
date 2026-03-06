@@ -1,6 +1,13 @@
+import { MONTH_LABELS } from "@/features/calendar/constants";
+
 /**
  * Utilitaires dates pour le calendrier (mois, grille, même jour).
  */
+
+/** Ex. "24 Février 2026" pour l’affichage dans les modales. */
+export function formatDateLabel(date: Date): string {
+  return `${date.getDate()} ${MONTH_LABELS[date.getMonth()]} ${date.getFullYear()}`;
+}
 
 export function getStartOfMonth(date: Date): Date {
   return new Date(date.getFullYear(), date.getMonth(), 1);

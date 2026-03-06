@@ -1,72 +1,33 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
 import { MonthNav } from "../MonthNav/MonthNav";
 import { MonthGrid } from "../MonthGrid/MonthGrid";
 import { EventCarousel } from "../EventCarousel/EventCarousel";
 import { AddEventModal } from "../AddEventModal/AddEventModal";
 import { EventDetailModal } from "../EventDetailModal/EventDetailModal";
-import { MOCK_EVENTS } from "@/features/calendar/data/mockEvents";
-import type { CalendarEvent } from "@/features/calendar/types";
-import {
-  filterEventsByMonth,
-  sortEventsByDate,
-  getEventsCountByDay,
-} from "@/features/calendar/utils";
+import { useCalendarView } from "@/lib/hooks/calendar/useCalendarView";
 
 export function CalendarView() {
-  const now = new Date();
-  const [events, setEvents] = useState<CalendarEvent[]>(MOCK_EVENTS);
-  const [current, setCurrent] = useState({ year: now.getFullYear(), month: now.getMonth() });
-  const [modalOpen, setModalOpen] = useState(false);
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [viewEvent, setViewEvent] = useState<CalendarEvent | null>(null);
-  const [viewModalOpen, setViewModalOpen] = useState(false);
-
-  const eventsInMonth = useMemo(
-    () => sortEventsByDate(filterEventsByMonth(events, current.year, current.month)),
-    [events, current.year, current.month]
-  );
-
-  const eventsByDay = useMemo(
-    () => getEventsCountByDay(filterEventsByMonth(events, current.year, current.month)),
-    [events, current.year, current.month]
-  );
-
-  const handleDayClick = useCallback((date: Date) => {
-    setSelectedDate(new Date(date.getFullYear(), date.getMonth(), date.getDate()));
-    setModalOpen(true);
-  }, []);
-
-  const handleAddEvent = useCallback(
-    (event: CalendarEvent) => {
-      setEvents((prev) => [...prev, event]);
-    },
-    [setEvents]
-  );
-
-  const handlePrev = () => {
-    setCurrent((prev) => {
-      if (prev.month === 0) return { year: prev.year - 1, month: 11 };
-      return { year: prev.year, month: prev.month - 1 };
-    });
-  };
-
-  const handleNext = () => {
-    setCurrent((prev) => {
-      if (prev.month === 11) return { year: prev.year + 1, month: 0 };
-      return { year: prev.year, month: prev.month + 1 };
-    });
-  };
-
-  const handleEventClick = useCallback((event: CalendarEvent) => {
-    setViewEvent(event);
-    setViewModalOpen(true);
-  }, []);
+  const {
+    now,
+    current,
+    eventsInMonth,
+    eventsByDay,
+    modalOpen,
+    selectedDate,
+    viewModalOpen,
+    viewEvent,
+    handleDayClick,
+    handleAddEvent,
+    handlePrev,
+    handleNext,
+    handleEventClick,
+    closeAddModal,
+    closeViewModal,
+  } = useCalendarView();
 
   return (
     <div className="flex flex-1 flex-col min-h-0">
-      {/* Mobile : calendrier limité à ~50% de la hauteur */}
       <section className="shrink-0 max-h-[50vh] lg:max-h-none flex flex-col min-h-0">
         <MonthNav
           year={current.year}
@@ -88,15 +49,11 @@ export function CalendarView() {
         </h2>
         <EventCarousel events={eventsInMonth} onEventClick={handleEventClick} />
       </section>
-      <EventDetailModal
-        open={viewModalOpen}
-        onClose={() => setViewModalOpen(false)}
-        event={viewEvent}
-      />
+      <EventDetailModal open={viewModalOpen} onClose={closeViewModal} event={viewEvent} />
       {selectedDate && (
         <AddEventModal
           open={modalOpen}
-          onClose={() => setModalOpen(false)}
+          onClose={closeAddModal}
           selectedDate={selectedDate}
           onSubmit={handleAddEvent}
         />

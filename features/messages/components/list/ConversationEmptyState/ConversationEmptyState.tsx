@@ -2,8 +2,7 @@
 
 import type { ConversationEmptyStateProps } from "@/features/messages/types";
 import { EMPTY_LAST_MESSAGE_TEXT } from "@/features/messages/constants/constants";
-import { useConversationEmptyState } from "./useConversationEmptyState/useConversationEmptyState";
-import { useCreateConversationModal } from "./useCreateConversationModal/useCreateConversationModal";
+import { useConversationEmptyState, useCreateConversationModal } from "@/lib/hooks/messages";
 import { CreateConversationModal } from "./CreateConversationModal/CreateConversationModal";
 
 export function ConversationEmptyState({

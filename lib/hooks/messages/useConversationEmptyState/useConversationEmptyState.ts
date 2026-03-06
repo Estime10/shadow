@@ -3,7 +3,7 @@
 import { useState, useCallback, useRef } from "react";
 import type { Profile } from "@/lib/supabase/CRUD";
 import { findOrCreateConversationAction } from "@/features/messages/actions";
-import { useFilteredOtherProfiles } from "@/lib/hooks/messages";
+import { useFilteredOtherProfiles } from "../useFilteredOtherProfiles/useFilteredOtherProfiles";
 
 type UseConversationEmptyStateParams = {
   profiles: { id: string; username: string | null }[];

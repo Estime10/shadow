@@ -1,6 +1,27 @@
 import type { CalendarEvent } from "@/features/calendar/types";
 import { toDateOnlyISO } from "./dateUtils";
 
+export type AddEventFormValues = {
+  title: string;
+  description: string;
+  time: string;
+};
+
+/** Construit un CalendarEvent à partir de la date sélectionnée et des champs du formulaire. */
+export function buildEventFromForm(selectedDate: Date, form: AddEventFormValues): CalendarEvent {
+  const [hours, minutes] = form.time.split(":").map(Number);
+  const eventDate = new Date(selectedDate);
+  eventDate.setHours(hours, minutes, 0, 0);
+  return {
+    id: crypto.randomUUID(),
+    title: form.title.trim(),
+    description: form.description.trim() || null,
+    eventDate: eventDate.toISOString(),
+    createdBy: "current-user",
+    createdAt: new Date().toISOString(),
+  };
+}
+
 export function filterEventsByMonth(
   events: CalendarEvent[],
   year: number,

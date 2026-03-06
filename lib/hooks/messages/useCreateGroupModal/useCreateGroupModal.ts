@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import type { Profile } from "@/lib/supabase/CRUD";
-import { useFilteredOtherProfiles } from "@/lib/hooks/messages";
+import { useFilteredOtherProfiles } from "../useFilteredOtherProfiles/useFilteredOtherProfiles";
 import { createGroupConversationAction } from "@/features/messages/actions";
 
 const MIN_PARTICIPANTS = 2;

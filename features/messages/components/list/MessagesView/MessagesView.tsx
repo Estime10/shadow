@@ -4,7 +4,7 @@ import { MessagesHeader } from "../MessagesHeader/MessagesHeader";
 import { MessagesContent } from "../MessagesContent/MessagesContent";
 import { ConversationTypeChoiceModal } from "../ConversationEmptyState/ConversationTypeChoiceModal/ConversationTypeChoiceModal";
 import { CreateGroupModal } from "../ConversationEmptyState/CreateGroupModal/CreateGroupModal";
-import { useMessagesView } from "./useMessagesView/useMessagesView";
+import { useMessagesView } from "@/lib/hooks/messages";
 import type { MessagesPageContent } from "@/features/messages/types";
 
 export function MessagesView(initial: MessagesPageContent) {

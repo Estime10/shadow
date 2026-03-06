@@ -8,5 +8,12 @@ export {
   toDateOnlyISO,
   formatEventTime,
   formatEventDateTime,
+  formatDateLabel,
 } from "./dateUtils";
-export { filterEventsByMonth, sortEventsByDate, getEventsCountByDay } from "./eventUtils";
+export {
+  filterEventsByMonth,
+  sortEventsByDate,
+  getEventsCountByDay,
+  buildEventFromForm,
+  type AddEventFormValues,
+} from "./eventUtils";
