@@ -6,8 +6,13 @@ import { EventCarousel } from "../EventCarousel/EventCarousel";
 import { AddEventModal } from "../AddEventModal/AddEventModal";
 import { EventDetailModal } from "../EventDetailModal/EventDetailModal";
 import { useCalendarView } from "@/lib/hooks/calendar/useCalendarView";
+import type { CalendarEvent } from "@/features/calendar/types";
 
-export function CalendarView() {
+export type CalendarViewProps = {
+  initialEvents: CalendarEvent[];
+};
+
+export function CalendarView({ initialEvents }: CalendarViewProps) {
   const {
     now,
     current,
@@ -24,7 +29,7 @@ export function CalendarView() {
     handleEventClick,
     closeAddModal,
     closeViewModal,
-  } = useCalendarView();
+  } = useCalendarView(initialEvents);
 
   return (
     <div className="flex flex-1 flex-col min-h-0">

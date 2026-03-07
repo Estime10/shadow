@@ -1,13 +1,16 @@
 "use client";
 
 import { useState, useMemo, useCallback } from "react";
-import { MOCK_EVENTS } from "@/features/calendar/data/mockEvents";
+import useSWR from "swr";
+import { createEventAction, getCalendarEventsAction } from "@/features/calendar/actions";
 import type { CalendarEvent } from "@/features/calendar/types";
 import {
   filterEventsByMonth,
   sortEventsByDate,
   getEventsCountByDay,
 } from "@/features/calendar/utils";
+
+const CALENDAR_EVENTS_KEY = "calendar-events";
 
 export type CalendarViewState = {
   now: Date;
@@ -32,9 +35,13 @@ export type CalendarViewActions = {
 
 export type UseCalendarViewReturn = CalendarViewState & CalendarViewActions;
 
-export function useCalendarView(): UseCalendarViewReturn {
+export function useCalendarView(initialEvents: CalendarEvent[]): UseCalendarViewReturn {
   const now = new Date();
-  const [events, setEvents] = useState<CalendarEvent[]>(MOCK_EVENTS);
+  const { data, mutate } = useSWR<CalendarEvent[]>(CALENDAR_EVENTS_KEY, getCalendarEventsAction, {
+    fallbackData: initialEvents,
+  });
+  const events = data ?? initialEvents;
+
   const [current, setCurrent] = useState({
     year: now.getFullYear(),
     month: now.getMonth(),
@@ -60,10 +67,15 @@ export function useCalendarView(): UseCalendarViewReturn {
   }, []);
 
   const handleAddEvent = useCallback(
-    (event: CalendarEvent) => {
-      setEvents((prev) => [...prev, event]);
+    async (event: CalendarEvent) => {
+      const { error } = await createEventAction({
+        title: event.title,
+        description: event.description,
+        eventDate: event.eventDate,
+      });
+      if (!error) void mutate();
     },
-    [setEvents]
+    [mutate]
   );
 
   const handlePrev = useCallback(() => {

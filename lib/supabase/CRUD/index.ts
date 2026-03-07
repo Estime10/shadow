@@ -37,3 +37,11 @@ export { deleteMessage } from "./messages/deleteMessage/deleteMessage";
 export { mapMessageRowToMessage } from "./messages/mappers/mappers";
 export { ROOM_CONVERSATION_ID } from "./messages/types/types";
 export type { MessageRow } from "./messages/types/types";
+
+export { getEvents } from "./events/getEvents/getEvents";
+export { createEvent } from "./events/createEvent/createEvent";
+export { updateEvent } from "./events/updateEvent/updateEvent";
+export { deleteEvent } from "./events/deleteEvent/deleteEvent";
+export type { CreateEventParams } from "./events/createEvent/createEvent";
+export type { UpdateEventParams } from "./events/updateEvent/updateEvent";
+export type { EventRow } from "./events/types/types";
