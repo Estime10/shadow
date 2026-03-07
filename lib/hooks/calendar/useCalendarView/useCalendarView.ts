@@ -31,6 +31,8 @@ export type CalendarViewActions = {
   handleEventClick: (event: CalendarEvent) => void;
   closeAddModal: () => void;
   closeViewModal: () => void;
+  handleEventDeleted: () => void;
+  handleEventUpdated: () => void;
 };
 
 export type UseCalendarViewReturn = CalendarViewState & CalendarViewActions;
@@ -105,6 +107,15 @@ export function useCalendarView(initialEvents: CalendarEvent[]): UseCalendarView
     setViewModalOpen(false);
   }, []);
 
+  const handleEventDeleted = useCallback(() => {
+    setViewModalOpen(false);
+    void mutate();
+  }, [mutate]);
+
+  const handleEventUpdated = useCallback(() => {
+    void mutate();
+  }, [mutate]);
+
   return {
     now,
     current,
@@ -121,5 +132,7 @@ export function useCalendarView(initialEvents: CalendarEvent[]): UseCalendarView
     handleEventClick,
     closeAddModal,
     closeViewModal,
+    handleEventDeleted,
+    handleEventUpdated,
   };
 }

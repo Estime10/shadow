@@ -29,6 +29,8 @@ export function CalendarView({ initialEvents }: CalendarViewProps) {
     handleEventClick,
     closeAddModal,
     closeViewModal,
+    handleEventDeleted,
+    handleEventUpdated,
   } = useCalendarView(initialEvents);
 
   return (
@@ -54,7 +56,13 @@ export function CalendarView({ initialEvents }: CalendarViewProps) {
         </h2>
         <EventCarousel events={eventsInMonth} onEventClick={handleEventClick} />
       </section>
-      <EventDetailModal open={viewModalOpen} onClose={closeViewModal} event={viewEvent} />
+      <EventDetailModal
+        open={viewModalOpen}
+        onClose={closeViewModal}
+        event={viewEvent}
+        onDeleteSuccess={handleEventDeleted}
+        onUpdateSuccess={handleEventUpdated}
+      />
       {selectedDate && (
         <AddEventModal
           open={modalOpen}
