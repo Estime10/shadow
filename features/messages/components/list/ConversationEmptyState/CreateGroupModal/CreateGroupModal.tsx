@@ -3,7 +3,7 @@
 import type { Profile } from "@/lib/supabase/CRUD";
 import { ProfileSelectListContent } from "@/features/messages/components/ProfileSelectListContent/ProfileSelectListContent";
 import { getInitial } from "@/features/messages/utils";
-import { FALLBACK_USERNAME } from "@/features/messages/constants/constants";
+import { FALLBACK_USERNAME } from "@/features/messages/constants";
 import { useCreateGroupModal } from "@/lib/hooks/messages";
 import { CreateGroupModalView } from "./CreateGroupModalView/CreateGroupModalView";
 

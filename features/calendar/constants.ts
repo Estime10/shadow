@@ -18,3 +18,8 @@ export const MONTH_LABELS = [
   "Novembre",
   "Décembre",
 ] as const;
+
+/** Longueur max titre d'événement (côté serveur + client). */
+export const MAX_EVENT_TITLE_LENGTH = 200;
+/** Longueur max description d'événement. */
+export const MAX_EVENT_DESCRIPTION_LENGTH = 2000;

@@ -1,12 +1,14 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { PATHS } from "@/lib/config/paths";
 import { deleteEvent } from "@/lib/supabase/CRUD";
+import { parseDeleteEventParams } from "@/features/calendar/schemas";
 
-export async function deleteEventAction(
-  eventId: string
-): Promise<{ ok: boolean; error: string | null }> {
-  const result = await deleteEvent(eventId);
-  if (result.ok) revalidatePath("/calendar");
-  return result;
+export async function deleteEventAction(eventId: unknown): Promise<{ error: string | null }> {
+  const parsed = parseDeleteEventParams(eventId);
+  if (!parsed.success) return { error: "ID événement invalide" };
+  const result = await deleteEvent(parsed.data);
+  if (!result.error) revalidatePath(PATHS.CALENDAR);
+  return { error: result.error };
 }

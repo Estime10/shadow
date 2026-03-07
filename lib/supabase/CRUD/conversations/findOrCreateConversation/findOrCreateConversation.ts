@@ -1,4 +1,5 @@
 import { createClient } from "../../../server";
+import { requireUser } from "../../../requireUser";
 
 /**
  * Trouve ou crée une conversation entre currentUser et otherUserId.
@@ -8,15 +9,9 @@ export async function findOrCreateConversation(
   otherUserId: string
 ): Promise<{ conversationId: string; error: string | null }> {
   const supabase = await createClient();
-  const {
-    data: { user },
-    error: authError,
-  } = await supabase.auth.getUser();
-
-  if (authError || !user) {
-    return { conversationId: "", error: "Non authentifié" };
-  }
-
+  const auth = await requireUser(supabase);
+  if ("error" in auth) return { conversationId: "", error: auth.error };
+  const { user } = auth;
   const myId = user.id;
   if (otherUserId === myId) {
     return { conversationId: "", error: "Impossible de créer une conversation avec soi-même" };

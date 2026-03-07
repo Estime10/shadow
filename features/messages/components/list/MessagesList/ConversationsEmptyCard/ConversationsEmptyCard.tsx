@@ -1,7 +1,7 @@
 "use client";
 
 import { MessageCirclePlus } from "lucide-react";
-import { EMPTY_LAST_MESSAGE_TEXT } from "@/features/messages/constants/constants";
+import { EMPTY_LAST_MESSAGE_TEXT } from "@/features/messages/constants";
 
 type ConversationsEmptyCardProps = {
   onOpenCreateConversation: () => void;

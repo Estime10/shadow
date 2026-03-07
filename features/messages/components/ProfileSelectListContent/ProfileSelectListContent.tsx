@@ -1,53 +1,12 @@
 "use client";
 
 import { useMemo } from "react";
-import type { Profile } from "@/lib/supabase/CRUD";
 import { SearchInput } from "@/components/ui/SearchInput/SearchInput";
-import {
-  SelectableItemList,
-  type SelectableItem,
-} from "@/components/ui/SelectableItemList/SelectableItemList";
+import { ProfileSelectListBody } from "./ProfileSelectListBody/ProfileSelectListBody";
+import { profilesToItems } from "./profilesToItems";
+import type { ProfileSelectListContentProps, ProfileSelectListMode } from "./types";
 
-export type ProfileSelectListMode = "direct" | "group";
-
-type ProfileSelectListContentBase = {
-  searchQuery: string;
-  onSearchChange: (value: string) => void;
-  searchInputRef: React.RefObject<HTMLInputElement | null>;
-  filteredProfiles: Profile[];
-  getInitial: (username: string | null | undefined) => string;
-  fallbackUsername: string;
-};
-
-type ProfileSelectListContentDirect = ProfileSelectListContentBase & {
-  mode: "direct";
-  onSelectUser: (profile: Profile) => void | Promise<void>;
-  creatingForProfileId?: string | null;
-  error?: string | null;
-};
-
-type ProfileSelectListContentGroup = ProfileSelectListContentBase & {
-  mode: "group";
-  selectedIds: Set<string>;
-  onToggleSelection: (profileId: string) => void;
-  selectedCountLabel?: React.ReactNode;
-};
-
-export type ProfileSelectListContentProps =
-  | ProfileSelectListContentDirect
-  | ProfileSelectListContentGroup;
-
-function profilesToItems(
-  profiles: Profile[],
-  getInitial: (username: string | null | undefined) => string,
-  fallbackUsername: string
-): SelectableItem[] {
-  return profiles.map((p) => ({
-    id: p.id,
-    initial: getInitial(p.username),
-    label: p.username ?? fallbackUsername,
-  }));
-}
+export type { ProfileSelectListContentProps, ProfileSelectListMode };
 
 export function ProfileSelectListContent(props: ProfileSelectListContentProps) {
   const {
@@ -63,7 +22,6 @@ export function ProfileSelectListContent(props: ProfileSelectListContentProps) {
     () => profilesToItems(filteredProfiles, getInitial, fallbackUsername),
     [filteredProfiles, getInitial, fallbackUsername]
   );
-
   const emptyMessage = searchQuery.trim() ? "Aucun utilisateur trouvé" : "Aucun utilisateur";
 
   return (
@@ -75,28 +33,12 @@ export function ProfileSelectListContent(props: ProfileSelectListContentProps) {
         placeholder="Rechercher un utilisateur…"
         aria-label="Rechercher un utilisateur"
       />
-      {props.mode === "direct" ? (
-        <SelectableItemList
-          variant="single"
-          items={items}
-          emptyMessage={emptyMessage}
-          onSelect={(id) => {
-            const profile = filteredProfiles.find((p) => p.id === id);
-            if (profile) props.onSelectUser(profile);
-          }}
-          loadingId={props.creatingForProfileId ?? undefined}
-          error={props.error ?? undefined}
-        />
-      ) : (
-        <SelectableItemList
-          variant="multi"
-          items={items}
-          emptyMessage={emptyMessage}
-          selectedIds={props.selectedIds}
-          onToggle={props.onToggleSelection}
-          selectedCountLabel={props.selectedCountLabel}
-        />
-      )}
+      <ProfileSelectListBody
+        {...props}
+        items={items}
+        emptyMessage={emptyMessage}
+        filteredProfiles={filteredProfiles}
+      />
     </div>
   );
 }

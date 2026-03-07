@@ -1,4 +1,5 @@
 import { createClient } from "../../../server";
+import { requireUser } from "../../../requireUser";
 import type { MessageDisappearAfterMinutes } from "../types/types";
 
 const ALLOWED_MINUTES: MessageDisappearAfterMinutes[] = [15, 30, 45, 60];
@@ -15,14 +16,9 @@ export async function updateUserMessageDisappearSetting(
   }
 
   const supabase = await createClient();
-  const {
-    data: { user },
-    error: authError,
-  } = await supabase.auth.getUser();
-
-  if (authError || !user) {
-    return { ok: false, error: "Non authentifié" };
-  }
+  const auth = await requireUser(supabase);
+  if ("error" in auth) return { ok: false, error: auth.error };
+  const { user } = auth;
 
   const { error } = await supabase
     .from("users")

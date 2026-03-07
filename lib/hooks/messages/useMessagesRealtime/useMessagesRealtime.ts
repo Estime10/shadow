@@ -32,6 +32,18 @@ type RealtimeConversationPayload = {
   [key: string]: unknown;
 };
 
+/**
+ * Signature .on("postgres_changes", filter, callback) utilisée pour DELETE.
+ * Les types @supabase/supabase-js ne résolvent pas correctement cet overload.
+ */
+type ChannelWithPostgresChanges = {
+  on(
+    event: "postgres_changes",
+    filter: { event: string; schema: string; table: string },
+    callback: (payload: { new?: unknown; old?: unknown }) => void
+  ): unknown;
+};
+
 /** Clé SWR du cache thread : ["thread", conversationId] ou ["thread", "room", withUserId]. */
 export type ThreadCacheKey = readonly [string, string, string?] | null;
 
@@ -158,19 +170,17 @@ export function useMessagesRealtime(
             }
           }
         );
-        // Supabase RealtimeChannel.on() overload resolution échoue avec ce filtre
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (ch as any).on(
+        (ch as ChannelWithPostgresChanges).on(
           "postgres_changes",
           {
             event: "DELETE",
             schema: "public",
             table: "messages",
           },
-          (payload: { old: RealtimeMessageOldPayload }) => {
+          (payload) => {
             revalidateList();
             const key = threadCacheKeyRef.current;
-            const old = payload.old;
+            const old = payload.old as RealtimeMessageOldPayload | undefined;
             if (!key || !old?.id) return;
             const convId = old.conversation_id ?? null;
             const deletedId = old.id;

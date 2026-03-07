@@ -1,6 +1,6 @@
 import type { Message } from "@/types/message";
 import type { ConversationRow } from "@/lib/supabase/CRUD";
-import { FALLBACK_PARTICIPANT_NAME, EMPTY_LAST_MESSAGE_TEXT } from "../../constants/constants";
+import { FALLBACK_PARTICIPANT_NAME, EMPTY_LAST_MESSAGE_TEXT } from "@/features/messages/constants";
 
 type LastMessageShape = {
   text: string;

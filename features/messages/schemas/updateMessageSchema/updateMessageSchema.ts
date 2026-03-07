@@ -1,12 +1,15 @@
 import { z } from "zod";
-import { MAX_MESSAGE_LENGTH } from "@/features/messages/constants/constants";
+import { getFormDataRaw } from "@/lib/utils/getFormDataRaw";
+import { MAX_MESSAGE_LENGTH } from "@/features/messages/constants";
+
+const UPDATE_MESSAGE_KEYS = ["messageId", "conversationId", "text"] as const;
 
 const updateMessageRawSchema = z.object({
-  messageId: z.string().min(1, "Message manquant").trim(),
+  messageId: z.string().uuid("ID message invalide").trim(),
   conversationId: z
-    .union([z.string(), z.null()])
+    .union([z.string().uuid("ID conversation invalide"), z.null()])
     .optional()
-    .transform((s) => (s && s.trim()) || undefined),
+    .transform((s) => (s && typeof s === "string" && s.trim() ? s.trim() : undefined)),
   text: z.string().min(1, "Message vide").max(MAX_MESSAGE_LENGTH, "Message trop long").trim(),
 });
 
@@ -14,12 +17,7 @@ const updateMessageRawSchema = z.object({
  * Parse FormData pour updateMessageAction.
  */
 export function parseUpdateMessageFormData(formData: FormData) {
-  const raw = {
-    messageId: formData.get("messageId"),
-    conversationId: formData.get("conversationId"),
-    text: formData.get("text"),
-  };
-  return updateMessageRawSchema.safeParse(raw);
+  return updateMessageRawSchema.safeParse(getFormDataRaw(formData, UPDATE_MESSAGE_KEYS));
 }
 
 export type UpdateMessageSchemaOutput = z.output<typeof updateMessageRawSchema>;

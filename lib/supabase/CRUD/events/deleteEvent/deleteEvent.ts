@@ -1,18 +1,14 @@
 import { createClient } from "../../../server";
+import { requireUser } from "../../../requireUser";
 
 /**
  * Supprime un événement. RLS : seul le créateur peut supprimer.
  */
 export async function deleteEvent(eventId: string): Promise<{ ok: boolean; error: string | null }> {
   const supabase = await createClient();
-  const {
-    data: { user },
-    error: authError,
-  } = await supabase.auth.getUser();
-
-  if (authError || !user) {
-    return { ok: false, error: "Non authentifié" };
-  }
+  const auth = await requireUser(supabase);
+  if ("error" in auth) return { ok: false, error: auth.error };
+  const { user } = auth;
 
   const { data, error } = await supabase
     .from("events")

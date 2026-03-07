@@ -1,8 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-import { ChevronUp, ChevronDown } from "lucide-react";
-import { stepTimeString, normalizeTimeString } from "@/lib/functions";
+import { useTimeInput } from "./useTimeInput/useTimeInput";
+import { TimeInputSteppers } from "./TimeInputSteppers/TimeInputSteppers";
 
 const DEFAULT_STEP_MINUTES = 15;
 
@@ -23,49 +22,14 @@ export function TimeInput({
   disabled = false,
   className = "",
 }: TimeInputProps) {
-  const [displayValue, setDisplayValue] = useState(value);
-
-  useEffect(() => {
-    setDisplayValue(value);
-  }, [value]);
-
-  const handleStepUp = useCallback(() => {
-    onChange(stepTimeString(value, stepMinutes, 1));
-  }, [value, stepMinutes, onChange]);
-
-  const handleStepDown = useCallback(() => {
-    onChange(stepTimeString(value, stepMinutes, -1));
-  }, [value, stepMinutes, onChange]);
-
-  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const raw = e.target.value;
-    const allowed = raw.replace(/[^\d:hH]/g, "");
-    setDisplayValue(allowed);
-  }, []);
-
-  const commitTime = useCallback(() => {
-    const normalized = normalizeTimeString(displayValue);
-    if (normalized !== null) {
-      setDisplayValue(normalized);
-      onChange(normalized);
-    } else {
-      setDisplayValue(value);
-    }
-  }, [displayValue, value, onChange]);
-
-  const handleBlur = useCallback(() => {
-    commitTime();
-  }, [commitTime]);
-
-  const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent<HTMLInputElement>) => {
-      if (e.key === "Enter") {
-        e.preventDefault();
-        commitTime();
-      }
-    },
-    [commitTime]
-  );
+  const {
+    displayValue,
+    handleInputChange,
+    handleBlur,
+    handleKeyDown,
+    handleStepUp,
+    handleStepDown,
+  } = useTimeInput({ value, onChange, stepMinutes });
 
   return (
     <div
@@ -85,26 +49,7 @@ export function TimeInput({
         className="time-input__field"
         aria-label="Heure (saisie manuelle)"
       />
-      <div className="flex shrink-0 flex-col border-l-2 border-(--border)">
-        <button
-          type="button"
-          onClick={handleStepUp}
-          disabled={disabled}
-          className="time-input__stepper-btn"
-          aria-label="Augmenter l'heure"
-        >
-          <ChevronUp className="h-5 w-5" aria-hidden />
-        </button>
-        <button
-          type="button"
-          onClick={handleStepDown}
-          disabled={disabled}
-          className="time-input__stepper-btn"
-          aria-label="Diminuer l'heure"
-        >
-          <ChevronDown className="h-5 w-5" aria-hidden />
-        </button>
-      </div>
+      <TimeInputSteppers onStepUp={handleStepUp} onStepDown={handleStepDown} disabled={disabled} />
     </div>
   );
 }

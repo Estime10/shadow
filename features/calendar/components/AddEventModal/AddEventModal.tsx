@@ -3,7 +3,7 @@
 import { Modal } from "@/components/ui/Modal/Modal";
 import type { CalendarEvent } from "@/features/calendar/types";
 import { formatDateLabel } from "@/features/calendar/utils";
-import { useAddEventForm } from "@/lib/hooks/calendar/useAddEventForm";
+import { useAddEventForm } from "@/lib/hooks/calendar";
 import { AddEventForm } from "./AddEventForm/AddEventForm";
 
 export type AddEventModalProps = {

@@ -1,4 +1,5 @@
 import { createClient } from "../../../server";
+import { requireUser } from "../../../requireUser";
 
 /**
  * Marque un message comme lu pour l'utilisateur connecté.
@@ -8,14 +9,9 @@ export async function insertMessageRead(
   messageId: string
 ): Promise<{ ok: boolean; error: string | null }> {
   const supabase = await createClient();
-  const {
-    data: { user },
-    error: authError,
-  } = await supabase.auth.getUser();
-
-  if (authError || !user) {
-    return { ok: false, error: "Non authentifié" };
-  }
+  const auth = await requireUser(supabase);
+  if ("error" in auth) return { ok: false, error: auth.error };
+  const { user } = auth;
 
   const { error } = await supabase.from("message_reads").insert({
     message_id: messageId,

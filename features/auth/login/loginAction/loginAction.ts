@@ -2,21 +2,16 @@
 
 import { redirect } from "next/navigation";
 import type { LoginResult } from "@/types/auth";
-import { loginSchema } from "../schema/schema";
+import { getFormDataRaw } from "@/lib/utils/getFormDataRaw";
+import { getFirstZodError } from "@/lib/utils/getFirstZodError";
 import { createClient } from "@/lib/supabase/server";
+import { loginSchema } from "../schema/loginSchema";
+
+const LOGIN_KEYS = ["email", "password"] as const;
 
 export async function loginAction(formData: FormData): Promise<LoginResult> {
-  const raw = {
-    email: formData.get("email"),
-    password: formData.get("password"),
-  };
-
-  const parsed = loginSchema.safeParse(raw);
-  if (!parsed.success) {
-    const first = parsed.error.flatten().fieldErrors;
-    const message = first.email?.[0] ?? first.password?.[0] ?? "Données invalides";
-    return { success: false, error: message };
-  }
+  const parsed = loginSchema.safeParse(getFormDataRaw(formData, LOGIN_KEYS));
+  if (!parsed.success) return { success: false, error: getFirstZodError(parsed) };
 
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithPassword({

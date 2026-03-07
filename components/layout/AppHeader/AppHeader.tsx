@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { APP_NAME } from "@/types/navigation";
+import { APP_NAME } from "@/lib/config/app";
 import { getCurrentUserProfile } from "@/lib/supabase/CRUD";
 import { HeaderAuth } from "./HeaderAuth/HeaderAuth";
 

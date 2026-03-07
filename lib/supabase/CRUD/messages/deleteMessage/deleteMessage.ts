@@ -1,4 +1,5 @@
 import { createClient } from "../../../server";
+import { requireUser } from "../../../requireUser";
 
 /**
  * Supprime un message (seul l'auteur peut).
@@ -6,17 +7,13 @@ import { createClient } from "../../../server";
  */
 export async function deleteMessage(
   messageId: string,
-  _conversationId?: string | null
+  conversationId?: string | null
 ): Promise<{ ok: boolean; error: string | null }> {
+  void conversationId; // réservé pour signature API / usage futur
   const supabase = await createClient();
-  const {
-    data: { user },
-    error: authError,
-  } = await supabase.auth.getUser();
-
-  if (authError || !user) {
-    return { ok: false, error: "Non authentifié" };
-  }
+  const auth = await requireUser(supabase);
+  if ("error" in auth) return { ok: false, error: auth.error };
+  const { user } = auth;
 
   const { data, error } = await supabase
     .from("messages")

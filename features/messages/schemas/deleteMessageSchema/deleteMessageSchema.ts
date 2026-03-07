@@ -1,22 +1,21 @@
 import { z } from "zod";
+import { getFormDataRaw } from "@/lib/utils/getFormDataRaw";
+
+const DELETE_MESSAGE_KEYS = ["messageId", "conversationId"] as const;
 
 const deleteMessageRawSchema = z.object({
-  messageId: z.string().min(1, "Message manquant").trim(),
+  messageId: z.string().uuid("ID message invalide").trim(),
   conversationId: z
-    .union([z.string(), z.null()])
+    .union([z.string().uuid("ID conversation invalide"), z.null()])
     .optional()
-    .transform((s) => (s && s.trim()) || undefined),
+    .transform((s) => (s && typeof s === "string" && s.trim() ? s.trim() : undefined)),
 });
 
 /**
  * Parse FormData pour deleteMessageAction.
  */
 export function parseDeleteMessageFormData(formData: FormData) {
-  const raw = {
-    messageId: formData.get("messageId"),
-    conversationId: formData.get("conversationId"),
-  };
-  return deleteMessageRawSchema.safeParse(raw);
+  return deleteMessageRawSchema.safeParse(getFormDataRaw(formData, DELETE_MESSAGE_KEYS));
 }
 
 export type DeleteMessageSchemaOutput = z.output<typeof deleteMessageRawSchema>;

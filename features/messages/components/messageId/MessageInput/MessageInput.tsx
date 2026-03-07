@@ -1,14 +1,8 @@
 "use client";
 
-import { useCallback, useRef } from "react";
-import { Send } from "lucide-react";
-import { useSWRConfig } from "swr";
 import { useKeyboardHeight } from "@/lib/hooks/useKeyboardHeight/useKeyboardHeight";
-import { createMessageAction } from "@/features/messages/actions";
-import { MAX_MESSAGE_LENGTH } from "@/features/messages/constants/constants";
 import type { ThreadCacheKey } from "@/lib/hooks/messages";
-
-const MESSAGES_LIST_KEY = "messages-list";
+import { MessageInputForm } from "./MessageInputForm/MessageInputForm";
 
 type MessageInputProps = {
   conversationId: string;
@@ -17,15 +11,6 @@ type MessageInputProps = {
 
 export function MessageInput({ conversationId, threadCacheKey }: MessageInputProps) {
   const keyboardHeight = useKeyboardHeight();
-  const inputRef = useRef<HTMLTextAreaElement>(null);
-  const formRef = useRef<HTMLFormElement>(null);
-  const { mutate } = useSWRConfig();
-
-  const handleFocus = useCallback(() => {
-    requestAnimationFrame(() => {
-      inputRef.current?.scrollIntoView({ block: "nearest", behavior: "smooth" });
-    });
-  }, []);
 
   return (
     <div
@@ -38,38 +23,7 @@ export function MessageInput({ conversationId, threadCacheKey }: MessageInputPro
       }}
     >
       <div className="bg-(--bg) content-px py-1.5">
-        <form
-          ref={formRef}
-          action={async (formData) => {
-            const { error } = await createMessageAction(formData);
-            if (!error) {
-              void mutate(MESSAGES_LIST_KEY);
-              void mutate(threadCacheKey ?? ["thread", conversationId]);
-              formRef.current?.reset();
-            }
-          }}
-          className="flex items-end gap-1.5 rounded-lg border-2 border-(--border) bg-(--bg) content-px py-1.5 focus-within:border-accent transition-colors"
-        >
-          <input type="hidden" name="conversationId" value={conversationId} />
-          <textarea
-            ref={inputRef}
-            name="text"
-            onFocus={handleFocus}
-            placeholder="Écris un message…"
-            rows={1}
-            maxLength={MAX_MESSAGE_LENGTH}
-            className="min-h-[28px] max-h-24 flex-1 resize-none bg-transparent font-display text-sm text-(--text) placeholder:text-(--text-muted) focus:outline-none py-1"
-            aria-label="Message"
-            required
-          />
-          <button
-            type="submit"
-            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent text-(--bg)"
-            aria-label="Envoyer"
-          >
-            <Send className="h-3.5 w-3.5" aria-hidden />
-          </button>
-        </form>
+        <MessageInputForm conversationId={conversationId} threadCacheKey={threadCacheKey} />
       </div>
     </div>
   );

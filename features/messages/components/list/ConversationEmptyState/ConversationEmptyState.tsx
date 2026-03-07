@@ -1,7 +1,7 @@
 "use client";
 
 import type { ConversationEmptyStateProps } from "@/features/messages/types";
-import { EMPTY_LAST_MESSAGE_TEXT } from "@/features/messages/constants/constants";
+import { EMPTY_LAST_MESSAGE_TEXT } from "@/features/messages/constants";
 import { useConversationEmptyState, useCreateConversationModal } from "@/lib/hooks/messages";
 import { CreateConversationModal } from "./CreateConversationModal/CreateConversationModal";
 

@@ -1,0 +1,44 @@
+"use client";
+
+import { type ReactNode } from "react";
+import { motion } from "framer-motion";
+import { ANIMATION_EASING } from "@/lib/config/animations";
+
+type CreateConversationModalOverlayProps = {
+  overlayRef: React.RefObject<HTMLDivElement | null>;
+  onOverlayClick: (e: React.MouseEvent) => void;
+  duration: number;
+  children: ReactNode;
+};
+
+export function CreateConversationModalOverlay({
+  overlayRef,
+  onOverlayClick,
+  duration,
+  children,
+}: CreateConversationModalOverlayProps) {
+  return (
+    <motion.div
+      ref={overlayRef}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="create-conversation-modal-title"
+      className="fixed inset-0 z-[10000] grid min-h-dvh place-items-center p-4"
+      onClick={onOverlayClick}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration, ease: ANIMATION_EASING }}
+    >
+      <motion.div
+        className="absolute inset-0 bg-black/60"
+        aria-hidden
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration }}
+      />
+      {children}
+    </motion.div>
+  );
+}

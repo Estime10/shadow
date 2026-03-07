@@ -1,6 +1,6 @@
 import { MessageBubble } from "../MessageBubble/MessageBubble";
 import { MessageInput } from "../MessageInput/MessageInput";
-import { EMPTY_LAST_MESSAGE_TEXT } from "@/features/messages/constants/constants";
+import { EMPTY_LAST_MESSAGE_TEXT } from "@/features/messages/constants";
 import type { MessageThreadProps } from "@/features/messages/types";
 import { getInitial } from "@/features/messages/utils";
 

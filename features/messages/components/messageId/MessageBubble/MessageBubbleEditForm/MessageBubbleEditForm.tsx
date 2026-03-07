@@ -3,8 +3,9 @@
 import { useState } from "react";
 import { useSWRConfig } from "swr";
 import { updateMessageAction } from "@/features/messages/actions";
-import { MAX_MESSAGE_LENGTH } from "@/features/messages/constants/constants";
 import type { ThreadCacheKey } from "@/lib/hooks/messages";
+import { MessageBubbleEditFormFields } from "./MessageBubbleEditFormFields/MessageBubbleEditFormFields";
+import { MessageBubbleEditFormActions } from "./MessageBubbleEditFormActions/MessageBubbleEditFormActions";
 
 const MESSAGES_LIST_KEY = "messages-list";
 
@@ -41,30 +42,8 @@ export function MessageBubbleEditForm({
       >
         <input type="hidden" name="messageId" value={messageId} />
         <input type="hidden" name="conversationId" value={conversationId} />
-        <textarea
-          name="text"
-          value={editText}
-          onChange={(e) => setEditText(e.target.value)}
-          maxLength={MAX_MESSAGE_LENGTH}
-          rows={2}
-          className="min-h-10 w-full min-w-0 resize-none rounded bg-(--bg)/80 font-display text-sm text-(--text) focus:outline-none"
-          required
-        />
-        <div className="flex justify-end gap-2">
-          <button
-            type="button"
-            onClick={onCancel}
-            className="rounded px-2 py-1 text-xs font-medium text-(--text-muted)"
-          >
-            Annuler
-          </button>
-          <button
-            type="submit"
-            className="rounded bg-accent px-2 py-1 font-display text-xs font-bold uppercase text-(--bg)"
-          >
-            Enregistrer
-          </button>
-        </div>
+        <MessageBubbleEditFormFields value={editText} onChange={setEditText} />
+        <MessageBubbleEditFormActions onCancel={onCancel} />
       </form>
     </div>
   );

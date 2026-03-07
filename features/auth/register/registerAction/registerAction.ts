@@ -2,23 +2,16 @@
 
 import { redirect } from "next/navigation";
 import type { RegisterResult } from "@/types/auth";
-import { registerSchema } from "../schema/schema";
+import { getFormDataRaw } from "@/lib/utils/getFormDataRaw";
+import { getFirstZodError } from "@/lib/utils/getFirstZodError";
 import { createClient } from "@/lib/supabase/server";
+import { registerSchema } from "../schema/registerSchema";
+
+const REGISTER_KEYS = ["email", "password", "username"] as const;
 
 export async function registerAction(formData: FormData): Promise<RegisterResult> {
-  const raw = {
-    email: formData.get("email"),
-    password: formData.get("password"),
-    username: formData.get("username"),
-  };
-
-  const parsed = registerSchema.safeParse(raw);
-  if (!parsed.success) {
-    const first = parsed.error.flatten().fieldErrors;
-    const message =
-      first.email?.[0] ?? first.password?.[0] ?? first.username?.[0] ?? "Données invalides";
-    return { success: false, error: message };
-  }
+  const parsed = registerSchema.safeParse(getFormDataRaw(formData, REGISTER_KEYS));
+  if (!parsed.success) return { success: false, error: getFirstZodError(parsed) };
 
   const supabase = await createClient();
   const { data, error } = await supabase.auth.signUp({

@@ -1,4 +1,5 @@
 import { createClient } from "../../../server";
+import { requireUser } from "../../../requireUser";
 
 const DEFAULT_GROUP_NAME = "Groupe";
 
@@ -13,15 +14,9 @@ export async function createGroupConversation(
   groupName?: string
 ): Promise<{ conversationId: string; error: string | null }> {
   const supabase = await createClient();
-  const {
-    data: { user },
-    error: authError,
-  } = await supabase.auth.getUser();
-
-  if (authError || !user) {
-    return { conversationId: "", error: "Non authentifié" };
-  }
-
+  const auth = await requireUser(supabase);
+  if ("error" in auth) return { conversationId: "", error: auth.error };
+  const { user } = auth;
   const creatorId = user.id;
   const memberIds = new Set<string>([creatorId, ...participantIds]);
 

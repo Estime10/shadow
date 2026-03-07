@@ -1,4 +1,5 @@
 import { createClient } from "../../../server";
+import { requireUser } from "../../../requireUser";
 import type { CurrentUserProfile } from "../types/types";
 
 function emailToDisplayName(email: string | undefined): string | null {
@@ -13,14 +14,9 @@ function emailToDisplayName(email: string | undefined): string | null {
  */
 export async function getCurrentUserProfile(): Promise<CurrentUserProfile | null> {
   const supabase = await createClient();
-  const {
-    data: { user },
-    error: authError,
-  } = await supabase.auth.getUser();
-
-  if (authError || !user) {
-    return null;
-  }
+  const auth = await requireUser(supabase);
+  if ("error" in auth) return null;
+  const { user } = auth;
 
   const { data: profile } = await supabase
     .from("users")

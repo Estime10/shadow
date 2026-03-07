@@ -1,1 +1,0 @@
-export { getEventsForCalendar } from "./getEventsForCalendar";

@@ -1,4 +1,5 @@
 import { createClient } from "../../../server";
+import { requireUser } from "../../../requireUser";
 import { mapEventRowToCalendarEvent } from "../mappers/mappers";
 import type { CalendarEvent } from "@/features/calendar/types";
 
@@ -15,14 +16,9 @@ export async function createEvent(
   params: CreateEventParams
 ): Promise<{ event: CalendarEvent | null; error: string | null }> {
   const supabase = await createClient();
-  const {
-    data: { user },
-    error: authError,
-  } = await supabase.auth.getUser();
-
-  if (authError || !user) {
-    return { event: null, error: "Non authentifié" };
-  }
+  const auth = await requireUser(supabase);
+  if ("error" in auth) return { event: null, error: auth.error };
+  const { user } = auth;
 
   const { data, error } = await supabase
     .from("events")

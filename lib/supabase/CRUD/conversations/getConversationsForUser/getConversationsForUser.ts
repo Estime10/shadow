@@ -1,4 +1,5 @@
 import { createClient } from "../../../server";
+import { requireUser } from "../../../requireUser";
 import type { ConversationRow } from "../types/types";
 
 /**
@@ -6,12 +7,9 @@ import type { ConversationRow } from "../types/types";
  */
 export async function getConversationsForUser(): Promise<ConversationRow[]> {
   const supabase = await createClient();
-  const {
-    data: { user },
-    error: authError,
-  } = await supabase.auth.getUser();
-
-  if (authError || !user) return [];
+  const auth = await requireUser(supabase);
+  if ("error" in auth) return [];
+  const { user } = auth;
 
   const { data, error } = await supabase
     .from("conversations")

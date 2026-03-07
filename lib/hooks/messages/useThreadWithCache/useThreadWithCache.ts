@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef } from "react";
 import useSWR from "swr";
 import { getThreadDataAction, markMessagesAsReadAction } from "@/features/messages/actions";
-import { ROOM_CONVERSATION_ID } from "@/features/messages/constants/constants";
+import { ROOM_CONVERSATION_ID } from "@/features/messages/constants";
 import type { MessageIdPageContent } from "@/features/messages/types";
 
 export type ThreadWithCacheParams = {
@@ -31,7 +31,7 @@ export function useThreadWithCache({ initial, conversationId, withUserId }: Thre
     () => buildThreadKey(conversationId, withUserId),
     [conversationId, withUserId]
   );
-  const { data, mutate } = useSWR<MessageIdPageContent | null>(
+  const { data } = useSWR<MessageIdPageContent | null>(
     threadKey,
     () => getThreadDataAction({ conversationId, withUserId }),
     { fallbackData: initial }
@@ -49,7 +49,7 @@ export function useThreadWithCache({ initial, conversationId, withUserId }: Thre
       .filter((m) => m.senderId !== content.currentUserId)
       .map((m) => m.id);
     void markMessagesAsReadAction(ids);
-  }, [content.currentUserId, content.messages, threadKey, mutate]);
+  }, [content.currentUserId, content.messages, threadKey]);
 
   return { content, threadKey };
 }

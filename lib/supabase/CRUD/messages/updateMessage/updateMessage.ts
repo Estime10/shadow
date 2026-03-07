@@ -1,4 +1,5 @@
 import { createClient } from "../../../server";
+import { requireUser } from "../../../requireUser";
 import { mapMessageRowToMessage } from "../mappers/mappers";
 
 /**
@@ -9,14 +10,9 @@ export async function updateMessage(
   text: string
 ): Promise<{ message: ReturnType<typeof mapMessageRowToMessage> | null; error: string | null }> {
   const supabase = await createClient();
-  const {
-    data: { user },
-    error: authError,
-  } = await supabase.auth.getUser();
-
-  if (authError || !user) {
-    return { message: null, error: "Non authentifié" };
-  }
+  const auth = await requireUser(supabase);
+  if ("error" in auth) return { message: null, error: auth.error };
+  const { user } = auth;
 
   const { data, error } = await supabase
     .from("messages")

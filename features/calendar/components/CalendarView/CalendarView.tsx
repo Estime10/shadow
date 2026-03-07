@@ -1,76 +1,44 @@
 "use client";
 
-import { MonthNav } from "../MonthNav/MonthNav";
-import { MonthGrid } from "../MonthGrid/MonthGrid";
-import { EventCarousel } from "../EventCarousel/EventCarousel";
-import { AddEventModal } from "../AddEventModal/AddEventModal";
-import { EventDetailModal } from "../EventDetailModal/EventDetailModal";
-import { useCalendarView } from "@/lib/hooks/calendar/useCalendarView";
+import { useCalendarView } from "@/lib/hooks/calendar";
 import type { CalendarEvent } from "@/features/calendar/types";
+import { CalendarViewEventsSection } from "./CalendarViewEventsSection/CalendarViewEventsSection";
+import { CalendarViewMonthSection } from "./CalendarViewMonthSection/CalendarViewMonthSection";
+import { CalendarViewModals } from "./CalendarViewModals/CalendarViewModals";
 
 export type CalendarViewProps = {
   initialEvents: CalendarEvent[];
 };
 
 export function CalendarView({ initialEvents }: CalendarViewProps) {
-  const {
-    now,
-    current,
-    eventsInMonth,
-    eventsByDay,
-    modalOpen,
-    selectedDate,
-    viewModalOpen,
-    viewEvent,
-    handleDayClick,
-    handleAddEvent,
-    handlePrev,
-    handleNext,
-    handleEventClick,
-    closeAddModal,
-    closeViewModal,
-    handleEventDeleted,
-    handleEventUpdated,
-  } = useCalendarView(initialEvents);
+  const calendar = useCalendarView(initialEvents);
 
   return (
     <div className="flex flex-1 flex-col min-h-0">
-      <section className="shrink-0 max-h-[50vh] lg:max-h-none flex flex-col min-h-0">
-        <MonthNav
-          year={current.year}
-          month={current.month}
-          onPrev={handlePrev}
-          onNext={handleNext}
-        />
-        <MonthGrid
-          year={current.year}
-          month={current.month}
-          today={now}
-          eventsByDay={eventsByDay}
-          onDayClick={handleDayClick}
-        />
-      </section>
-      <section className="flex-1 min-h-0 flex flex-col" aria-label="Événements du mois">
-        <h2 className="content-px pt-4 font-display text-sm font-bold uppercase tracking-wider text-(--text-muted)">
-          Événements
-        </h2>
-        <EventCarousel events={eventsInMonth} onEventClick={handleEventClick} />
-      </section>
-      <EventDetailModal
-        open={viewModalOpen}
-        onClose={closeViewModal}
-        event={viewEvent}
-        onDeleteSuccess={handleEventDeleted}
-        onUpdateSuccess={handleEventUpdated}
+      <CalendarViewMonthSection
+        year={calendar.current.year}
+        month={calendar.current.month}
+        today={calendar.now}
+        eventsByDay={calendar.eventsByDay}
+        onPrev={calendar.handlePrev}
+        onNext={calendar.handleNext}
+        onDayClick={calendar.handleDayClick}
       />
-      {selectedDate && (
-        <AddEventModal
-          open={modalOpen}
-          onClose={closeAddModal}
-          selectedDate={selectedDate}
-          onSubmit={handleAddEvent}
-        />
-      )}
+      <CalendarViewEventsSection
+        events={calendar.eventsInMonth}
+        onEventClick={calendar.handleEventClick}
+      />
+      <CalendarViewModals
+        viewModalOpen={calendar.viewModalOpen}
+        viewEvent={calendar.viewEvent}
+        closeViewModal={calendar.closeViewModal}
+        handleEventDeleted={calendar.handleEventDeleted}
+        handleEventUpdated={calendar.handleEventUpdated}
+        modalOpen={calendar.modalOpen}
+        selectedDate={calendar.selectedDate}
+        closeAddModal={calendar.closeAddModal}
+        handleAddEvent={calendar.handleAddEvent}
+      />
     </div>
   );
 }

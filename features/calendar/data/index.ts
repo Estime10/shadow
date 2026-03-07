@@ -1,1 +1,1 @@
-export { getEventsForCalendar } from "./getEventsForCalendar";
+export { getEventsForCalendar } from "./getEventsForCalendar/getEventsForCalendar";

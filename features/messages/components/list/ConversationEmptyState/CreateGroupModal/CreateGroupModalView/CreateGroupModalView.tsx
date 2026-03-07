@@ -1,10 +1,10 @@
 "use client";
 
-import { useRef } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { ANIMATION_DURATION_MODAL, ANIMATION_EASING } from "@/lib/config/animations";
-import { CreateGroupModalHeader } from "../CreateGroupModalHeader/CreateGroupModalHeader";
-import { CreateGroupModalFooter } from "../CreateGroupModalFooter/CreateGroupModalFooter";
+import { type ReactNode } from "react";
+import { AnimatePresence } from "framer-motion";
+import { useModalEffect } from "@/lib/hooks/useModalEffect/useModalEffect";
+import { CreateGroupModalViewOverlay } from "./CreateGroupModalViewOverlay/CreateGroupModalViewOverlay";
+import { CreateGroupModalViewPanel } from "./CreateGroupModalViewPanel/CreateGroupModalViewPanel";
 
 type CreateGroupModalViewProps = {
   open: boolean;
@@ -13,7 +13,7 @@ type CreateGroupModalViewProps = {
   creating?: boolean;
   error?: string | null;
   onCreateGroup: () => void;
-  children: React.ReactNode;
+  children: ReactNode;
 };
 
 export function CreateGroupModalView({
@@ -25,59 +25,30 @@ export function CreateGroupModalView({
   onCreateGroup,
   children,
 }: CreateGroupModalViewProps) {
-  const overlayRef = useRef<HTMLDivElement>(null);
-  const reduced = useReducedMotion();
-  const duration = reduced ? 0 : ANIMATION_DURATION_MODAL;
-
-  function handleOverlayClick(e: React.MouseEvent) {
-    if (e.target === overlayRef.current) onClose();
-  }
+  const { overlayRef, handleOverlayClick, duration } = useModalEffect({
+    open,
+    onClose,
+  });
 
   return (
     <AnimatePresence>
       {open ? (
-        <motion.div
-          ref={overlayRef}
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="create-group-modal-title"
-          className="fixed inset-0 z-10000 grid min-h-dvh place-items-center p-4"
-          onClick={handleOverlayClick}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration, ease: ANIMATION_EASING }}
+        <CreateGroupModalViewOverlay
+          overlayRef={overlayRef}
+          onOverlayClick={handleOverlayClick}
+          duration={duration}
         >
-          <motion.div
-            className="absolute inset-0 bg-black/60"
-            aria-hidden
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration }}
-          />
-          <motion.div
-            className="relative z-10 flex max-h-[85dvh] w-full max-w-md flex-col rounded-xl border-2 border-(--border) bg-surface shadow-xl"
-            onClick={(e) => e.stopPropagation()}
-            initial={{ opacity: 0, scale: 0.96 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.96 }}
-            transition={{ duration, ease: ANIMATION_EASING }}
+          <CreateGroupModalViewPanel
+            duration={duration}
+            onClose={onClose}
+            canSubmit={canSubmit}
+            creating={creating}
+            error={error}
+            onCreateGroup={onCreateGroup}
           >
-            <CreateGroupModalHeader onClose={onClose} />
-            <div className="flex min-h-0 flex-1 flex-col p-4">{children}</div>
-            {error ? (
-              <p className="shrink-0 px-4 pb-2 text-sm text-red-600" role="alert">
-                {error}
-              </p>
-            ) : null}
-            <CreateGroupModalFooter
-              canSubmit={canSubmit}
-              creating={creating}
-              onSubmit={onCreateGroup}
-            />
-          </motion.div>
-        </motion.div>
+            {children}
+          </CreateGroupModalViewPanel>
+        </CreateGroupModalViewOverlay>
       ) : null}
     </AnimatePresence>
   );

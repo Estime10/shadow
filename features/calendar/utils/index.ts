@@ -17,3 +17,4 @@ export {
   buildEventFromForm,
   type AddEventFormValues,
 } from "./eventUtils";
+export { buildEventDateFromTime } from "./buildEventDateFromTime";

@@ -1,10 +1,10 @@
 "use client";
 
-import { useRef, useEffect } from "react";
-import { MoreVertical } from "lucide-react";
+import { useRef } from "react";
 import type { ThreadCacheKey } from "@/lib/hooks/messages";
-import { formatRelativeTime } from "@/lib/functions";
-import { MessageBubbleMenu } from "../MessageBubbleMenu/MessageBubbleMenu";
+import { useClickOutside } from "@/lib/hooks/useClickOutside/useClickOutside";
+import { MessageBubbleFooterMeta } from "./MessageBubbleFooterMeta/MessageBubbleFooterMeta";
+import { MessageBubbleFooterMenu } from "./MessageBubbleFooterMenu/MessageBubbleFooterMenu";
 
 type MessageBubbleFooterProps = {
   createdAt: string;
@@ -32,54 +32,28 @@ export function MessageBubbleFooter({
   threadCacheKey,
 }: MessageBubbleFooterProps) {
   const menuRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!menuOpen) return;
-    const close = (e: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        setMenuOpen(false);
-      }
-    };
-    document.addEventListener("click", close);
-    return () => document.removeEventListener("click", close);
-  }, [menuOpen, setMenuOpen]);
+  useClickOutside(menuRef, menuOpen, () => setMenuOpen(false));
 
   return (
     <div
       className={`mt-2 flex items-center gap-2 pt-1 ${isSent ? "justify-end" : "justify-start"}`}
       ref={menuRef}
     >
-      <span className={`text-[10px] shrink-0 ${isSent ? "text-accent" : "text-(--text-muted)"}`}>
-        {formatRelativeTime(createdAt)}
-      </span>
-      {isSent && readByRecipient ? (
-        <span
-          className="shrink-0 text-[10px] font-medium uppercase tracking-wider text-(--text-muted)"
-          title="Lu"
-        >
-          Lu
-        </span>
-      ) : null}
+      <MessageBubbleFooterMeta
+        createdAt={createdAt}
+        isSent={isSent}
+        readByRecipient={readByRecipient}
+      />
       {isSent ? (
-        <>
-          <button
-            type="button"
-            onClick={onMenuToggle}
-            className="shrink-0 rounded p-1 hover:bg-(--bg)/20"
-            aria-label="Options"
-          >
-            <MoreVertical className="h-4 w-4" />
-          </button>
-          {menuOpen ? (
-            <MessageBubbleMenu
-              messageId={messageId}
-              conversationId={conversationId}
-              onEdit={onEdit}
-              onClose={() => setMenuOpen(false)}
-              threadCacheKey={threadCacheKey}
-            />
-          ) : null}
-        </>
+        <MessageBubbleFooterMenu
+          messageId={messageId}
+          conversationId={conversationId}
+          menuOpen={menuOpen}
+          onEdit={onEdit}
+          onMenuToggle={onMenuToggle}
+          setMenuOpen={setMenuOpen}
+          threadCacheKey={threadCacheKey}
+        />
       ) : null}
     </div>
   );

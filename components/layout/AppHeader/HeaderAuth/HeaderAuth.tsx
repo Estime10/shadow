@@ -1,63 +1,34 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
-import { LogOut } from "lucide-react";
-import { logoutAction } from "@/features/auth/logout/logoutAction/logoutAction";
+import { useHeaderAuth } from "../useHeaderAuth/useHeaderAuth";
 import type { CurrentUserProfile } from "@/lib/supabase/CRUD";
-import { ConfirmModal } from "@/components/ui/ConfirmModal/ConfirmModal";
+import { HeaderAuthLoggedIn } from "./HeaderAuthLoggedIn/HeaderAuthLoggedIn";
+import { HeaderAuthLoggedOut } from "./HeaderAuthLoggedOut/HeaderAuthLoggedOut";
 
 type HeaderAuthProps = {
   profile: CurrentUserProfile | null;
 };
 
 export function HeaderAuth({ profile }: HeaderAuthProps) {
-  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const {
+    profile: _profile,
+    showLogoutModal,
+    openLogoutModal,
+    closeLogoutModal,
+    confirmLogout,
+  } = useHeaderAuth(profile);
 
-  function handleLogoutClick() {
-    setShowLogoutModal(true);
-  }
-
-  function handleLogoutConfirm() {
-    setShowLogoutModal(false);
-    void logoutAction();
-  }
-
-  if (profile) {
+  if (_profile) {
     return (
-      <div className="flex items-center gap-2">
-        <span
-          className="font-display text-xs font-bold uppercase tracking-wider text-(--text)"
-          title="Connecté"
-        >
-          {profile.username ?? "Profil"}
-        </span>
-        <button
-          type="button"
-          onClick={handleLogoutClick}
-          className="flex h-8 w-8 items-center justify-center rounded-lg text-(--text)"
-          aria-label="Se déconnecter"
-        >
-          <LogOut className="h-4 w-4" aria-hidden />
-        </button>
-        <ConfirmModal
-          open={showLogoutModal}
-          onClose={() => setShowLogoutModal(false)}
-          onConfirm={handleLogoutConfirm}
-          title="Déconnexion"
-          message="Tu veux te déconnecter ?"
-          confirmLabel="Déconnecter"
-        />
-      </div>
+      <HeaderAuthLoggedIn
+        username={_profile.username}
+        onLogoutClick={openLogoutModal}
+        showLogoutModal={showLogoutModal}
+        onCloseLogoutModal={closeLogoutModal}
+        onConfirmLogout={confirmLogout}
+      />
     );
   }
 
-  return (
-    <Link
-      href="/login"
-      className="font-display text-xs font-bold uppercase tracking-wider text-(--text)"
-    >
-      Connexion
-    </Link>
-  );
+  return <HeaderAuthLoggedOut />;
 }
