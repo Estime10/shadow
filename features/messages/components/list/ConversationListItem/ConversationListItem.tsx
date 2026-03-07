@@ -20,7 +20,7 @@ export function ConversationListItem({
 
   return (
     <div
-      className={`mx-2 flex w-full items-center gap-3 rounded-xl content-px py-3 text-left ${
+      className={`mx-2 flex w-full items-start gap-3 rounded-xl content-px py-3 text-left ${
         isSelected ? "bg-surface" : ""
       }`}
     >
@@ -35,15 +35,19 @@ export function ConversationListItem({
         isEmpty={isEmpty}
         isFromMe={isFromMe}
         unreadCount={unreadCount}
+        action={
+          <Link
+            href={`/messages/${conversation.id}`}
+            className="inline-flex md:cursor-pointer items-center justify-center rounded-lg p-0.5 transition-colors md:hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+            aria-label={`Ouvrir la conversation avec ${participant.name ?? "ce contact"}`}
+          >
+            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-accent/20 text-accent">
+              <ChevronRight className="h-4 w-4" aria-hidden />
+            </span>
+          </Link>
+        }
       />
       <ConversationListItemBadge unreadCount={unreadCount} />
-      <Link
-        href={`/messages/${conversation.id}`}
-        className="ml-auto shrink-0 inline-flex md:cursor-pointer items-center justify-center rounded-lg p-1 transition-colors md:hover:bg-(--bg) focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-        aria-label={`Ouvrir la conversation avec ${participant.name ?? "ce contact"}`}
-      >
-        <ChevronRight className="h-5 w-5 text-(--text-muted)" aria-hidden />
-      </Link>
     </div>
   );
 }

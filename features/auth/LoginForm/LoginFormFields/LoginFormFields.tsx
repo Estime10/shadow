@@ -2,6 +2,7 @@
 
 import type { UseFormRegister, FieldErrors } from "react-hook-form";
 import { Input } from "@/components/ui/Input/Input";
+import { PasswordInput } from "@/components/ui/PasswordInput/PasswordInput";
 import type { LoginSchemaOutput } from "@/features/auth/login/schema/loginSchema";
 
 type LoginFormFieldsProps = {
@@ -23,9 +24,8 @@ export function LoginFormFields({ register, errors, disabled }: LoginFormFieldsP
         error={errors.email?.message}
         {...register("email")}
       />
-      <Input
+      <PasswordInput
         label="Mot de passe"
-        type="password"
         autoComplete="current-password"
         required
         disabled={disabled}

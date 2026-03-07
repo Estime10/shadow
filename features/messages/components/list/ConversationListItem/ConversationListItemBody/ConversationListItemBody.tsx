@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactNode } from "react";
 import { formatRelativeTime } from "@/lib/functions";
 
 type ConversationListItemBodyProps = {
@@ -10,6 +11,7 @@ type ConversationListItemBodyProps = {
   isEmpty: boolean;
   isFromMe: boolean;
   unreadCount: number;
+  action?: ReactNode;
 };
 
 export function ConversationListItemBody({
@@ -20,18 +22,22 @@ export function ConversationListItemBody({
   isEmpty,
   isFromMe,
   unreadCount,
+  action,
 }: ConversationListItemBodyProps) {
   return (
     <div className="min-w-0 flex-1">
       <div className="flex items-center justify-between gap-2">
-        <span className="font-display text-sm font-bold uppercase tracking-wider text-(--text)">
+        <span className="min-w-0 truncate font-display text-sm font-bold uppercase tracking-wider text-(--text)">
           {participantName}
         </span>
-        {!isEmpty ? (
-          <span className="shrink-0 text-xs text-(--text-muted)">
-            {formatRelativeTime(lastMessageCreatedAt)}
-          </span>
-        ) : null}
+        <div className="flex shrink-0 items-center gap-2">
+          {!isEmpty ? (
+            <span className="text-xs text-(--text-muted)">
+              {formatRelativeTime(lastMessageCreatedAt)}
+            </span>
+          ) : null}
+          {action}
+        </div>
       </div>
       <p
         className={`mt-0.5 truncate text-sm ${

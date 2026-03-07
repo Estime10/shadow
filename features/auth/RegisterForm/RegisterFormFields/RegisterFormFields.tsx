@@ -2,6 +2,7 @@
 
 import type { UseFormRegister, FieldErrors } from "react-hook-form";
 import { Input } from "@/components/ui/Input/Input";
+import { PasswordInput } from "@/components/ui/PasswordInput/PasswordInput";
 import type { RegisterSchemaOutput } from "@/features/auth/register/schema/registerSchema";
 
 type RegisterFormFieldsProps = {
@@ -33,9 +34,8 @@ export function RegisterFormFields({ register, errors, disabled }: RegisterFormF
         error={errors.username?.message}
         {...register("username")}
       />
-      <Input
+      <PasswordInput
         label="Mot de passe"
-        type="password"
         autoComplete="new-password"
         placeholder="Au moins 8 caractères"
         required
