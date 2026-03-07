@@ -16,7 +16,7 @@ export function ConversationTypeChoiceOptions({
       <button
         type="button"
         onClick={onSelectDirect}
-        className="flex items-center gap-3 rounded-xl border-2 border-(--border) bg-(--bg) content-px py-4 text-left transition-colors hover:border-accent hover:bg-(--accent)/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+        className="flex md:cursor-pointer items-center gap-3 rounded-xl border-2 border-(--border) bg-(--bg) content-px py-4 text-left transition-colors md:hover:border-accent md:hover:bg-(--accent)/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
       >
         <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-(--accent)/15 text-accent">
           <MessageCircle className="h-6 w-6" aria-hidden />
@@ -31,7 +31,7 @@ export function ConversationTypeChoiceOptions({
       <button
         type="button"
         onClick={onSelectGroup}
-        className="flex items-center gap-3 rounded-xl border-2 border-(--border) bg-(--bg) content-px py-4 text-left transition-colors hover:border-accent hover:bg-(--accent)/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+        className="flex md:cursor-pointer items-center gap-3 rounded-xl border-2 border-(--border) bg-(--bg) content-px py-4 text-left transition-colors md:hover:border-accent md:hover:bg-(--accent)/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
       >
         <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-(--accent)/15 text-accent">
           <Users className="h-6 w-6" aria-hidden />

@@ -20,7 +20,7 @@ export function MessageBubbleContent({ text }: MessageBubbleContentProps) {
         <button
           type="button"
           onClick={() => setExpanded((e) => !e)}
-          className="mt-1 text-[10px] font-medium text-accent hover:underline"
+          className="mt-1 md:cursor-pointer text-[10px] font-medium text-accent md:hover:underline"
         >
           {expanded ? "Voir moins" : "Voir plus"}
         </button>

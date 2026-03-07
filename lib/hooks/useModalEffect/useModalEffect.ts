@@ -31,11 +31,11 @@ export function useModalEffect({ open, onClose }: UseModalEffectParams): UseModa
     }
     if (open) {
       document.addEventListener("keydown", handleEscape);
-      document.body.style.overflow = "hidden";
+      document.body.classList.add("overflow-hidden");
     }
     return () => {
       document.removeEventListener("keydown", handleEscape);
-      document.body.style.overflow = "";
+      document.body.classList.remove("overflow-hidden");
     };
   }, [open]);
 

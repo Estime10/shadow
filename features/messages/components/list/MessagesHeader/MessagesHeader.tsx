@@ -22,7 +22,7 @@ export function MessagesHeader({
           <button
             type="button"
             onClick={onOpenCreateConversation}
-            className="flex items-center gap-2 font-display text-sm font-bold uppercase tracking-wider text-(--text) focus:outline-none focus-visible:ring-2 focus-visible:ring-accent mt-2"
+            className="flex md:cursor-pointer items-center gap-2 font-display text-sm font-bold uppercase tracking-wider text-(--text) focus:outline-none focus-visible:ring-2 focus-visible:ring-accent mt-2 transition-colors md:hover:text-accent"
             aria-label="Créer une conversation"
           >
             <MessageCirclePlus className="h-5 w-5 text-accent" aria-hidden />

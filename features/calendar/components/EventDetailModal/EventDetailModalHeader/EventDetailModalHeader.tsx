@@ -1,5 +1,6 @@
 "use client";
 
+import { IconButton } from "@/components/ui/IconButton/IconButton";
 import { X } from "lucide-react";
 import { EventDetailModalHeaderMenu } from "./EventDetailModalHeaderMenu/EventDetailModalHeaderMenu";
 
@@ -14,9 +15,6 @@ type EventDetailModalHeaderProps = {
   onDeleteClick: () => void;
   onClose: () => void;
 };
-
-const closeBtnClass =
-  "flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-(--text-muted) transition-colors hover:bg-(--bg) hover:text-(--text) focus:outline-none focus-visible:ring-2 focus-visible:ring-accent";
 
 export function EventDetailModalHeader({
   title,
@@ -47,9 +45,9 @@ export function EventDetailModalHeader({
             onDeleteClick={onDeleteClick}
           />
         )}
-        <button type="button" onClick={onClose} className={closeBtnClass} aria-label="Fermer">
+        <IconButton aria-label="Fermer" onClick={onClose}>
           <X className="h-5 w-5" aria-hidden />
-        </button>
+        </IconButton>
       </div>
     </div>
   );

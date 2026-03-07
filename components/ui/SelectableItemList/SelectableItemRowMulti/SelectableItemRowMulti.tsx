@@ -16,7 +16,7 @@ export function SelectableItemRowMulti({
 }: SelectableItemRowMultiProps) {
   return (
     <li>
-      <label className="flex cursor-pointer items-center gap-3 rounded-xl content-px py-3 transition-colors hover:bg-(--bg) focus-within:ring-2 focus-within:ring-accent">
+      <label className="flex md:cursor-pointer items-center gap-3 rounded-xl content-px py-3 transition-colors md:hover:bg-(--bg) focus-within:ring-2 focus-within:ring-accent">
         <Checkbox
           checked={isSelected}
           onChange={() => onToggle(item.id)}

@@ -7,7 +7,7 @@ export type EventCardProps = {
 };
 
 export function EventCard({ event, onClick }: EventCardProps) {
-  const rootClass = onClick ? "event-card event-card--button" : "event-card";
+  const rootClass = onClick ? "event-card event-card--button md:cursor-pointer" : "event-card";
 
   const firstLine = (
     <div className="event-card__first-line">

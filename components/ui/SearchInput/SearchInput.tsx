@@ -35,7 +35,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
           <button
             type="button"
             onClick={() => onChange("")}
-            className="shrink-0 rounded p-0.5 text-(--text-muted) transition-colors hover:text-(--text) focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+            className="shrink-0 rounded p-0.5 text-(--text-muted) transition-colors md:hover:text-(--text) focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             aria-label="Effacer la recherche"
           >
             <X className="h-4 w-4" aria-hidden />

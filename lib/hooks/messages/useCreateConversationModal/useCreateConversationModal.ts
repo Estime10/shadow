@@ -34,13 +34,13 @@ export function useCreateConversationModal({
     }
     if (modalOpen) {
       document.addEventListener("keydown", handleEscape);
-      document.body.style.overflow = "hidden";
+      document.body.classList.add("overflow-hidden");
       setSearchQueryRef.current("");
       requestAnimationFrame(() => searchInputRefRef.current.current?.focus());
     }
     return () => {
       document.removeEventListener("keydown", handleEscape);
-      document.body.style.overflow = "";
+      document.body.classList.remove("overflow-hidden");
     };
   }, [modalOpen]);
 }

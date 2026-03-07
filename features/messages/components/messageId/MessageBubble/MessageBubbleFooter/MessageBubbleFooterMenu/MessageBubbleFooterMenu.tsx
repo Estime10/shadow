@@ -28,7 +28,7 @@ export function MessageBubbleFooterMenu({
       <button
         type="button"
         onClick={onMenuToggle}
-        className="shrink-0 rounded p-1 hover:bg-(--bg)/20"
+        className="shrink-0 md:cursor-pointer rounded p-1 md:hover:bg-(--bg)/20"
         aria-label="Options"
       >
         <MoreVertical className="h-4 w-4" />

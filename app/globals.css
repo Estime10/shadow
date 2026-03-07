@@ -73,6 +73,28 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* Curseur : default en dessous de md, pointer à partir de md (tactile vs souris) */
+a,
+button {
+  cursor: default;
+}
+button:disabled {
+  cursor: not-allowed;
+}
+@media (min-width: 768px) {
+  a,
+  button {
+    cursor: pointer;
+  }
+  button:disabled {
+    cursor: not-allowed;
+  }
+}
+/* Logo / marque : jamais pointer */
+.header-home-link {
+  cursor: default !important;
+}
+
 /* Safe area pour notch / barre de statut iOS (mobile-first) */
 @supports (padding-bottom: env(safe-area-inset-bottom)) {
   .safe-area-bottom {
@@ -116,7 +138,7 @@ body {
   box-shadow: 0 0 0 2px var(--accent);
 }
 .event-card--button {
-  cursor: pointer;
+  /* cursor: pointer uniquement via md:cursor-pointer (Tailwind) au-dessus de md */
   text-align: left;
 }
 .event-card__first-line {

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ChevronRight } from "lucide-react";
 import type { ConversationListItemProps } from "@/features/messages/types";
 import { getInitial, getLastMessageSenderLabel } from "@/features/messages/utils";
 import { EMPTY_LAST_MESSAGE_TEXT } from "@/features/messages/constants";
@@ -18,8 +19,7 @@ export function ConversationListItem({
   const senderLabel = getLastMessageSenderLabel(lastMessage.senderId, currentUserId, profiles);
 
   return (
-    <Link
-      href={`/messages/${conversation.id}`}
+    <div
       className={`mx-2 flex w-full items-center gap-3 rounded-xl content-px py-3 text-left ${
         isSelected ? "bg-surface" : ""
       }`}
@@ -37,6 +37,13 @@ export function ConversationListItem({
         unreadCount={unreadCount}
       />
       <ConversationListItemBadge unreadCount={unreadCount} />
-    </Link>
+      <Link
+        href={`/messages/${conversation.id}`}
+        className="ml-auto shrink-0 inline-flex md:cursor-pointer items-center justify-center rounded-lg p-1 transition-colors md:hover:bg-(--bg) focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+        aria-label={`Ouvrir la conversation avec ${participant.name ?? "ce contact"}`}
+      >
+        <ChevronRight className="h-5 w-5 text-(--text-muted)" aria-hidden />
+      </Link>
+    </div>
   );
 }

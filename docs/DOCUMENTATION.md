@@ -285,4 +285,5 @@ Rapport détaillé : **[docs/PENTEST-SECURITY-AUDIT.md](PENTEST-SECURITY-AUDIT.m
 - [ARCHITECTURE.md](ARCHITECTURE.md) — Arborescence et règles par dossier
 - [CONVENTIONS-COMPOSANTS.md](CONVENTIONS-COMPOSANTS.md) — Structure des composants
 - [TYPES-ANALYSIS.md](TYPES-ANALYSIS.md) — Centralisation des types, doublons et où définir un type
+- [ANALYSE-MAINTENABILITE.md](ANALYSE-MAINTENABILITE.md) — Analyse maintenabilité, volume de fichiers et optimisations
 - [PENTEST-SECURITY-AUDIT.md](PENTEST-SECURITY-AUDIT.md) — Audit de sécurité

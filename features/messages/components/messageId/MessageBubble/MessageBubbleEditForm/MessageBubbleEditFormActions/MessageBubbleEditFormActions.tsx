@@ -10,13 +10,13 @@ export function MessageBubbleEditFormActions({ onCancel }: MessageBubbleEditForm
       <button
         type="button"
         onClick={onCancel}
-        className="rounded px-2 py-1 text-xs font-medium text-(--text-muted)"
+        className="md:cursor-pointer rounded px-2 py-1 text-xs font-medium text-(--text-muted)"
       >
         Annuler
       </button>
       <button
         type="submit"
-        className="rounded bg-accent px-2 py-1 font-display text-xs font-bold uppercase text-(--bg)"
+        className="md:cursor-pointer rounded bg-accent px-2 py-1 font-display text-xs font-bold uppercase text-(--bg)"
       >
         Enregistrer
       </button>

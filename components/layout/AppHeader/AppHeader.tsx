@@ -11,7 +11,7 @@ export async function AppHeader() {
       <div className="content-max-w flex h-14 items-center justify-between content-px">
         <Link
           href="/"
-          className="font-display text-lg font-bold uppercase tracking-wider text-(--text)"
+          className="header-home-link font-display text-lg font-bold uppercase tracking-wider text-(--text)"
         >
           {APP_NAME}
         </Link>

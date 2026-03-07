@@ -29,7 +29,7 @@ export function HeaderAuthLoggedIn({
       <button
         type="button"
         onClick={onLogoutClick}
-        className="flex h-8 w-8 items-center justify-center rounded-lg text-(--text)"
+        className="flex h-8 w-8 md:cursor-pointer items-center justify-center rounded-lg text-(--text) transition-colors md:hover:bg-(--bg)"
         aria-label="Se déconnecter"
       >
         <LogOut className="h-4 w-4" aria-hidden />

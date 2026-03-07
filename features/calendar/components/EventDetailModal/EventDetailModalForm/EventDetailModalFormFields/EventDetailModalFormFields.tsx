@@ -1,10 +1,12 @@
 "use client";
 
+import {
+  EventFormDescriptionField,
+  EventFormTimeField,
+  EventFormTitleField,
+} from "@/features/calendar/components/EventFormFields";
 import type { CalendarEvent } from "@/features/calendar/types";
 import { formatDateLabel } from "@/features/calendar/utils";
-import { EventDetailModalFormTitleField } from "./EventDetailModalFormTitleField/EventDetailModalFormTitleField";
-import { EventDetailModalFormTimeField } from "./EventDetailModalFormTimeField/EventDetailModalFormTimeField";
-import { EventDetailModalFormDescriptionField } from "./EventDetailModalFormDescriptionField/EventDetailModalFormDescriptionField";
 
 type EventDetailModalFormFieldsProps = {
   event: CalendarEvent;
@@ -30,9 +32,13 @@ export function EventDetailModalFormFields({
       <p className="font-display text-sm text-(--text-muted)">
         {formatDateLabel(new Date(event.eventDate))}
       </p>
-      <EventDetailModalFormTitleField value={editTitle} onChange={setEditTitle} />
-      <EventDetailModalFormTimeField value={editTime} onChange={setEditTime} />
-      <EventDetailModalFormDescriptionField value={editDescription} onChange={setEditDescription} />
+      <EventFormTitleField id="edit-event-title" value={editTitle} onChange={setEditTitle} />
+      <EventFormTimeField id="edit-event-time" value={editTime} onChange={setEditTime} />
+      <EventFormDescriptionField
+        id="edit-event-description"
+        value={editDescription}
+        onChange={setEditDescription}
+      />
     </>
   );
 }

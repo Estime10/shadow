@@ -16,7 +16,7 @@ export function ConversationsEmptyCard({ onOpenCreateConversation }: Conversatio
       <button
         type="button"
         onClick={onOpenCreateConversation}
-        className="flex flex-col items-center gap-2 rounded-lg p-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+        className="flex md:cursor-pointer flex-col items-center gap-2 rounded-lg p-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
         aria-label="Créer une conversation"
       >
         <MessageCirclePlus className="h-8 w-8 text-accent" aria-hidden />

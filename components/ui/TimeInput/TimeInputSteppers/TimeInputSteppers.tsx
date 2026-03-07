@@ -15,7 +15,7 @@ export function TimeInputSteppers({ onStepUp, onStepDown, disabled }: TimeInputS
         type="button"
         onClick={onStepUp}
         disabled={disabled}
-        className="time-input__stepper-btn"
+        className="time-input__stepper-btn md:cursor-pointer"
         aria-label="Augmenter l'heure"
       >
         <ChevronUp className="h-5 w-5" aria-hidden />
@@ -24,7 +24,7 @@ export function TimeInputSteppers({ onStepUp, onStepDown, disabled }: TimeInputS
         type="button"
         onClick={onStepDown}
         disabled={disabled}
-        className="time-input__stepper-btn"
+        className="time-input__stepper-btn md:cursor-pointer"
         aria-label="Diminuer l'heure"
       >
         <ChevronDown className="h-5 w-5" aria-hidden />

@@ -12,7 +12,7 @@ type EventCarouselNavProps = {
 };
 
 const navBtnClass =
-  "flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 border-(--border) bg-(--surface) text-(--text-muted) transition-colors hover:border-(--accent-dim) hover:text-(--text) focus:outline-none focus-visible:ring-2 focus-visible:ring-accent disabled:opacity-40 disabled:pointer-events-none";
+  "flex h-10 w-10 shrink-0 md:cursor-pointer items-center justify-center rounded-full border-2 border-(--border) bg-(--surface) text-(--text-muted) transition-colors md:hover:border-(--accent-dim) md:hover:text-(--text) focus:outline-none focus-visible:ring-2 focus-visible:ring-accent disabled:opacity-40 disabled:pointer-events-none";
 
 export function EventCarouselNav({
   onPrev,
@@ -32,13 +32,7 @@ export function EventCarouselNav({
       >
         <ChevronLeft className="h-5 w-5" aria-hidden />
       </button>
-      <div
-        className="flex-1 min-w-0 overflow-x-auto overflow-y-hidden scroll-smooth py-2 -mx-content-px content-px [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-        style={{
-          scrollSnapType: "x mandatory",
-          WebkitOverflowScrolling: "touch",
-        }}
-      >
+      <div className="flex-1 min-w-0 snap-x snap-mandatory overflow-x-auto overflow-y-hidden scroll-smooth py-2 -mx-content-px content-px [scrollbar-width:none] [&::-webkit-scrollbar]:hidden [-webkit-overflow-scrolling:touch]">
         {children}
       </div>
       <button

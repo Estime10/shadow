@@ -30,7 +30,7 @@ export function MonthGridDayCell({
   const className = `min-h-12 bg-(--surface) p-1 flex flex-col items-center justify-center ${
     !isInMonth ? "text-(--text-muted) opacity-60" : "text-(--text)"
   } ${isToday ? "ring-2 ring-inset ring-accent" : ""} ${
-    onDayClick ? "cursor-pointer transition-colors hover:bg-(--surface-hover)" : ""
+    onDayClick ? "md:cursor-pointer transition-colors md:hover:bg-(--surface-hover)" : ""
   }`;
 
   if (onDayClick) {

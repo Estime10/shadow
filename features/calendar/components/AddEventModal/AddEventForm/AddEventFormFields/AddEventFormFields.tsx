@@ -1,8 +1,10 @@
 "use client";
 
-import { AddEventFormTitleField } from "./AddEventFormTitleField/AddEventFormTitleField";
-import { AddEventFormTimeField } from "./AddEventFormTimeField/AddEventFormTimeField";
-import { AddEventFormDescriptionField } from "./AddEventFormDescriptionField/AddEventFormDescriptionField";
+import {
+  EventFormDescriptionField,
+  EventFormTimeField,
+  EventFormTitleField,
+} from "@/features/calendar/components/EventFormFields";
 
 type AddEventFormFieldsProps = {
   title: string;
@@ -23,9 +25,13 @@ export function AddEventFormFields({
 }: AddEventFormFieldsProps) {
   return (
     <>
-      <AddEventFormTitleField value={title} onChange={setTitle} />
-      <AddEventFormTimeField value={time} onChange={setTime} />
-      <AddEventFormDescriptionField value={description} onChange={setDescription} />
+      <EventFormTitleField id="add-event-title" value={title} onChange={setTitle} autoFocus />
+      <EventFormTimeField id="add-event-time" value={time} onChange={setTime} />
+      <EventFormDescriptionField
+        id="add-event-description"
+        value={description}
+        onChange={setDescription}
+      />
     </>
   );
 }
