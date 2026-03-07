@@ -1,9 +1,9 @@
 "use client";
 
-import type { SelectableItem } from "./SelectableItemRowSingle/SelectableItemRowSingle";
 import { SelectableItemListContent } from "./SelectableItemListContent/SelectableItemListContent";
+import type { SelectableItem } from "@/types";
 
-export type { SelectableItem } from "./SelectableItemRowSingle/SelectableItemRowSingle";
+export type { SelectableItem } from "@/types";
 
 type SelectableItemListBase = {
   items: SelectableItem[];

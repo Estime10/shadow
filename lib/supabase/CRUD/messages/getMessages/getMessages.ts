@@ -1,12 +1,9 @@
 import { createClient } from "../../../server";
 import { getReadAtByMessageIds } from "../../messageReads/getReadAtByMessageIds/getReadAtByMessageIds";
 import { mapMessageRowToMessage } from "../mappers/mappers";
-import type { Message } from "@/types/message";
+import type { GetMessagesVisibilityOptions, Message } from "@/types";
 
-export type GetMessagesVisibilityOptions = {
-  currentUserId: string;
-  disappearAfterMinutes: number;
-};
+export type { GetMessagesVisibilityOptions } from "@/types";
 
 /**
  * Récupère les messages d'une conversation (ou tous si conversationId non fourni, pour compat).

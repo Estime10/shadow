@@ -1,13 +1,9 @@
 import { createClient } from "../../../server";
 import { requireUser } from "../../../requireUser";
 import { mapEventRowToCalendarEvent } from "../mappers/mappers";
-import type { CalendarEvent } from "@/features/calendar/types";
+import type { CalendarEvent, CreateEventParams } from "@/types";
 
-export type CreateEventParams = {
-  title: string;
-  description: string | null;
-  eventDate: string;
-};
+export type { CreateEventParams } from "@/types";
 
 /**
  * Crée un événement. created_by = utilisateur connecté (RLS).

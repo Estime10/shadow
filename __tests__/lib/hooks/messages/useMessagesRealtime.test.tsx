@@ -2,7 +2,7 @@
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, waitFor } from "@testing-library/react";
-import { SWRConfig } from "swr";
+import { SWRConfig, type SWRConfiguration } from "swr";
 import { useMessagesRealtime } from "@/lib/hooks/messages/useMessagesRealtime/useMessagesRealtime";
 
 const MESSAGES_LIST_KEY = "messages-list";
@@ -69,7 +69,7 @@ describe("useMessagesRealtime", () => {
   it("s'abonne au channel et appelle mutate(messages-list) sur INSERT message", async () => {
     const mutate = vi.fn();
     render(
-      <SWRConfig value={{ mutate }}>
+      <SWRConfig value={{ mutate } as SWRConfiguration}>
         <TestWrapper conversationIds={["conv-1"]} currentUserId="user-1" />
       </SWRConfig>
     );
@@ -98,7 +98,7 @@ describe("useMessagesRealtime", () => {
     const threadCacheKey: readonly [string, string] = ["messages", "conv-1"];
 
     render(
-      <SWRConfig value={{ mutate }}>
+      <SWRConfig value={{ mutate } as SWRConfiguration}>
         <TestWrapper
           conversationIds={["conv-1"]}
           currentUserId="user-1"
@@ -128,7 +128,7 @@ describe("useMessagesRealtime", () => {
       (c: unknown[]) => Array.isArray(c[0]) && c[0][1] === "conv-1"
     );
     expect(threadCall).toBeDefined();
-    const updater = threadCall[1];
+    const updater = threadCall![1];
     const prev = {
       conversation: { id: "conv-1" } as const,
       messages: [
@@ -148,7 +148,7 @@ describe("useMessagesRealtime", () => {
     const threadCacheKey: readonly [string, string] = ["messages", "conv-1"];
 
     render(
-      <SWRConfig value={{ mutate }}>
+      <SWRConfig value={{ mutate } as SWRConfiguration}>
         <TestWrapper
           conversationIds={["conv-1"]}
           currentUserId="user-1"
@@ -174,7 +174,7 @@ describe("useMessagesRealtime", () => {
       (c: unknown[]) => Array.isArray(c[0]) && c[0][1] === "conv-1"
     );
     expect(threadCall).toBeDefined();
-    const updater = threadCall[1];
+    const updater = threadCall![1];
     const prev = {
       conversation: { id: "conv-1" } as const,
       messages: [
@@ -200,7 +200,7 @@ describe("useMessagesRealtime", () => {
     const threadCacheKey: readonly [string, string] = ["messages", "conv-1"];
 
     render(
-      <SWRConfig value={{ mutate }}>
+      <SWRConfig value={{ mutate } as SWRConfiguration}>
         <TestWrapper
           conversationIds={["conv-1"]}
           currentUserId="user-1"
@@ -229,7 +229,7 @@ describe("useMessagesRealtime", () => {
       (c: unknown[]) => Array.isArray(c[0]) && c[0][1] === "conv-1"
     );
     expect(threadCall).toBeDefined();
-    const updater = threadCall[1];
+    const updater = threadCall![1];
     const prev = {
       conversation: { id: "conv-1" } as const,
       messages: [
@@ -252,7 +252,7 @@ describe("useMessagesRealtime", () => {
   it("appelle revalidateList sur INSERT conversation si la conversation est pour currentUserId", async () => {
     const mutate = vi.fn();
     render(
-      <SWRConfig value={{ mutate }}>
+      <SWRConfig value={{ mutate } as SWRConfiguration}>
         <TestWrapper conversationIds={[]} currentUserId="user-1" />
       </SWRConfig>
     );
@@ -273,7 +273,7 @@ describe("useMessagesRealtime", () => {
   it("n'appelle pas revalidateList sur INSERT conversation si currentUserId n'est pas participant", async () => {
     const mutate = vi.fn();
     render(
-      <SWRConfig value={{ mutate }}>
+      <SWRConfig value={{ mutate } as SWRConfiguration}>
         <TestWrapper conversationIds={[]} currentUserId="user-1" />
       </SWRConfig>
     );

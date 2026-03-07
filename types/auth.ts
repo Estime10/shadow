@@ -1,13 +1,8 @@
-import type { z } from "zod";
-import type { loginSchema } from "@/features/auth/login/schema/loginSchema";
-import type { registerSchema } from "@/features/auth/register/schema/registerSchema";
-
-/** Dérivé du schéma Zod login — source de vérité unique. */
-export type LoginFormData = z.infer<typeof loginSchema>;
-
-/** Dérivé du schéma Zod register — source de vérité unique. */
-export type RegisterFormData = z.infer<typeof registerSchema>;
-
+/**
+ * Types de résultat des actions auth.
+ * Pour la forme des données de formulaire, utiliser les types des schémas :
+ * LoginSchemaOutput / RegisterSchemaOutput depuis @/features/auth.
+ */
 export type LoginResult =
   | { success: true; redirectTo?: string }
   | { success: false; error: string };

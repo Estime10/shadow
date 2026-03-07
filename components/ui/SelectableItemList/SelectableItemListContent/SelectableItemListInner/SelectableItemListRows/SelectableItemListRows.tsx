@@ -1,6 +1,6 @@
 "use client";
 
-import type { SelectableItem } from "../../../SelectableItemRowSingle/SelectableItemRowSingle";
+import type { SelectableItem } from "@/types";
 import { SelectableItemRowSingle } from "../../../SelectableItemRowSingle/SelectableItemRowSingle";
 import { SelectableItemRowMulti } from "../../../SelectableItemRowMulti/SelectableItemRowMulti";
 

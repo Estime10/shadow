@@ -1,12 +1,7 @@
 "use client";
 
 import { Checkbox } from "@/components/ui/Checkbox/Checkbox";
-
-export type SelectableItem = {
-  id: string;
-  initial: string;
-  label: string;
-};
+import type { SelectableItem } from "@/types";
 
 type SelectableItemRowMultiProps = {
   item: SelectableItem;

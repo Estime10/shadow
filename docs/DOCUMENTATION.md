@@ -99,7 +99,7 @@ shade/
 │   └── home/               # Page d’accueil (HomeView)
 ├── lib/                    # Code transverse (config, Supabase, utils, hooks)
 ├── components/             # UI réutilisable (layout, ui, animations)
-├── types/                  # Types globaux (auth, message, etc.)
+├── types/                  # Tous les types — point d'entrée unique (voir §4)
 ├── e2e/                    # Tests E2E Playwright
 ├── __tests__/              # Tests unitaires Vitest
 ├── supabase/               # Migrations / politiques RLS (SQL)
@@ -264,11 +264,12 @@ Rapport détaillé : **[docs/PENTEST-SECURITY-AUDIT.md](PENTEST-SECURITY-AUDIT.m
 
 | Besoin                     | Emplacement                                                           |
 | -------------------------- | --------------------------------------------------------------------- |
+| **Récupérer un type**      | **`import type { … } from "@/types"`** — point d'entrée unique        |
 | Ajouter une page           | `app/<route>/page.tsx`                                                |
 | Ajouter une route publique | `lib/config/publicRoutes.ts` + page dans `app/`                       |
 | Nouvelle Server Action     | `features/<nom>/actions/` + schéma Zod dans `features/<nom>/schemas/` |
 | Nouveau composant métier   | `features/<nom>/components/`                                          |
-| Nouveau type partagé       | `types/` ou `features/<nom>/types/`                                   |
+| Nouveau type partagé       | `types/<domaine>.ts` + export dans `types/index.ts`                   |
 | Utilitaire transverse      | `lib/utils/` ou `lib/functions/`                                      |
 | Config (routes, chemins)   | `lib/config/`                                                         |
 | Constante métier           | `features/<nom>/constants/`                                           |
@@ -283,4 +284,5 @@ Rapport détaillé : **[docs/PENTEST-SECURITY-AUDIT.md](PENTEST-SECURITY-AUDIT.m
 
 - [ARCHITECTURE.md](ARCHITECTURE.md) — Arborescence et règles par dossier
 - [CONVENTIONS-COMPOSANTS.md](CONVENTIONS-COMPOSANTS.md) — Structure des composants
+- [TYPES-ANALYSIS.md](TYPES-ANALYSIS.md) — Centralisation des types, doublons et où définir un type
 - [PENTEST-SECURITY-AUDIT.md](PENTEST-SECURITY-AUDIT.md) — Audit de sécurité

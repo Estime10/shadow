@@ -1,13 +1,9 @@
 import { createClient } from "../../../server";
 import { requireUser } from "../../../requireUser";
 import { mapEventRowToCalendarEvent } from "../mappers/mappers";
-import type { CalendarEvent } from "@/features/calendar/types";
+import type { CalendarEvent, UpdateEventParams } from "@/types";
 
-export type UpdateEventParams = {
-  title?: string;
-  description?: string | null;
-  eventDate?: string;
-};
+export type { UpdateEventParams } from "@/types";
 
 /**
  * Met à jour un événement. RLS : seul le créateur peut modifier.

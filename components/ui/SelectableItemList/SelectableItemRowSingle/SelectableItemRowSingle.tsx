@@ -1,12 +1,7 @@
 "use client";
 
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner/LoadingSpinner";
-
-export type SelectableItem = {
-  id: string;
-  initial: string;
-  label: string;
-};
+import type { SelectableItem } from "@/types";
 
 type SelectableItemRowSingleProps = {
   item: SelectableItem;

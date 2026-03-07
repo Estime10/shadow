@@ -1,11 +1,7 @@
 import { createClient } from "../../../server";
+import type { GroupRow } from "@/types";
 
-export type GroupRow = {
-  id: string;
-  name: string;
-  created_by_user_id: string;
-  created_at: string;
-};
+export type { GroupRow } from "@/types";
 
 /**
  * Récupère un groupe par id. Retourne null si pas trouvé ou pas membre (RLS).
