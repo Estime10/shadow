@@ -1,363 +1,54 @@
-# Ephemeral Friends App — PWA
+# Shade
 
-Web App privée avec messages éphémères (24h), partage de médias, calendrier partagé et notifications realtime.
-Installable comme une app native sur iPhone et Android via PWA.
+Application web privée : messages éphémères (24h), calendrier partagé, notifications. Installable en PWA.
 
----
-
-# Stack Technique
-
-## Frontend
-
-- Next.js
-- TailwindCSS
-- Supabase Client
-- PWA (Service Worker)
-
-## Backend (Supabase)
-
-- Database (PostgreSQL)
-- Realtime subscriptions
-- Storage (images / vidéos)
-- Auth (optionnel)
-
-## Hosting
-
-- Vercel
+**Stack :** Next.js 16 (App Router), Supabase (Auth, DB, Realtime), TypeScript strict, React 19, Tailwind CSS.
 
 ---
 
-# Features
+## Commandes
 
-## Messages éphémères
-
-- Texte
-- Images
-- Vidéos
-- Expiration automatique après 24h
-- Realtime
-
-## Calendar partagé
-
-- Events internes à l'app
-- Notifications visuelles
-- Pas de sync avec calendar téléphone
-
-## Notifications
-
-- Badge dans l'app
-- Realtime
-- Push notifications (optionnel)
-
-## PWA
-
-- Installable
-- Fullscreen
-- Icône home screen
-- Native-like
+| Commande                 | Description                   |
+| ------------------------ | ----------------------------- |
+| `pnpm dev`               | Serveur de développement      |
+| `pnpm build`             | Build de production           |
+| `pnpm start`             | Démarrer en production        |
+| `pnpm lint`              | Linter ESLint                 |
+| `pnpm run test:run`      | Tests unitaires (Vitest)      |
+| `pnpm run test:coverage` | Tests + rapport de couverture |
+| `pnpm run e2e`           | Tests E2E (Playwright)        |
+| `pnpm exec tsc --noEmit` | Vérification TypeScript       |
 
 ---
 
-# Installation
+## Variables d’environnement
 
-## 1. Create Next.js app
+Créer un fichier `.env.local` à la racine :
 
-```bash
-npx create-next-app ephemeral-app
-cd ephemeral-app
+```
+NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=xxx
 ```
 
-Install deps:
-
-```bash
-npm install @supabase/supabase-js
-npm install next-pwa
-```
+Sans ces variables, le middleware renvoie une erreur 503 (configuration manquante).
 
 ---
 
-## 2. Setup Supabase
+## Structure du projet
 
-Créer projet Supabase
+- **`app/`** — Routing et orchestration (pages, layouts, metadata).
+- **`features/`** — Logique métier par domaine (auth, calendar, messages, home). Chaque feature expose un `index.ts` (actions, components, data, schemas, etc.).
+- **`lib/`** — Code transverse (config, Supabase, rate limit, utils).
+- **`components/`** — Composants UI réutilisables (layout, cartes, icônes).
+- **`types/`** — Types globaux.
 
-Créer tables SQL :
-
-```sql
--- USERS
-create table users (
-  id uuid primary key default gen_random_uuid(),
-  username text unique,
-  created_at timestamp default now()
-);
-
--- MESSAGES
-create table messages (
-  id uuid primary key default gen_random_uuid(),
-  user_id uuid references users(id),
-  text text,
-  media_url text,
-  media_type text,
-  created_at timestamp default now(),
-  expires_at timestamp
-);
-
--- EVENTS
-create table events (
-  id uuid primary key default gen_random_uuid(),
-  title text,
-  description text,
-  event_date timestamp,
-  created_by uuid references users(id),
-  created_at timestamp default now()
-);
-```
+Voir **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)** pour les règles détaillées et où ajouter du code.
 
 ---
 
-## 3. Storage setup
-
-Créer bucket:
-
-```
-messages-media
-```
-
-Public bucket: true
-
----
-
-## 4. Supabase client
-
-Create:
-
-```
-/lib/supabase.js
-```
-
-```js
-import { createClient } from "@supabase/supabase-js";
-
-export const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-);
-```
-
----
-
-## 5. Environment variables
-
-```
-NEXT_PUBLIC_SUPABASE_URL=
-NEXT_PUBLIC_SUPABASE_ANON_KEY=
-```
-
----
-
-# Messages Logic
-
-## Send message
-
-```js
-const sendMessage = async ({ text, file }) => {
-  let media_url = null;
-
-  if (file) {
-    const path = `${Date.now()}-${file.name}`;
-
-    await supabase.storage.from("messages-media").upload(path, file);
-
-    media_url = path;
-  }
-
-  await supabase.from("messages").insert({
-    text,
-    media_url,
-    expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000),
-  });
-};
-```
-
----
-
-## Fetch messages
-
-```js
-const { data } = await supabase
-  .from("messages")
-  .select("*")
-  .gt("expires_at", new Date().toISOString())
-  .order("created_at", { ascending: false });
-```
-
----
-
-## Realtime subscription
-
-```js
-useEffect(() => {
-  const channel = supabase
-    .channel("messages")
-    .on(
-      "postgres_changes",
-      {
-        event: "INSERT",
-        schema: "public",
-        table: "messages",
-      },
-      (payload) => {
-        console.log(payload);
-      }
-    )
-    .subscribe();
-
-  return () => {
-    supabase.removeChannel(channel);
-  };
-}, []);
-```
-
----
-
-# Calendar Logic
-
-## Create event
-
-```js
-await supabase.from("events").insert({
-  title,
-  description,
-  event_date,
-});
-```
-
-## Fetch events
-
-```js
-await supabase.from("events").select("*").order("event_date");
-```
-
----
-
-# Auto delete expired messages
-
-Option 1: Cron (recommended)
-
-Supabase SQL:
-
-```sql
-delete from messages
-where expires_at < now();
-```
-
-Run every hour.
-
----
-
-# PWA Setup
-
-Install:
-
-```bash
-npm install next-pwa
-```
-
-next.config.js
-
-```js
-const withPWA = require("next-pwa")({
-  dest: "public",
-});
-
-module.exports = withPWA({});
-```
-
----
-
-Create manifest:
-
-```
-/public/manifest.json
-```
-
-```json
-{
-  "name": "Friends App",
-  "short_name": "Friends",
-  "start_url": "/",
-  "display": "standalone",
-  "background_color": "#000",
-  "theme_color": "#000",
-  "icons": [
-    {
-      "src": "/icon.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
-  ]
-}
-```
-
----
-
-# Deploy
-
-Push GitHub
-
-Deploy Vercel
-
-Done.
-
----
-
-# Project Structure
-
-```
-/app
-/messages
-/calendar
-
-/components
-MessageList
-MessageInput
-Calendar
-
-/lib
-supabase.js
-
-/public
-manifest.json
-```
-
----
-
-# Future Improvements
-
-Push notifications
-User auth
-Message reactions
-Seen status
-Typing indicator
-Private groups
-
----
-
-# Result
-
-Installable app
-Realtime
-Ephemeral messages
-Shared calendar
-Private usage
-No App Store needed
-
----
-
-# Estimated Build Time
-
-MVP: 4–6 hours
-Full app polished: 1–2 days
-
----
-
-# End
+## Documentation
+
+- **[Documentation développeur](docs/DOCUMENTATION.md)** — Guide complet : installation, architecture, features, tests, sécurité, conventions (point d’entrée pour un nouveau dev).
+- [Architecture](docs/ARCHITECTURE.md) — Arborescence, règles par dossier.
+- [Conventions composants](docs/CONVENTIONS-COMPOSANTS.md) — Structure des composants (orchestrateur, sous-dossiers).
+- [Audit sécurité](docs/PENTEST-SECURITY-AUDIT.md) — Rapport type pentest.

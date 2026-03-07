@@ -1,6 +1,7 @@
 import { SectionWithTitle } from "@/components/layout/SectionWithTitle/SectionWithTitle";
 import { CalendarView } from "@/features/calendar/components";
 import { getEventsForCalendar } from "@/features/calendar/data";
+
 import { createPageMetadata } from "@/lib/metadata/createPageMetadata";
 
 export const metadata = createPageMetadata({

@@ -17,7 +17,10 @@ export async function updateSession(request: NextRequest) {
   const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
   if (!url || !anonKey) {
-    return supabaseResponse;
+    return new NextResponse(
+      "<!DOCTYPE html><html><body><h1>Configuration error</h1><p>Missing Supabase configuration.</p></body></html>",
+      { status: 503, headers: { "Content-Type": "text/html; charset=utf-8" } }
+    );
   }
 
   const supabase = createServerClient(url, anonKey, {
