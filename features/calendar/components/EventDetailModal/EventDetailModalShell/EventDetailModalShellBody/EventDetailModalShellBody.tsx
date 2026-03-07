@@ -8,33 +8,27 @@ import { EventDetailModalView } from "@/features/calendar/components/EventDetail
 type EventDetailModalShellBodyProps = {
   event: CalendarEvent;
   state: UseEventDetailModalReturn;
+  onUpdateSuccess?: () => void;
 };
 
-export function EventDetailModalShellBody({ event, state }: EventDetailModalShellBodyProps) {
-  const {
-    editing,
-    editTitle,
-    setEditTitle,
-    editDescription,
-    setEditDescription,
-    editTime,
-    setEditTime,
-    handleSaveEdit,
-    handleCancelEdit,
-  } = state;
+export function EventDetailModalShellBody({
+  event,
+  state,
+  onUpdateSuccess,
+}: EventDetailModalShellBodyProps) {
+  const { editing, setEditing, handleCancelEdit } = state;
+
+  const handleSaveSuccess = () => {
+    setEditing(false);
+    onUpdateSuccess?.();
+  };
 
   return (
     <div className="content-px py-4 space-y-4">
       {editing ? (
         <EventDetailModalForm
           event={event}
-          editTitle={editTitle}
-          setEditTitle={setEditTitle}
-          editDescription={editDescription}
-          setEditDescription={setEditDescription}
-          editTime={editTime}
-          setEditTime={setEditTime}
-          onSave={handleSaveEdit}
+          onSaveSuccess={handleSaveSuccess}
           onCancel={handleCancelEdit}
         />
       ) : (

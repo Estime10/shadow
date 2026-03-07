@@ -1,9 +1,15 @@
 "use client";
 
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Modal } from "@/components/ui/Modal/Modal";
 import type { CalendarEvent } from "@/features/calendar/types";
 import { formatDateLabel } from "@/features/calendar/utils";
-import { useAddEventForm } from "@/lib/hooks/calendar";
+import {
+  eventFormSchema,
+  type EventFormValues,
+} from "@/features/calendar/schemas/eventFormSchema/eventFormSchema";
+import { buildEventFromForm } from "@/features/calendar/utils";
 import { AddEventForm } from "./AddEventForm/AddEventForm";
 
 export type AddEventModalProps = {
@@ -13,8 +19,30 @@ export type AddEventModalProps = {
   onSubmit: (event: CalendarEvent) => void;
 };
 
+const DEFAULT_TIME = "12:00";
+
 export function AddEventModal({ open, onClose, selectedDate, onSubmit }: AddEventModalProps) {
-  const form = useAddEventForm({ selectedDate, onSubmit, onClose });
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+    setError,
+  } = useForm<EventFormValues>({
+    resolver: zodResolver(eventFormSchema),
+    defaultValues: { title: "", description: "", time: DEFAULT_TIME },
+  });
+
+  function onValid(data: EventFormValues) {
+    const event = buildEventFromForm(selectedDate, {
+      title: data.title,
+      description: data.description || "",
+      time: data.time,
+    });
+    onSubmit(event);
+    reset({ title: "", description: "", time: DEFAULT_TIME });
+    onClose();
+  }
 
   return (
     <Modal
@@ -25,14 +53,12 @@ export function AddEventModal({ open, onClose, selectedDate, onSubmit }: AddEven
       subtitle={formatDateLabel(selectedDate)}
     >
       <AddEventForm
-        title={form.title}
-        setTitle={form.setTitle}
-        description={form.description}
-        setDescription={form.setDescription}
-        time={form.time}
-        setTime={form.setTime}
-        onSubmit={form.handleSubmit}
-        onCancel={form.onCancel}
+        control={control}
+        errors={errors}
+        isSubmitting={isSubmitting}
+        onSubmit={handleSubmit(onValid)}
+        onCancel={onClose}
+        setError={setError}
       />
     </Modal>
   );

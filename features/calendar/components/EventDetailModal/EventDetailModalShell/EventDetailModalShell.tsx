@@ -15,6 +15,7 @@ type EventDetailModalShellProps = {
   state: UseEventDetailModalReturn;
   onDeleteClick: () => void;
   onClose: () => void;
+  onUpdateSuccess?: () => void;
 };
 
 export function EventDetailModalShell({
@@ -24,6 +25,7 @@ export function EventDetailModalShell({
   state,
   onDeleteClick,
   onClose,
+  onUpdateSuccess,
 }: EventDetailModalShellProps) {
   const { menuOpen, setMenuOpen, menuRef, editing, isCreator, openEditMode, handleOverlayClick } =
     state;
@@ -42,7 +44,7 @@ export function EventDetailModalShell({
           onDeleteClick={onDeleteClick}
           onClose={onClose}
         />
-        <EventDetailModalShellBody event={event} state={state} />
+        <EventDetailModalShellBody event={event} state={state} onUpdateSuccess={onUpdateSuccess} />
       </EventDetailModalPanel>
     </EventDetailModalOverlay>
   );

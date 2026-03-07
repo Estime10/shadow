@@ -8,6 +8,7 @@ type EventFormDescriptionFieldProps = {
   onChange: (value: string) => void;
   placeholder?: string;
   optionalLabel?: boolean;
+  error?: string;
 };
 
 export function EventFormDescriptionField({
@@ -16,6 +17,7 @@ export function EventFormDescriptionField({
   onChange,
   placeholder = "Détails…",
   optionalLabel = true,
+  error,
 }: EventFormDescriptionFieldProps) {
   return (
     <div className="flex flex-col gap-1.5">
@@ -28,8 +30,15 @@ export function EventFormDescriptionField({
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         rows={3}
-        className={eventFormFieldTextareaClass}
+        aria-invalid={Boolean(error)}
+        aria-describedby={error ? `${id}-error` : undefined}
+        className={`${eventFormFieldTextareaClass} ${error ? "border-(--error) ring-2 ring-(--error)/30" : ""}`}
       />
+      {error ? (
+        <p id={`${id}-error`} className="text-sm text-(--error)" role="alert">
+          {error}
+        </p>
+      ) : null}
     </div>
   );
 }

@@ -9,6 +9,7 @@ type EventFormTitleFieldProps = {
   placeholder?: string;
   required?: boolean;
   autoFocus?: boolean;
+  error?: string;
 };
 
 export function EventFormTitleField({
@@ -18,6 +19,7 @@ export function EventFormTitleField({
   placeholder = "Ex. Réunion équipe",
   required = true,
   autoFocus = false,
+  error,
 }: EventFormTitleFieldProps) {
   return (
     <Input
@@ -29,6 +31,7 @@ export function EventFormTitleField({
       placeholder={placeholder}
       required={required}
       autoFocus={autoFocus}
+      error={error}
     />
   );
 }

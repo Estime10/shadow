@@ -7,3 +7,4 @@ export {
   type UpdateEventSchemaOutput,
 } from "./updateEventSchema/updateEventSchema";
 export { parseDeleteEventParams } from "./deleteEventSchema/deleteEventSchema";
+export { eventFormSchema, type EventFormValues } from "./eventFormSchema/eventFormSchema";

@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Oswald, Space_Mono } from "next/font/google";
 import { AppNav } from "@/components/layout/AppNav/AppNav";
 import { PageTransition } from "@/components/animations/PageTransition/PageTransition";
+import { ToastRoot } from "@/components/providers/ToastRoot/ToastRoot";
 import type { LayoutChildrenProps } from "@/types/layout";
 import "./globals.css";
 
@@ -38,10 +39,12 @@ export default function RootLayout({ children }: Readonly<LayoutChildrenProps>) 
       <body
         className={`${oswald.variable} ${spaceMono.variable} antialiased min-h-screen bg-(--bg) text-(--text)`}
       >
-        <div className="flex min-h-screen flex-col pb-20">
-          <PageTransition>{children}</PageTransition>
-        </div>
-        <AppNav />
+        <ToastRoot>
+          <div className="flex min-h-screen flex-col pb-20">
+            <PageTransition>{children}</PageTransition>
+          </div>
+          <AppNav />
+        </ToastRoot>
       </body>
     </html>
   );

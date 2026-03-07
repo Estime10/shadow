@@ -44,6 +44,7 @@ export function EventDetailModal({
             state={state}
             onDeleteClick={handleDeleteClick}
             onClose={onClose}
+            onUpdateSuccess={onUpdateSuccess}
           />
         ) : null}
       </AnimatePresence>

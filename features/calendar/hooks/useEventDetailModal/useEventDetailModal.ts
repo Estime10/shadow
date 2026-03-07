@@ -2,9 +2,9 @@
 
 import { useState, useCallback, useRef, useEffect } from "react";
 import { useClientUserId } from "@/lib/hooks/messages";
-import { updateEventAction, deleteEventAction } from "@/features/calendar/actions";
+import { useToast } from "@/lib/contexts/ToastContext/ToastContext";
+import { deleteEventAction } from "@/features/calendar/actions";
 import type { CalendarEvent } from "@/features/calendar/types";
-import { formatEventTime, buildEventDateFromTime } from "@/features/calendar/utils";
 
 export type UseEventDetailModalParams = {
   event: CalendarEvent | null;
@@ -20,17 +20,11 @@ export type UseEventDetailModalReturn = {
   confirmDeleteOpen: boolean;
   setConfirmDeleteOpen: React.Dispatch<React.SetStateAction<boolean>>;
   editing: boolean;
-  editTitle: string;
-  setEditTitle: React.Dispatch<React.SetStateAction<string>>;
-  editDescription: string;
-  setEditDescription: React.Dispatch<React.SetStateAction<string>>;
-  editTime: string;
-  setEditTime: React.Dispatch<React.SetStateAction<string>>;
+  setEditing: React.Dispatch<React.SetStateAction<boolean>>;
   isCreator: boolean;
   openEditMode: () => void;
   handleOverlayClick: (e: React.MouseEvent) => void;
   handleConfirmDelete: () => Promise<void>;
-  handleSaveEdit: (e: React.FormEvent) => Promise<void>;
   handleCancelEdit: () => void;
 };
 
@@ -38,27 +32,20 @@ export function useEventDetailModal({
   event,
   onClose,
   onDeleteSuccess,
-  onUpdateSuccess,
 }: UseEventDetailModalParams): UseEventDetailModalReturn {
   const currentUserId = useClientUserId();
+  const { addToast } = useToast();
   const [menuOpen, setMenuOpen] = useState(false);
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const [editing, setEditing] = useState(false);
-  const [editTitle, setEditTitle] = useState("");
-  const [editDescription, setEditDescription] = useState("");
-  const [editTime, setEditTime] = useState("12:00");
   const menuRef = useRef<HTMLDivElement>(null);
 
   const isCreator = event != null && currentUserId != null && event.createdBy === currentUserId;
 
   const openEditMode = useCallback(() => {
-    if (!event) return;
-    setEditTitle(event.title);
-    setEditDescription(event.description ?? "");
-    setEditTime(formatEventTime(event.eventDate));
     setEditing(true);
     setMenuOpen(false);
-  }, [event]);
+  }, []);
 
   useEffect(() => {
     if (!menuOpen) return;
@@ -83,37 +70,15 @@ export function useEventDetailModal({
     const { error } = await deleteEventAction(event.id);
     setConfirmDeleteOpen(false);
     if (!error) {
+      addToast("success", "Événement supprimé");
       onClose();
       onDeleteSuccess?.();
     }
-  }, [event, onClose, onDeleteSuccess]);
-
-  const handleSaveEdit = useCallback(
-    async (e: React.FormEvent) => {
-      e.preventDefault();
-      if (!event) return;
-      const { error } = await updateEventAction(event.id, {
-        title: editTitle.trim(),
-        description: editDescription.trim() || null,
-        eventDate: buildEventDateFromTime(event.eventDate, editTime),
-      });
-      if (!error) {
-        setEditing(false);
-        setMenuOpen(false);
-        onUpdateSuccess?.();
-      }
-    },
-    [event, editTitle, editDescription, editTime, onUpdateSuccess]
-  );
+  }, [event, onClose, onDeleteSuccess, addToast]);
 
   const handleCancelEdit = useCallback(() => {
     setEditing(false);
-    if (event) {
-      setEditTitle(event.title);
-      setEditDescription(event.description ?? "");
-      setEditTime(formatEventTime(event.eventDate));
-    }
-  }, [event]);
+  }, []);
 
   return {
     menuOpen,
@@ -122,17 +87,11 @@ export function useEventDetailModal({
     confirmDeleteOpen,
     setConfirmDeleteOpen,
     editing,
-    editTitle,
-    setEditTitle,
-    editDescription,
-    setEditDescription,
-    editTime,
-    setEditTime,
+    setEditing,
     isCreator,
     openEditMode,
     handleOverlayClick,
     handleConfirmDelete,
-    handleSaveEdit,
     handleCancelEdit,
   };
 }

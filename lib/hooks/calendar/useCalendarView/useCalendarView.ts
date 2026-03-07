@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useCallback } from "react";
 import useSWR from "swr";
+import { useToast } from "@/lib/contexts/ToastContext/ToastContext";
 import { createEventAction, getCalendarEventsAction } from "@/features/calendar/actions";
 import type { CalendarEvent } from "@/features/calendar/types";
 import {
@@ -39,6 +40,7 @@ export type UseCalendarViewReturn = CalendarViewState & CalendarViewActions;
 
 export function useCalendarView(initialEvents: CalendarEvent[]): UseCalendarViewReturn {
   const now = new Date();
+  const { addToast } = useToast();
   const { data, mutate } = useSWR<CalendarEvent[]>(CALENDAR_EVENTS_KEY, getCalendarEventsAction, {
     fallbackData: initialEvents,
   });
@@ -75,9 +77,12 @@ export function useCalendarView(initialEvents: CalendarEvent[]): UseCalendarView
         description: event.description,
         eventDate: event.eventDate,
       });
-      if (!error) void mutate();
+      if (!error) {
+        void mutate();
+        addToast("success", "Événement créé");
+      }
     },
-    [mutate]
+    [mutate, addToast]
   );
 
   const handlePrev = useCallback(() => {
