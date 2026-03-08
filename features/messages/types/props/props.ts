@@ -36,7 +36,6 @@ export type ConversationEmptyStateProps = Pick<
 /** Un item = une conversation + infos liste (slice du page content) */
 export type ConversationListItemProps = Pick<MessagesPageContent, "currentUserId" | "profiles"> & {
   conversation: Conversation;
-  isSelected: boolean;
 };
 
 /** Header thread : slice conversation du content [id] */

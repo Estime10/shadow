@@ -9,7 +9,6 @@ import { ConversationListItemBadge } from "./ConversationListItemBadge/Conversat
 
 export function ConversationListItem({
   conversation,
-  isSelected,
   currentUserId,
   profiles,
 }: ConversationListItemProps) {
@@ -19,11 +18,7 @@ export function ConversationListItem({
   const senderLabel = getLastMessageSenderLabel(lastMessage.senderId, currentUserId, profiles);
 
   return (
-    <div
-      className={`mx-2 flex w-full items-start gap-3 rounded-xl content-px py-3 text-left ${
-        isSelected ? "bg-surface" : ""
-      }`}
-    >
+    <div className="mx-2 flex w-full items-start gap-3 rounded-xl bg-(--surface) content-px py-3 text-left">
       <ConversationListItemAvatar
         initial={participant.avatar ? "" : getInitial(participant.name ?? null)}
       />

@@ -1,4 +1,4 @@
-import { SectionWithTitle } from "@/components/layout/SectionWithTitle/SectionWithTitle";
+import { NotificationsView, fakeNotifications } from "@/features/notifications";
 import { createPageMetadata } from "@/lib/metadata/createPageMetadata";
 
 export const metadata = createPageMetadata({
@@ -7,9 +7,5 @@ export const metadata = createPageMetadata({
 });
 
 export default function NotificationsPage() {
-  return (
-    <SectionWithTitle title="Notifications">
-      Badge et notifications realtime. (À brancher sur Supabase.)
-    </SectionWithTitle>
-  );
+  return <NotificationsView notifications={fakeNotifications} />;
 }
