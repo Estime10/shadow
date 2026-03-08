@@ -28,7 +28,7 @@ export function MessageInputForm({ conversationId, threadCacheKey }: MessageInpu
     <form
       ref={formRef}
       action={handleSubmit}
-      className="flex items-end gap-1.5 rounded-lg border-2 border-(--border) bg-(--bg) content-px py-1.5 focus-within:border-accent transition-colors"
+      className="flex items-end gap-1.5  bg-(--bg) content-px py-1.5 focus-within:border-accent transition-colors"
     >
       <input type="hidden" name="conversationId" value={conversationId} />
       <textarea
