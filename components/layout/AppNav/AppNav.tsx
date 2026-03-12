@@ -3,13 +3,22 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { mainNavItems } from "@/lib/navigation/navigation";
+import { useCalendarBadgeCount } from "@/lib/contexts/CalendarBadgeContext/CalendarBadgeContext";
 import { useNotificationsUnreadCount } from "@/lib/contexts/NotificationsContext/NotificationsContext";
 
 const MESSAGES_HREF = "/messages";
+const CALENDAR_HREF = "/calendar";
 
 export function AppNav() {
   const pathname = usePathname();
   const messagesUnreadCount = useNotificationsUnreadCount();
+  const calendarUpcomingCount = useCalendarBadgeCount();
+
+  const getBadge = (href: string) => {
+    if (href === MESSAGES_HREF) return messagesUnreadCount;
+    if (href === CALENDAR_HREF) return calendarUpcomingCount;
+    return null;
+  };
 
   return (
     <nav
@@ -19,7 +28,7 @@ export function AppNav() {
       <div className="content-max-w flex items-center justify-around content-px py-2">
         {mainNavItems.map((item) => {
           const isActive = pathname === item.href;
-          const badge = item.href === MESSAGES_HREF ? messagesUnreadCount : item.badge;
+          const badge = item.badge ?? getBadge(item.href);
           return (
             <Link
               key={item.href}
@@ -42,7 +51,9 @@ export function AppNav() {
                   aria-label={
                     item.href === MESSAGES_HREF
                       ? `${badge} message${badge > 1 ? "s" : ""} non lu${badge > 1 ? "s" : ""}`
-                      : `${badge} nouvelles notifications`
+                      : item.href === CALENDAR_HREF
+                        ? `${badge} événement${badge > 1 ? "s" : ""} à venir`
+                        : `${badge} nouvelles notifications`
                   }
                 >
                   {badge > 99 ? "99+" : badge}

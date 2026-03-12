@@ -42,6 +42,7 @@ export type { MessageRow } from "./messages/types/types";
 
 export { getConversationIdsForCurrentUser, getUnreadCountForCurrentUser } from "./notifications";
 export { getEvents } from "./events/getEvents/getEvents";
+export { getUpcomingEventsCount } from "./events/getUpcomingEventsCount/getUpcomingEventsCount";
 export { createEvent } from "./events/createEvent/createEvent";
 export { updateEvent } from "./events/updateEvent/updateEvent";
 export { deleteEvent } from "./events/deleteEvent/deleteEvent";

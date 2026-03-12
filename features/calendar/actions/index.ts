@@ -1,4 +1,5 @@
 export { getCalendarEventsAction } from "./getCalendarEventsAction/getCalendarEventsAction";
+export { getUpcomingEventsCountAction } from "./getUpcomingEventsCountAction/getUpcomingEventsCountAction";
 export {
   createEventAction,
   type CreateEventActionParams,

@@ -1,6 +1,7 @@
 "use client";
 
 import { type ReactNode } from "react";
+import { CalendarBadgeProvider } from "@/lib/contexts/CalendarBadgeContext/CalendarBadgeContext";
 import { NotificationsProvider } from "@/lib/contexts/NotificationsContext/NotificationsContext";
 
 type NotificationsRootProps = {
@@ -8,9 +9,12 @@ type NotificationsRootProps = {
 };
 
 /**
- * Enveloppe l'app avec le provider de notifications (badge nav, sync cross-tab).
- * Placé à la racine pour que le badge et les toasts de notification soient disponibles sur toutes les routes protégées.
+ * Enveloppe l'app avec les providers (badge nav Messages, badge nav Calendrier, sync cross-tab).
  */
 export function NotificationsRoot({ children }: NotificationsRootProps) {
-  return <NotificationsProvider>{children}</NotificationsProvider>;
+  return (
+    <NotificationsProvider>
+      <CalendarBadgeProvider>{children}</CalendarBadgeProvider>
+    </NotificationsProvider>
+  );
 }
