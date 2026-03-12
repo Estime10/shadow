@@ -1,15 +1,10 @@
-import { HeaderMainLayout } from "@/components/layout/HeaderMainLayout/HeaderMainLayout";
-import { MessagesViewTransition } from "@/components/animations/MessagesViewTransition/MessagesViewTransition";
-import { MESSAGES_PAGE_MAIN_CLASS } from "@/lib/config/pages";
+import { AppHeader } from "@/components/layout/AppHeader/AppHeader";
+import { MessagesLayoutContent } from "./MessagesLayoutContent/MessagesLayoutContent";
 
 type LayoutProps = {
   children: React.ReactNode;
 };
 
-export default function MessagesLayout({ children }: LayoutProps) {
-  return (
-    <HeaderMainLayout mainClassName={MESSAGES_PAGE_MAIN_CLASS}>
-      <MessagesViewTransition>{children}</MessagesViewTransition>
-    </HeaderMainLayout>
-  );
+export default async function MessagesLayout({ children }: LayoutProps) {
+  return <MessagesLayoutContent appHeader={<AppHeader />}>{children}</MessagesLayoutContent>;
 }
