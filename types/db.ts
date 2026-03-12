@@ -55,6 +55,8 @@ export type MessageReadRow = {
 export type GetMessagesVisibilityOptions = {
   currentUserId: string;
   disappearAfterMinutes: number;
+  /** Ids des autres participants (direct = 1, groupe = N). Mes messages disparaissent pour moi quand au moins un autre les a lus + délai, et au moins 24h après création. */
+  otherUserIds?: string[];
 };
 
 /** Paramètres création événement. */

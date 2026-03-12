@@ -27,6 +27,7 @@ export { getConversationsByIds } from "./conversations/getConversationsByIds/get
 export { getConversationsForUser } from "./conversations/getConversationsForUser/getConversationsForUser";
 export type { ConversationRow } from "./conversations/types/types";
 export { getGroupById } from "./groups/getGroupById/getGroupById";
+export { getGroupMemberIds } from "./groups/getGroupMemberIds/getGroupMemberIds";
 export type { GroupRow } from "./groups/getGroupById/getGroupById";
 
 export { getMessages } from "./messages/getMessages/getMessages";

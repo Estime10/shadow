@@ -27,7 +27,13 @@ export async function getRoomConversation(withUserId?: string | null): Promise<{
     null,
     100,
     "asc",
-    currentUserId ? { currentUserId, disappearAfterMinutes: disappearMinutes } : undefined
+    currentUserId
+      ? {
+          currentUserId,
+          disappearAfterMinutes: disappearMinutes,
+          otherUserIds: withUserId ? [withUserId] : undefined,
+        }
+      : undefined
   );
   const lastMessage = messages[messages.length - 1];
 

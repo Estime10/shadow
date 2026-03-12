@@ -3,6 +3,7 @@ import {
   getCurrentUserProfile,
   getConversationById,
   getGroupById,
+  getGroupMemberIds,
   getMessages,
   getProfiles,
   getReadAtByMessageIds,
@@ -34,16 +35,25 @@ export async function getConversationWithMessages(conversationId: string): Promi
   const disappearMinutes = profile?.messageDisappearAfterMinutes ?? 30;
 
   if (convRow.type === "group" && convRow.group_id) {
-    const [group, messages] = await Promise.all([
+    const [group, memberIds] = await Promise.all([
       getGroupById(convRow.group_id),
-      getMessages(
-        convRow.id,
-        100,
-        "asc",
-        currentUserId ? { currentUserId, disappearAfterMinutes: disappearMinutes } : undefined
-      ),
+      getGroupMemberIds(convRow.group_id),
     ]);
     if (!group) return null;
+    const otherUserIds =
+      currentUserId != null ? memberIds.filter((id) => id !== currentUserId) : [];
+    const messages = await getMessages(
+      convRow.id,
+      100,
+      "asc",
+      currentUserId
+        ? {
+            currentUserId,
+            disappearAfterMinutes: disappearMinutes,
+            otherUserIds: otherUserIds.length > 0 ? otherUserIds : undefined,
+          }
+        : undefined
+    );
     const lastMessage = messages[messages.length - 1];
     const conversation: Conversation = {
       id: convRow.id,
@@ -66,7 +76,13 @@ export async function getConversationWithMessages(conversationId: string): Promi
       convRow.id,
       100,
       "asc",
-      currentUserId ? { currentUserId, disappearAfterMinutes: disappearMinutes } : undefined
+      currentUserId
+        ? {
+            currentUserId,
+            disappearAfterMinutes: disappearMinutes,
+            otherUserIds: [otherId],
+          }
+        : undefined
     ),
   ]);
   const participantName = getParticipantDisplayName(profiles[0]?.username);
