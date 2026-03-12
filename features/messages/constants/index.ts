@@ -17,3 +17,9 @@ export const ROOM_DISPLAY_NAME = "Messages";
 export const MAX_MESSAGE_LENGTH = 65_536;
 /** Au-delà de ce nombre de caractères, afficher "Voir plus" (style WhatsApp). */
 export const MESSAGE_TRUNCATE_THRESHOLD = 200;
+
+/** Clé SWR pour la liste des conversations / messages (invalidation après envoi, suppression, etc.). */
+export const MESSAGES_LIST_KEY = "messages-list";
+
+/** Types MIME acceptés pour la pièce jointe image dans l'input message. */
+export const ACCEPT_IMAGES = "image/jpeg,image/png,image/webp,image/gif";

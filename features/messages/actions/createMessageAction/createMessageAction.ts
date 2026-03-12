@@ -10,8 +10,12 @@ export async function createMessageAction(formData: FormData): Promise<{ error: 
   const parsed = parseCreateMessageFormData(formData);
   if (!parsed.success) return { error: getFirstZodError(parsed) };
 
-  const { conversationId, text } = parsed.data;
-  const { error } = await createMessage(conversationId, text);
+  const { conversationId, text, mediaPath, mediaType } = parsed.data;
+  const media =
+    mediaPath != null && mediaPath !== "" && mediaType != null
+      ? { mediaPath, mediaType }
+      : undefined;
+  const { error } = await createMessage(conversationId, text ?? "", media);
   if (error) return { error };
 
   revalidatePath(PATHS.MESSAGES);

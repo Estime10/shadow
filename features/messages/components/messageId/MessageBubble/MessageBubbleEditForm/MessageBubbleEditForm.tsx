@@ -1,13 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { useSWRConfig } from "swr";
-import { updateMessageAction } from "@/features/messages/actions";
 import type { ThreadCacheKey } from "@/lib/hooks/messages";
-import { MessageBubbleEditFormFields } from "./MessageBubbleEditFormFields/MessageBubbleEditFormFields";
 import { MessageBubbleEditFormActions } from "./MessageBubbleEditFormActions/MessageBubbleEditFormActions";
-
-const MESSAGES_LIST_KEY = "messages-list";
+import { MessageBubbleEditFormFields } from "./MessageBubbleEditFormFields/MessageBubbleEditFormFields";
+import { useMessageBubbleEditForm } from "./useMessageBubbleEditForm/useMessageBubbleEditForm";
 
 type MessageBubbleEditFormProps = {
   messageId: string;
@@ -24,20 +21,17 @@ export function MessageBubbleEditForm({
   onCancel,
   threadCacheKey,
 }: MessageBubbleEditFormProps) {
-  const { mutate } = useSWRConfig();
   const [editText, setEditText] = useState(initialText);
+  const { handleSubmit } = useMessageBubbleEditForm({
+    conversationId,
+    onCancel,
+    threadCacheKey,
+  });
 
   return (
     <div className="flex w-full justify-end">
       <form
-        action={async (formData) => {
-          const { error } = await updateMessageAction(formData);
-          if (!error) {
-            onCancel();
-            void mutate(MESSAGES_LIST_KEY);
-            void mutate(threadCacheKey ?? ["thread", conversationId]);
-          }
-        }}
+        action={handleSubmit}
         className="flex w-full max-w-[min(85%,20rem)] flex-col gap-2 rounded-2xl rounded-br-md bg-(--accent)/15 content-px py-2.5"
       >
         <input type="hidden" name="messageId" value={messageId} />

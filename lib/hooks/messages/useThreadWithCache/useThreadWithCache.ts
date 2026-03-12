@@ -4,8 +4,8 @@ import { useEffect, useMemo, useRef } from "react";
 import useSWR from "swr";
 import { getThreadDataAction, markMessagesAsReadAction } from "@/features/messages/actions";
 import { getNotificationsBadgeAction } from "@/features/messages/actions/getNotificationsBadgeAction/getNotificationsBadgeAction";
-import { useNotifications } from "@/lib/contexts/NotificationsContext/NotificationsContext";
 import { ROOM_CONVERSATION_ID } from "@/features/messages/constants";
+import { useNotificationsOptional } from "@/lib/contexts/NotificationsContext/NotificationsContext";
 import type { MessageIdPageContent } from "@/features/messages/types";
 
 export type ThreadWithCacheParams = {
@@ -29,7 +29,12 @@ function buildThreadKey(
  * Les données initiales servent de fallback ; le realtime met à jour le cache.
  */
 export function useThreadWithCache({ initial, conversationId, withUserId }: ThreadWithCacheParams) {
-  const { setUnreadCount } = useNotifications();
+  const notificationsContext = useNotificationsOptional();
+  const setUnreadCountRef = useRef(notificationsContext?.setUnreadCount ?? null);
+  useEffect(() => {
+    setUnreadCountRef.current = notificationsContext?.setUnreadCount ?? null;
+  }, [notificationsContext?.setUnreadCount]);
+
   const threadKey = useMemo(
     () => buildThreadKey(conversationId, withUserId),
     [conversationId, withUserId]
@@ -52,9 +57,12 @@ export function useThreadWithCache({ initial, conversationId, withUserId }: Thre
       .filter((m) => m.senderId !== content.currentUserId)
       .map((m) => m.id);
     markMessagesAsReadAction(ids).then(() => {
-      getNotificationsBadgeAction().then(({ count }) => setUnreadCount(count));
+      const setUnreadCount = setUnreadCountRef.current;
+      if (setUnreadCount) {
+        getNotificationsBadgeAction().then(({ count }) => setUnreadCount(count));
+      }
     });
-  }, [content.currentUserId, content.messages, threadKey, setUnreadCount]);
+  }, [content.currentUserId, content.messages, threadKey]);
 
   return { content, threadKey };
 }

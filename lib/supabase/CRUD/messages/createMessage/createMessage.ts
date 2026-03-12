@@ -1,15 +1,23 @@
 import { createClient } from "../../../server";
 import { requireUser } from "../../../requireUser";
 import { mapMessageRowToMessage } from "../mappers/mappers";
+import type { MessageMediaType } from "@/types";
 
 const EPHEMERAL_HOURS = 24;
 
+export type CreateMessageMediaOptions = {
+  mediaPath: string;
+  mediaType: MessageMediaType;
+};
+
 /**
  * Crée un message dans une conversation. user_id = utilisateur connecté, expires_at = now + 24h.
+ * Si media est fourni, enregistre media_url/media_type et une ligne dans message_media (pour suppression après vue).
  */
 export async function createMessage(
   conversationId: string,
-  text: string
+  text: string,
+  media?: CreateMessageMediaOptions
 ): Promise<{ message: ReturnType<typeof mapMessageRowToMessage> | null; error: string | null }> {
   const supabase = await createClient();
   const auth = await requireUser(supabase);
@@ -25,11 +33,24 @@ export async function createMessage(
       conversation_id: conversationId,
       user_id: user.id,
       text: text.trim() || null,
+      media_url: media?.mediaPath ?? null,
+      media_type: media?.mediaType ?? null,
       expires_at: expiresAt.toISOString(),
     })
     .select("id, user_id, conversation_id, text, media_url, media_type, created_at, expires_at")
     .single();
 
   if (error) return { message: null, error: error.message };
-  return { message: mapMessageRowToMessage(data), error: null };
+  const message = data;
+
+  if (media) {
+    const { error: mediaError } = await supabase.from("message_media").insert({
+      message_id: message.id,
+      type: media.mediaType,
+      storage_path: media.mediaPath,
+    });
+    if (mediaError) return { message: null, error: mediaError.message };
+  }
+
+  return { message: mapMessageRowToMessage(message), error: null };
 }

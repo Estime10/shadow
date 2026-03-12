@@ -91,6 +91,11 @@ export function useNotifications(): NotificationsContextValue {
   return ctx;
 }
 
+/** Retourne le contexte ou null si hors provider (SSR / arbre alternatif). À utiliser quand le provider peut être absent. */
+export function useNotificationsOptional(): NotificationsContextValue | null {
+  return useContext(NotificationsContext);
+}
+
 export function useNotificationsUnreadCount(): number {
   const ctx = useContext(NotificationsContext);
   return ctx?.unreadCount ?? 0;

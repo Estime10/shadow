@@ -3,10 +3,9 @@
 import { useState, useCallback } from "react";
 import { useSWRConfig } from "swr";
 import { deleteMessageAction } from "@/features/messages/actions";
-import type { ThreadCacheKey } from "@/lib/hooks/messages";
+import { MESSAGES_LIST_KEY } from "@/features/messages/constants";
 import type { MessageIdPageContent } from "@/features/messages/types";
-
-const MESSAGES_LIST_KEY = "messages-list";
+import type { ThreadCacheKey } from "@/lib/hooks/messages";
 
 export type UseMessageBubbleMenuConfirmParams = {
   messageId: string;

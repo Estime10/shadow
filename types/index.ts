@@ -7,7 +7,7 @@
 export type { LoginResult, RegisterResult } from "./auth";
 
 // Message & conversations (domaine)
-export type { Message, Conversation } from "./message";
+export type { Message, MessageMediaType, Conversation } from "./message";
 
 // Navigation & layout
 export type { NavItem } from "./navigation";
