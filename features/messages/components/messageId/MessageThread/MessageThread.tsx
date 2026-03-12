@@ -1,3 +1,6 @@
+"use client";
+
+import { useRef, useLayoutEffect } from "react";
 import { MessageBubble } from "../MessageBubble/MessageBubble";
 import { MessageInput } from "../MessageInput/MessageInput";
 import { EMPTY_LAST_MESSAGE_TEXT } from "@/features/messages/constants";
@@ -12,6 +15,20 @@ export function MessageThread({
   showHeader = true,
   threadCacheKey,
 }: MessageThreadProps) {
+  const bottomSentinelRef = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    if (messages.length === 0) return;
+    const sentinel = bottomSentinelRef.current;
+    if (!sentinel) return;
+    const scrollToBottom = () => {
+      sentinel.scrollIntoView({ behavior: "auto", block: "end" });
+    };
+    scrollToBottom();
+    const raf = requestAnimationFrame(scrollToBottom);
+    return () => cancelAnimationFrame(raf);
+  }, [messages.length]);
+
   return (
     <div className="flex min-h-0 flex-1 flex-col bg-(--bg)">
       {showHeader ? (
@@ -34,15 +51,18 @@ export function MessageThread({
             </p>
           </div>
         ) : (
-          messages.map((msg) => (
-            <MessageBubble
-              key={msg.id}
-              message={msg}
-              currentUserId={currentUserId}
-              readByRecipient={readMessageIds.includes(msg.id)}
-              threadCacheKey={threadCacheKey}
-            />
-          ))
+          <>
+            {messages.map((msg) => (
+              <MessageBubble
+                key={msg.id}
+                message={msg}
+                currentUserId={currentUserId}
+                readByRecipient={readMessageIds.includes(msg.id)}
+                threadCacheKey={threadCacheKey}
+              />
+            ))}
+            <div ref={bottomSentinelRef} aria-hidden="true" className="h-[50px] shrink-0" />
+          </>
         )}
       </div>
 

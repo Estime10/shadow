@@ -67,9 +67,12 @@ export async function getConversationsForList(): Promise<{
     };
   });
 
-  const conversations = conversationsWithMessages.filter(
-    (c): c is NonNullable<typeof c> => c !== null
-  );
+  const conversations = conversationsWithMessages
+    .filter((c): c is NonNullable<typeof c> => c !== null)
+    .sort(
+      (a, b) =>
+        new Date(b.lastMessage.createdAt).getTime() - new Date(a.lastMessage.createdAt).getTime()
+    );
 
   return { conversations, currentUserId };
 }

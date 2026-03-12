@@ -1,6 +1,6 @@
 "use client";
 
-import { formatRelativeTime } from "@/lib/functions";
+import { formatEuropeanDateTime } from "@/lib/functions";
 
 type MessageBubbleFooterMetaProps = {
   createdAt: string;
@@ -16,7 +16,7 @@ export function MessageBubbleFooterMeta({
   return (
     <>
       <span className={`text-[10px] shrink-0 ${isSent ? "text-accent" : "text-(--text-muted)"}`}>
-        {formatRelativeTime(createdAt)}
+        {formatEuropeanDateTime(createdAt)}
       </span>
       {isSent && readByRecipient ? (
         <span

@@ -35,7 +35,7 @@ export async function getRoomConversation(withUserId?: string | null): Promise<{
         }
       : undefined
   );
-  const lastMessage = messages[messages.length - 1];
+  const lastMessage = messages.length > 0 ? messages[messages.length - 1] : null;
 
   let participantId: string = ROOM_CONVERSATION_ID;
   let participantName: string = ROOM_DISPLAY_NAME;

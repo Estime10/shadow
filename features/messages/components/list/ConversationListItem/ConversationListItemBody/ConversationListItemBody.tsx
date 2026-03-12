@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { formatRelativeTime } from "@/lib/functions";
+import { formatEuropeanDateTime } from "@/lib/functions";
 
 type ConversationListItemBodyProps = {
   participantName: string;
@@ -33,7 +33,7 @@ export function ConversationListItemBody({
         <div className="flex shrink-0 items-center gap-2">
           {!isEmpty ? (
             <span className="text-xs text-(--text-muted)">
-              {formatRelativeTime(lastMessageCreatedAt)}
+              {formatEuropeanDateTime(lastMessageCreatedAt)}
             </span>
           ) : null}
           {action}

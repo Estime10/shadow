@@ -54,7 +54,7 @@ export async function getConversationWithMessages(conversationId: string): Promi
           }
         : undefined
     );
-    const lastMessage = messages[messages.length - 1];
+    const lastMessage = messages.length > 0 ? messages[messages.length - 1] : null;
     const conversation: Conversation = {
       id: convRow.id,
       participant: {
@@ -86,7 +86,7 @@ export async function getConversationWithMessages(conversationId: string): Promi
     ),
   ]);
   const participantName = getParticipantDisplayName(profiles[0]?.username);
-  const lastMessage = messages[messages.length - 1];
+  const lastMessage = messages.length > 0 ? messages[messages.length - 1] : null;
 
   const conversation: Conversation = {
     id: convRow.id,
