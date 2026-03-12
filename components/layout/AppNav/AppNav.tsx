@@ -3,9 +3,13 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { mainNavItems } from "@/lib/navigation/navigation";
+import { useNotificationsUnreadCount } from "@/lib/contexts/NotificationsContext/NotificationsContext";
+
+const MESSAGES_HREF = "/messages";
 
 export function AppNav() {
   const pathname = usePathname();
+  const messagesUnreadCount = useNotificationsUnreadCount();
 
   return (
     <nav
@@ -15,7 +19,7 @@ export function AppNav() {
       <div className="content-max-w flex items-center justify-around content-px py-2">
         {mainNavItems.map((item) => {
           const isActive = pathname === item.href;
-          const badge = item.badge;
+          const badge = item.href === MESSAGES_HREF ? messagesUnreadCount : item.badge;
           return (
             <Link
               key={item.href}
@@ -34,8 +38,12 @@ export function AppNav() {
               ) : null}
               {badge != null && badge > 0 ? (
                 <span
-                  className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center bg-(--error) px-1 text-[10px] font-bold text-(--bg)"
-                  aria-label={`${badge} nouvelles notifications`}
+                  className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-(--error) px-1 text-[10px] font-bold text-(--bg)"
+                  aria-label={
+                    item.href === MESSAGES_HREF
+                      ? `${badge} message${badge > 1 ? "s" : ""} non lu${badge > 1 ? "s" : ""}`
+                      : `${badge} nouvelles notifications`
+                  }
                 >
                   {badge > 99 ? "99+" : badge}
                 </span>

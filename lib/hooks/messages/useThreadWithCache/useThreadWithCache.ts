@@ -3,6 +3,8 @@
 import { useEffect, useMemo, useRef } from "react";
 import useSWR from "swr";
 import { getThreadDataAction, markMessagesAsReadAction } from "@/features/messages/actions";
+import { getNotificationsBadgeAction } from "@/features/notifications/actions/getNotificationsBadgeAction/getNotificationsBadgeAction";
+import { useNotifications } from "@/lib/contexts/NotificationsContext/NotificationsContext";
 import { ROOM_CONVERSATION_ID } from "@/features/messages/constants";
 import type { MessageIdPageContent } from "@/features/messages/types";
 
@@ -27,6 +29,7 @@ function buildThreadKey(
  * Les données initiales servent de fallback ; le realtime met à jour le cache.
  */
 export function useThreadWithCache({ initial, conversationId, withUserId }: ThreadWithCacheParams) {
+  const { setUnreadCount } = useNotifications();
   const threadKey = useMemo(
     () => buildThreadKey(conversationId, withUserId),
     [conversationId, withUserId]
@@ -48,8 +51,10 @@ export function useThreadWithCache({ initial, conversationId, withUserId }: Thre
     const ids = content.messages
       .filter((m) => m.senderId !== content.currentUserId)
       .map((m) => m.id);
-    void markMessagesAsReadAction(ids);
-  }, [content.currentUserId, content.messages, threadKey]);
+    markMessagesAsReadAction(ids).then(() => {
+      getNotificationsBadgeAction().then(({ count }) => setUnreadCount(count));
+    });
+  }, [content.currentUserId, content.messages, threadKey, setUnreadCount]);
 
   return { content, threadKey };
 }

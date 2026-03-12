@@ -10,6 +10,7 @@ import {
   type ReactNode,
 } from "react";
 import { getNotificationsBadgeAction } from "@/features/notifications/actions/getNotificationsBadgeAction/getNotificationsBadgeAction";
+import { useGlobalMessagesBadgeRealtime } from "@/lib/hooks/notifications/useGlobalMessagesBadgeRealtime/useGlobalMessagesBadgeRealtime";
 import { useClientUserId } from "@/lib/hooks/messages/useClientUserId/useClientUserId";
 
 const NOTIFICATIONS_CHANNEL = "shadow-notifications";
@@ -59,6 +60,8 @@ export function NotificationsProvider({ children }: { children: ReactNode }) {
       cancelled = true;
     };
   }, [userId]);
+
+  useGlobalMessagesBadgeRealtime(userId, setUnreadCount);
 
   useEffect(() => {
     const ch = getChannel();
