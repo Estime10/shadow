@@ -29,6 +29,12 @@ export function CalendarView({ initialEvents }: CalendarViewProps) {
         onEventClick={calendar.handleEventClick}
       />
       <CalendarViewModals
+        dayModalOpen={calendar.dayModalOpen}
+        dayModalDate={calendar.dayModalDate}
+        eventsForDayModalDate={calendar.eventsForDayModalDate}
+        closeDayModal={calendar.closeDayModal}
+        openAddEventFromDay={calendar.openAddEventFromDay}
+        onEventClick={calendar.handleEventClick}
         viewModalOpen={calendar.viewModalOpen}
         viewEvent={calendar.viewEvent}
         closeViewModal={calendar.closeViewModal}

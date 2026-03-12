@@ -48,3 +48,16 @@ export function getEventsCountByDay(events: CalendarEvent[]): Map<string, number
   }
   return map;
 }
+
+/** Événements dont la date (jour) correspond à la date donnée. */
+export function filterEventsByDay(events: CalendarEvent[], date: Date): CalendarEvent[] {
+  const key = toDateOnlyISO(date);
+  return events.filter((e) => toDateOnlyISO(new Date(e.eventDate)) === key);
+}
+
+/** Événements à partir d'aujourd'hui (date du jour 00:00:00 incluse). */
+export function filterEventsFromToday(events: CalendarEvent[], today: Date): CalendarEvent[] {
+  const start = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  const startTime = start.getTime();
+  return events.filter((e) => new Date(e.eventDate).getTime() >= startTime);
+}

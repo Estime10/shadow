@@ -7,11 +7,14 @@ export {
   isCurrentMonth,
   toDateOnlyISO,
   formatEventTime,
+  formatEventDayTime,
   formatEventDateTime,
   formatDateLabel,
 } from "./dateUtils";
 export {
   filterEventsByMonth,
+  filterEventsByDay,
+  filterEventsFromToday,
   sortEventsByDate,
   getEventsCountByDay,
   buildEventFromForm,

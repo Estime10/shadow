@@ -2,9 +2,16 @@
 
 import type { CalendarEvent } from "@/features/calendar/types";
 import { AddEventModal } from "../../AddEventModal/AddEventModal";
+import { DayEventsModal } from "../../DayEventsModal/DayEventsModal";
 import { EventDetailModal } from "../../EventDetailModal/EventDetailModal";
 
 type CalendarViewModalsProps = {
+  dayModalOpen: boolean;
+  dayModalDate: Date | null;
+  eventsForDayModalDate: CalendarEvent[];
+  closeDayModal: () => void;
+  openAddEventFromDay: () => void;
+  onEventClick: (event: CalendarEvent) => void;
   viewModalOpen: boolean;
   viewEvent: CalendarEvent | null;
   closeViewModal: () => void;
@@ -17,6 +24,12 @@ type CalendarViewModalsProps = {
 };
 
 export function CalendarViewModals({
+  dayModalOpen,
+  dayModalDate,
+  eventsForDayModalDate,
+  closeDayModal,
+  openAddEventFromDay,
+  onEventClick,
   viewModalOpen,
   viewEvent,
   closeViewModal,
@@ -29,6 +42,14 @@ export function CalendarViewModals({
 }: CalendarViewModalsProps) {
   return (
     <>
+      <DayEventsModal
+        open={dayModalOpen}
+        date={dayModalDate}
+        events={eventsForDayModalDate}
+        onClose={closeDayModal}
+        onAddEvent={openAddEventFromDay}
+        onEventClick={onEventClick}
+      />
       <EventDetailModal
         open={viewModalOpen}
         onClose={closeViewModal}

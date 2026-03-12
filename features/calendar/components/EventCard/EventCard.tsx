@@ -1,5 +1,5 @@
 import type { CalendarEvent } from "@/features/calendar/types";
-import { formatEventTime } from "@/features/calendar/utils";
+import { formatEventDayTime } from "@/features/calendar/utils";
 
 export type EventCardProps = {
   event: CalendarEvent;
@@ -12,7 +12,7 @@ export function EventCard({ event, onClick }: EventCardProps) {
   const firstLine = (
     <div className="event-card__first-line">
       <time className="event-card__time" dateTime={event.eventDate}>
-        {formatEventTime(event.eventDate)}
+        {formatEventDayTime(event.eventDate)}
       </time>
       {onClick ? (
         <span className="event-card__title">{event.title}</span>

@@ -26,12 +26,12 @@ export function AppNav() {
               aria-current={isActive ? "page" : undefined}
             >
               <span>{item.label}</span>
-              <span
-                className={`absolute bottom-0 left-1/2 h-0.5 w-8 -translate-x-1/2 ${
-                  isActive ? "bg-accent" : "bg-(--text)"
-                }`}
-                aria-hidden
-              />
+              {isActive ? (
+                <span
+                  className="absolute bottom-0 left-1/2 h-0.5 w-8 -translate-x-1/2 bg-accent"
+                  aria-hidden
+                />
+              ) : null}
               {badge != null && badge > 0 ? (
                 <span
                   className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center bg-(--error) px-1 text-[10px] font-bold text-(--bg)"

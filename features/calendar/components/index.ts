@@ -5,4 +5,5 @@ export { EventCard } from "./EventCard/EventCard";
 export { EventList } from "./EventList/EventList";
 export { EventCarousel } from "./EventCarousel/EventCarousel";
 export { AddEventModal } from "./AddEventModal/AddEventModal";
+export { DayEventsModal } from "./DayEventsModal/DayEventsModal";
 export { EventDetailModal } from "./EventDetailModal/EventDetailModal";

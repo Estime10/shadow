@@ -7,6 +7,8 @@ import { createEventAction, getCalendarEventsAction } from "@/features/calendar/
 import type { CalendarEvent } from "@/features/calendar/types";
 import {
   filterEventsByMonth,
+  filterEventsByDay,
+  filterEventsFromToday,
   sortEventsByDate,
   getEventsCountByDay,
 } from "@/features/calendar/utils";
@@ -18,6 +20,9 @@ export type CalendarViewState = {
   current: { year: number; month: number };
   eventsInMonth: CalendarEvent[];
   eventsByDay: Map<string, number>;
+  dayModalOpen: boolean;
+  dayModalDate: Date | null;
+  eventsForDayModalDate: CalendarEvent[];
   modalOpen: boolean;
   selectedDate: Date | null;
   viewModalOpen: boolean;
@@ -26,10 +31,12 @@ export type CalendarViewState = {
 
 export type CalendarViewActions = {
   handleDayClick: (date: Date) => void;
+  openAddEventFromDay: () => void;
   handleAddEvent: (event: CalendarEvent) => void;
   handlePrev: () => void;
   handleNext: () => void;
   handleEventClick: (event: CalendarEvent) => void;
+  closeDayModal: () => void;
   closeAddModal: () => void;
   closeViewModal: () => void;
   handleEventDeleted: () => void;
@@ -50,15 +57,18 @@ export function useCalendarView(initialEvents: CalendarEvent[]): UseCalendarView
     year: now.getFullYear(),
     month: now.getMonth(),
   });
+  const [dayModalOpen, setDayModalOpen] = useState(false);
+  const [dayModalDate, setDayModalDate] = useState<Date | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [viewEvent, setViewEvent] = useState<CalendarEvent | null>(null);
   const [viewModalOpen, setViewModalOpen] = useState(false);
 
-  const eventsInMonth = useMemo(
-    () => sortEventsByDate(filterEventsByMonth(events, current.year, current.month)),
-    [events, current.year, current.month]
-  );
+  const eventsInMonth = useMemo(() => {
+    const inMonth = filterEventsByMonth(events, current.year, current.month);
+    const fromToday = filterEventsFromToday(inMonth, new Date());
+    return sortEventsByDate(fromToday);
+  }, [events, current.year, current.month]);
 
   const eventsByDay = useMemo(
     () => getEventsCountByDay(filterEventsByMonth(events, current.year, current.month)),
@@ -66,9 +76,28 @@ export function useCalendarView(initialEvents: CalendarEvent[]): UseCalendarView
   );
 
   const handleDayClick = useCallback((date: Date) => {
-    setSelectedDate(new Date(date.getFullYear(), date.getMonth(), date.getDate()));
-    setModalOpen(true);
+    const normalized = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    setDayModalDate(normalized);
+    setDayModalOpen(true);
   }, []);
+
+  const closeDayModal = useCallback(() => {
+    setDayModalOpen(false);
+    setDayModalDate(null);
+  }, []);
+
+  const openAddEventFromDay = useCallback(() => {
+    if (!dayModalDate) return;
+    setSelectedDate(dayModalDate);
+    setDayModalOpen(false);
+    setDayModalDate(null);
+    setModalOpen(true);
+  }, [dayModalDate]);
+
+  const eventsForDayModalDate = useMemo(
+    () => (dayModalDate ? sortEventsByDate(filterEventsByDay(events, dayModalDate)) : []),
+    [events, dayModalDate]
+  );
 
   const handleAddEvent = useCallback(
     async (event: CalendarEvent) => {
@@ -126,15 +155,20 @@ export function useCalendarView(initialEvents: CalendarEvent[]): UseCalendarView
     current,
     eventsInMonth,
     eventsByDay,
+    dayModalOpen,
+    dayModalDate,
+    eventsForDayModalDate,
     modalOpen,
     selectedDate,
     viewModalOpen,
     viewEvent,
     handleDayClick,
+    openAddEventFromDay,
     handleAddEvent,
     handlePrev,
     handleNext,
     handleEventClick,
+    closeDayModal,
     closeAddModal,
     closeViewModal,
     handleEventDeleted,

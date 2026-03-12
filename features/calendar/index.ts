@@ -13,6 +13,7 @@ export {
   EventList,
   EventCarousel,
   AddEventModal,
+  DayEventsModal,
   EventDetailModal,
 } from "./components";
 export { getEventsForCalendar } from "./data";
@@ -33,9 +34,12 @@ export {
   isCurrentMonth,
   toDateOnlyISO,
   formatEventTime,
+  formatEventDayTime,
   formatEventDateTime,
   formatDateLabel,
   filterEventsByMonth,
+  filterEventsByDay,
+  filterEventsFromToday,
   sortEventsByDate,
   getEventsCountByDay,
   buildEventFromForm,

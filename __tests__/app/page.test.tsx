@@ -24,7 +24,7 @@ describe("Home", () => {
     const ticketLink = screen.getByRole("link", { name: /Réservez un ticket/i });
     expect(contactLink).toBeInTheDocument();
     expect(ticketLink).toBeInTheDocument();
-    expect(contactLink).toHaveAttribute("href", "#");
-    expect(ticketLink).toHaveAttribute("href", "#");
+    expect(contactLink).toHaveAttribute("href", "/messages");
+    expect(ticketLink).toHaveAttribute("href", "/calendar");
   });
 });

@@ -39,7 +39,7 @@ export function MonthGridDayCell({
         type="button"
         onClick={() => onDayClick(date)}
         className={className}
-        aria-label={`Ajouter un événement le ${date.getDate()} ${date.getMonth() + 1}`}
+        aria-label={`Voir les événements du ${date.getDate()}`}
       >
         {content}
       </button>
