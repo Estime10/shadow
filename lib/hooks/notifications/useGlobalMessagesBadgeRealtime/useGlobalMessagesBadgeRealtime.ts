@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { getNotificationsBadgeAction } from "@/features/notifications/actions/getNotificationsBadgeAction/getNotificationsBadgeAction";
+import { getNotificationsBadgeAction } from "@/features/messages/actions/getNotificationsBadgeAction/getNotificationsBadgeAction";
 
 const CHANNEL_NAME = "global-messages-badge";
 

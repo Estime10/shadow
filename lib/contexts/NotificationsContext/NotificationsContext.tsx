@@ -9,7 +9,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { getNotificationsBadgeAction } from "@/features/notifications/actions/getNotificationsBadgeAction/getNotificationsBadgeAction";
+import { getNotificationsBadgeAction } from "@/features/messages/actions/getNotificationsBadgeAction/getNotificationsBadgeAction";
 import { useGlobalMessagesBadgeRealtime } from "@/lib/hooks/notifications/useGlobalMessagesBadgeRealtime/useGlobalMessagesBadgeRealtime";
 import { useClientUserId } from "@/lib/hooks/messages/useClientUserId/useClientUserId";
 

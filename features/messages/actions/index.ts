@@ -7,4 +7,6 @@ export { getMessagesListDataAction } from "./getMessagesListDataAction/getMessag
 export { getThreadDataAction } from "./getThreadDataAction/getThreadDataAction";
 export { markMessagesAsReadAction } from "./markMessagesAsReadAction/markMessagesAsReadAction";
 export { updateUserMessageDisappearSettingAction } from "./updateUserMessageDisappearSettingAction/updateUserMessageDisappearSettingAction";
+export { getNotificationsBadgeAction } from "./getNotificationsBadgeAction/getNotificationsBadgeAction";
+export type { GetNotificationsBadgeResult } from "./getNotificationsBadgeAction/getNotificationsBadgeAction";
 export type { GetThreadDataArgs } from "./getThreadDataAction/getThreadDataAction";

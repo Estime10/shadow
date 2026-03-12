@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef } from "react";
 import useSWR from "swr";
 import { getThreadDataAction, markMessagesAsReadAction } from "@/features/messages/actions";
-import { getNotificationsBadgeAction } from "@/features/notifications/actions/getNotificationsBadgeAction/getNotificationsBadgeAction";
+import { getNotificationsBadgeAction } from "@/features/messages/actions/getNotificationsBadgeAction/getNotificationsBadgeAction";
 import { useNotifications } from "@/lib/contexts/NotificationsContext/NotificationsContext";
 import { ROOM_CONVERSATION_ID } from "@/features/messages/constants";
 import type { MessageIdPageContent } from "@/features/messages/types";

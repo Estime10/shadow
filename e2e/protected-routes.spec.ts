@@ -20,11 +20,6 @@ test.describe("Routes protégées — redirection vers login", () => {
     await expect(page).toHaveURL(/\/login/, { timeout: 10000 });
   });
 
-  test("accès à /notifications redirige vers /login", async ({ page }) => {
-    await page.goto("/notifications");
-    await expect(page).toHaveURL(/\/login/, { timeout: 10000 });
-  });
-
   test("accès à /messages/[id] redirige vers /login", async ({ page }) => {
     await page.goto("/messages/00000000-0000-0000-0000-000000000001");
     await expect(page).toHaveURL(/\/login/, { timeout: 10000 });
