@@ -4,6 +4,7 @@ import { AppNav } from "@/components/layout/AppNav/AppNav";
 import { PageTransition } from "@/components/animations/PageTransition/PageTransition";
 import { NotificationsRoot } from "@/components/providers/NotificationsRoot/NotificationsRoot";
 import { ToastRoot } from "@/components/providers/ToastRoot/ToastRoot";
+import { ViewportLock } from "@/app/ViewportLock/ViewportLock";
 import type { LayoutChildrenProps } from "@/types/layout";
 import "./globals.css";
 
@@ -42,10 +43,10 @@ export default function RootLayout({ children }: Readonly<LayoutChildrenProps>) 
       >
         <ToastRoot>
           <NotificationsRoot>
-            <div className="flex min-h-screen flex-col pb-20">
+            <ViewportLock>
               <PageTransition>{children}</PageTransition>
-            </div>
-            <AppNav />
+              <AppNav />
+            </ViewportLock>
           </NotificationsRoot>
         </ToastRoot>
       </body>

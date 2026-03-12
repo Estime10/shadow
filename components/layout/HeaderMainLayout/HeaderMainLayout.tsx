@@ -1,9 +1,9 @@
 import { AppHeader } from "@/components/layout/AppHeader/AppHeader";
-import { MAIN_PAGE_MAIN_CLASS } from "@/lib/config/pages";
+import { MainWithPathname } from "./MainWithPathname/MainWithPathname";
 
 export type HeaderMainLayoutProps = {
   children: React.ReactNode;
-  /** Classes du <main> (optionnel). Défaut : config pages principale. */
+  /** Classes du <main> pour les pages autres que la home (optionnel). */
   mainClassName?: string;
 };
 
@@ -15,11 +15,7 @@ export function HeaderMainLayout({ children, mainClassName }: HeaderMainLayoutPr
   return (
     <>
       <AppHeader />
-      <main
-        className={`mx-auto flex w-full flex-1 flex-col ${mainClassName ?? MAIN_PAGE_MAIN_CLASS}`}
-      >
-        {children}
-      </main>
+      <MainWithPathname defaultMainClassName={mainClassName}>{children}</MainWithPathname>
     </>
   );
 }

@@ -3,26 +3,28 @@ import { describe, it, expect } from "vitest";
 import { HomeView } from "@/features/home/components";
 
 describe("Home", () => {
-  it("affiche le titre avec le nom affiché", () => {
-    render(<HomeView displayName="ghost" />);
-    expect(screen.getByText(/What it do/i)).toBeInTheDocument();
-    expect(screen.getByText(/\( ghost \)/)).toBeInTheDocument();
+  it("affiche le titre Événements à venir", () => {
+    render(<HomeView />);
+    expect(screen.getByRole("heading", { name: /Événements à venir/i })).toBeInTheDocument();
   });
 
-  it("affiche le username quand fourni", () => {
-    render(<HomeView displayName="alice" />);
-    expect(screen.getByText(/\( alice \)/)).toBeInTheDocument();
+  it("affiche le sous-titre", () => {
+    render(<HomeView />);
+    expect(screen.getByText(/Ne manquez pas nos prochains rendez-vous/i)).toBeInTheDocument();
   });
 
-  it("contient les liens Messages et Calendrier", () => {
-    render(<HomeView displayName="ghost" />);
-    const messagesLink = screen
-      .getAllByRole("link", { name: /Messages/i })
-      .find((el) => el.getAttribute("href") === "/messages");
-    const calendarLink = screen
-      .getAllByRole("link", { name: /Calendrier/i })
-      .find((el) => el.getAttribute("href") === "/calendar");
-    expect(messagesLink).toBeDefined();
-    expect(calendarLink).toBeDefined();
+  it("affiche la date", () => {
+    render(<HomeView />);
+    expect(screen.getByText(/15 juin 2025/)).toBeInTheDocument();
+  });
+
+  it("contient les CTA Contactez nous et Réservez un ticket", () => {
+    render(<HomeView />);
+    const contactLink = screen.getByRole("link", { name: /Contactez nous/i });
+    const ticketLink = screen.getByRole("link", { name: /Réservez un ticket/i });
+    expect(contactLink).toBeInTheDocument();
+    expect(ticketLink).toBeInTheDocument();
+    expect(contactLink).toHaveAttribute("href", "#");
+    expect(ticketLink).toHaveAttribute("href", "#");
   });
 });
