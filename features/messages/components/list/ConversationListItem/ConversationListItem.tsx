@@ -5,7 +5,6 @@ import { getInitial, getLastMessageSenderLabel } from "@/features/messages/utils
 import { EMPTY_LAST_MESSAGE_TEXT } from "@/features/messages/constants";
 import { ConversationListItemAvatar } from "./ConversationListItemAvatar/ConversationListItemAvatar";
 import { ConversationListItemBody } from "./ConversationListItemBody/ConversationListItemBody";
-import { ConversationListItemBadge } from "./ConversationListItemBadge/ConversationListItemBadge";
 
 export function ConversationListItem({
   conversation,
@@ -17,8 +16,11 @@ export function ConversationListItem({
   const isEmpty = lastMessage.text === EMPTY_LAST_MESSAGE_TEXT;
   const senderLabel = getLastMessageSenderLabel(lastMessage.senderId, currentUserId, profiles);
 
+  const hasUnread = unreadCount > 0;
   return (
-    <div className="mx-2 flex w-full items-start gap-3 rounded-xl bg-(--surface) content-px py-3 text-left">
+    <div
+      className={`mx-2 flex w-full items-start gap-3 rounded-xl content-px py-3 text-left ${hasUnread ? "bg-(--surface-unread)" : "bg-surface"}`}
+    >
       <ConversationListItemAvatar
         initial={participant.avatar ? "" : getInitial(participant.name ?? null)}
       />
@@ -42,7 +44,6 @@ export function ConversationListItem({
           </Link>
         }
       />
-      <ConversationListItemBadge unreadCount={unreadCount} />
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import { NotificationsView, fakeNotifications } from "@/features/notifications";
+import { getNotificationsForCurrentUser, NotificationsView } from "@/features/notifications";
 import { createPageMetadata } from "@/lib/metadata/createPageMetadata";
 
 export const metadata = createPageMetadata({
@@ -6,6 +6,7 @@ export const metadata = createPageMetadata({
   description: "Notifications en temps réel",
 });
 
-export default function NotificationsPage() {
-  return <NotificationsView notifications={fakeNotifications} />;
+export default async function NotificationsPage() {
+  const notifications = await getNotificationsForCurrentUser();
+  return <NotificationsView notifications={notifications} />;
 }

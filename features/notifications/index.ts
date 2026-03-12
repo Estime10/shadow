@@ -1,5 +1,6 @@
 export { NotificationsView } from "./components/NotificationsView/NotificationsView";
 export { fakeNotifications } from "./data/fakeNotifications";
+export { getNotificationsForCurrentUser } from "./data/getNotificationsForCurrentUser/getNotificationsForCurrentUser";
 export { getNotificationIconType } from "./lib/getNotificationIconType/getNotificationIconType";
 export { mapNotificationToItemProps } from "./lib/mapNotificationToItemProps/mapNotificationToItemProps";
 export type { Notification, NotificationKind, MessageContentKind } from "./types/notification";

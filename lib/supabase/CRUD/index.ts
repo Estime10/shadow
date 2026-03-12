@@ -23,6 +23,7 @@ export { deleteConversation } from "./conversations/deleteConversation/deleteCon
 export { findOrCreateConversation } from "./conversations/findOrCreateConversation/findOrCreateConversation";
 export { createGroupConversation } from "./conversations/createGroupConversation/createGroupConversation";
 export { getConversationById } from "./conversations/getConversationById/getConversationById";
+export { getConversationsByIds } from "./conversations/getConversationsByIds/getConversationsByIds";
 export { getConversationsForUser } from "./conversations/getConversationsForUser/getConversationsForUser";
 export type { ConversationRow } from "./conversations/types/types";
 export { getGroupById } from "./groups/getGroupById/getGroupById";
@@ -38,6 +39,7 @@ export { mapMessageRowToMessage } from "./messages/mappers/mappers";
 export { ROOM_CONVERSATION_ID } from "./messages/types/types";
 export type { MessageRow } from "./messages/types/types";
 
+export { getConversationIdsForCurrentUser, getUnreadCountForCurrentUser } from "./notifications";
 export { getEvents } from "./events/getEvents/getEvents";
 export { createEvent } from "./events/createEvent/createEvent";
 export { updateEvent } from "./events/updateEvent/updateEvent";

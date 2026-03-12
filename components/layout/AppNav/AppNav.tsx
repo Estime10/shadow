@@ -15,28 +15,29 @@ export function AppNav() {
       <div className="content-max-w flex items-center justify-around content-px py-2">
         {mainNavItems.map((item) => {
           const isActive = pathname === item.href;
+          const badge = item.badge;
           return (
             <Link
               key={item.href}
               href={item.href}
-              className={`relative flex flex-col items-center gap-0.5 px-4 pt-2 pb-3 font-display text-xs font-bold uppercase tracking-wider text-(--text) ${
-                isActive ? "text-accent" : ""
+              className={`relative flex flex-col items-center gap-0.5 px-4 pt-2 pb-3 font-display text-xs font-bold uppercase tracking-wider ${
+                isActive ? "text-accent" : "text-(--text)"
               }`}
               aria-current={isActive ? "page" : undefined}
             >
               <span>{item.label}</span>
-              {isActive ? (
-                <span
-                  className="absolute bottom-0 left-1/2 h-0.5 w-8 -translate-x-1/2 bg-accent"
-                  aria-hidden
-                />
-              ) : null}
-              {item.badge != null && item.badge > 0 ? (
+              <span
+                className={`absolute bottom-0 left-1/2 h-0.5 w-8 -translate-x-1/2 ${
+                  isActive ? "bg-accent" : "bg-(--text)"
+                }`}
+                aria-hidden
+              />
+              {badge != null && badge > 0 ? (
                 <span
                   className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center bg-(--error) px-1 text-[10px] font-bold text-(--bg)"
-                  aria-label={`${item.badge} nouvelles notifications`}
+                  aria-label={`${badge} nouvelles notifications`}
                 >
-                  {item.badge > 99 ? "99+" : item.badge}
+                  {badge > 99 ? "99+" : badge}
                 </span>
               ) : null}
             </Link>
