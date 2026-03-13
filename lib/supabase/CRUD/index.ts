@@ -37,6 +37,8 @@ export { createMessage } from "./messages/createMessage/createMessage";
 export { updateMessage } from "./messages/updateMessage/updateMessage";
 export { deleteMessage } from "./messages/deleteMessage/deleteMessage";
 export { mapMessageRowToMessage } from "./messages/mappers/mappers";
+export { getMessageMediaViewedByUser } from "./message_media_views/getMessageMediaViewedByUser/getMessageMediaViewedByUser";
+export { createMessageMediaView } from "./message_media_views/createMessageMediaView/createMessageMediaView";
 export { ROOM_CONVERSATION_ID } from "./messages/types/types";
 export type { MessageRow } from "./messages/types/types";
 

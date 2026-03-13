@@ -15,6 +15,8 @@ export type UseMessageSubmitParams = {
 export type UseMessageSubmitReturn = {
   formRef: React.RefObject<HTMLFormElement | null>;
   handleSubmit: (formData: FormData) => Promise<void>;
+  /** Soumission avec FormData construit à la main (ex. modale média). N’effectue pas de reset du formulaire. */
+  submitWithFormData: (formData: FormData) => Promise<void>;
 };
 
 export function useMessageSubmit({
@@ -24,7 +26,7 @@ export function useMessageSubmit({
   const formRef = useRef<HTMLFormElement>(null);
   const { mutate } = useSWRConfig();
 
-  const handleSubmit = useCallback(
+  const submitWithFormData = useCallback(
     async (formData: FormData) => {
       messagesLogger.submit("Envoi message", {
         conversationId: formData.get("conversationId"),
@@ -38,10 +40,17 @@ export function useMessageSubmit({
       messagesLogger.submit("Message envoyé, invalidation cache");
       void mutate(MESSAGES_LIST_KEY);
       void mutate(threadCacheKey ?? ["thread", conversationId]);
-      formRef.current?.reset();
     },
     [conversationId, threadCacheKey, mutate]
   );
 
-  return { formRef, handleSubmit };
+  const handleSubmit = useCallback(
+    async (formData: FormData) => {
+      await submitWithFormData(formData);
+      formRef.current?.reset();
+    },
+    [submitWithFormData]
+  );
+
+  return { formRef, handleSubmit, submitWithFormData };
 }

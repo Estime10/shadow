@@ -5,6 +5,15 @@ const bundleAnalyzer = require("@next/bundle-analyzer");
 
 const nextConfig: NextConfig = {
   trailingSlash: false,
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "*.supabase.co",
+        pathname: "/storage/v1/**",
+      },
+    ],
+  },
   async headers() {
     return [
       {

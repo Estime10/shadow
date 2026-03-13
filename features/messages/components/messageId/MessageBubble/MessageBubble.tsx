@@ -36,6 +36,9 @@ export function MessageBubble({
     <div className={`flex w-full ${isSent ? "justify-end" : "justify-start"}`}>
       <MessageBubbleView
         text={message.text}
+        mediaUrl={message.mediaUrl ?? null}
+        mediaType={message.mediaType ?? null}
+        mediaViewedByMe={message.mediaViewedByMe ?? false}
         createdAt={message.createdAt}
         messageId={message.id}
         conversationId={message.conversationId}

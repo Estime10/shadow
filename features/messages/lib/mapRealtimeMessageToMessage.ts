@@ -29,5 +29,6 @@ export function mapRealtimeMessageToMessage(row: RealtimeMessageRow): Message {
     createdAt: row.created_at,
     mediaUrl: row.media_url ?? null,
     mediaType: mediaType ?? null,
+    mediaViewedByMe: false,
   };
 }

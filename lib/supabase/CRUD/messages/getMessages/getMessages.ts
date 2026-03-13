@@ -1,4 +1,5 @@
 import { createClient } from "../../../server";
+import { getMessageMediaViewedByUser } from "../../message_media_views/getMessageMediaViewedByUser/getMessageMediaViewedByUser";
 import { getReadAtByMessageIds } from "../../messageReads/getReadAtByMessageIds/getReadAtByMessageIds";
 import { mapMessageRowToMessage } from "../mappers/mappers";
 import type { GetMessagesVisibilityOptions, Message } from "@/types";
@@ -6,7 +7,7 @@ import type { GetMessagesVisibilityOptions, Message } from "@/types";
 export type { GetMessagesVisibilityOptions } from "@/types";
 
 /** Délai minimum (24h) après création pour que mes messages puissent disparaître une fois lus par l'autre. */
-const MIN_AGE_FOR_SENT_DISAPPEAR_MS = 24 * 60 * 60 * 1000;
+const MIN_TIME_FOR_SENT_DISAPPEAR_MS = 24 * 60 * 60 * 1000;
 
 /**
  * Récupère les messages d'une conversation (ou tous si conversationId non fourni, pour compat).
@@ -39,7 +40,21 @@ export async function getMessages(
 
   if (error) return [];
 
-  const messages = (data ?? []).map(mapMessageRowToMessage);
+  let messages: Message[] = (data ?? []).map(mapMessageRowToMessage);
+
+  if (options?.currentUserId) {
+    const withMediaIds = messages
+      .filter((m) => m.mediaUrl != null && m.mediaUrl !== "")
+      .map((m) => m.id);
+    const viewedSet =
+      withMediaIds.length > 0
+        ? await getMessageMediaViewedByUser(withMediaIds, options.currentUserId)
+        : new Set<string>();
+    messages = messages.map((m) => ({
+      ...m,
+      mediaViewedByMe: viewedSet.has(m.id),
+    }));
+  }
 
   if (!options || options.disappearAfterMinutes <= 0) return messages;
 
@@ -67,7 +82,7 @@ export async function getMessages(
 
     if (isMine && readAtMapsByOther.length > 0) {
       const createdMs = new Date(m.createdAt).getTime();
-      if (nowMs - createdMs < MIN_AGE_FOR_SENT_DISAPPEAR_MS) return true;
+      if (nowMs - createdMs < MIN_TIME_FOR_SENT_DISAPPEAR_MS) return true;
       const readAtBySomeone = readAtMapsByOther.some((map) => {
         const readAt = map.get(m.id);
         return readAt != null && new Date(readAt).getTime() + disappearMs <= nowMs;

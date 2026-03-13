@@ -9,4 +9,6 @@ export { markMessagesAsReadAction } from "./markMessagesAsReadAction/markMessage
 export { updateUserMessageDisappearSettingAction } from "./updateUserMessageDisappearSettingAction/updateUserMessageDisappearSettingAction";
 export { getNotificationsBadgeAction } from "./getNotificationsBadgeAction/getNotificationsBadgeAction";
 export type { GetNotificationsBadgeResult } from "./getNotificationsBadgeAction/getNotificationsBadgeAction";
+export { recordMessageMediaViewAction } from "./recordMessageMediaViewAction/recordMessageMediaViewAction";
+export type { RecordMessageMediaViewResult } from "./recordMessageMediaViewAction/recordMessageMediaViewAction";
 export type { GetThreadDataArgs } from "./getThreadDataAction/getThreadDataAction";

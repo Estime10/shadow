@@ -1,31 +1,24 @@
 "use client";
 
 import { useRef, useCallback } from "react";
-import { useClientUserId } from "@/lib/hooks/messages";
 import { messagesLogger } from "@/features/messages/lib/logger/logger";
-import { uploadMessageMediaToStorage } from "@/features/messages/lib/uploadMessageMediaToStorage/uploadMessageMediaToStorage";
 
 export type UseAttachMediaParams = {
-  conversationId: string;
-  onSubmitWithMedia: (formData: FormData) => Promise<void>;
+  onFileSelected: (file: File) => void;
 };
 
 export type UseAttachMediaReturn = {
   fileInputRef: React.RefObject<HTMLInputElement | null>;
   handleAttachClick: () => void;
-  handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => Promise<void>;
+  handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
 /**
- * Logique métier : sélection fichier → upload Storage → envoi message avec média.
- * Le composant UI ne fait qu'afficher l'input file et appeler ces callbacks.
+ * Logique métier : sélection fichier → callback (ex. ouverture modale de composition).
+ * L’upload et l’envoi sont gérés par la modale.
  */
-export function useAttachMedia({
-  conversationId,
-  onSubmitWithMedia,
-}: UseAttachMediaParams): UseAttachMediaReturn {
+export function useAttachMedia({ onFileSelected }: UseAttachMediaParams): UseAttachMediaReturn {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const userId = useClientUserId();
 
   const handleAttachClick = useCallback(() => {
     messagesLogger.media("Clic pièce jointe, ouverture sélecteur de fichier");
@@ -33,31 +26,14 @@ export function useAttachMedia({
   }, []);
 
   const handleFileChange = useCallback(
-    async (e: React.ChangeEvent<HTMLInputElement>) => {
+    (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
       e.target.value = "";
       if (!file) return;
-      if (!userId) {
-        messagesLogger.upload("Upload annulé : utilisateur non connecté");
-        return;
-      }
-      messagesLogger.upload("Fichier sélectionné", file.name, file.type, file.size);
-
-      const result = await uploadMessageMediaToStorage(file, userId, "image");
-      if (!result.success) {
-        messagesLogger.upload("Échec upload", result.error);
-        return;
-      }
-
-      const formData = new FormData();
-      formData.set("conversationId", conversationId);
-      formData.set("text", "");
-      formData.set("mediaPath", result.path);
-      formData.set("mediaType", result.type);
-      messagesLogger.submit("Envoi message avec média", result.path);
-      await onSubmitWithMedia(formData);
+      messagesLogger.media("Fichier sélectionné, ouverture modale", file.name, file.type);
+      onFileSelected(file);
     },
-    [conversationId, userId, onSubmitWithMedia]
+    [onFileSelected]
   );
 
   return { fileInputRef, handleAttachClick, handleFileChange };

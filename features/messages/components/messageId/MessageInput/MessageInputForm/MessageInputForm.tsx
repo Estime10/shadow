@@ -1,11 +1,12 @@
 "use client";
 
-import { useRef, useCallback } from "react";
+import { useRef, useCallback, useState } from "react";
 import { Plus, Send } from "lucide-react";
-import { ACCEPT_IMAGES, MAX_MESSAGE_LENGTH } from "@/features/messages/constants";
+import { ACCEPT_MEDIA, MAX_MESSAGE_LENGTH } from "@/features/messages/constants";
 import type { ThreadCacheKey } from "@/lib/hooks/messages";
 import { useAttachMedia } from "../useAttachMedia/useAttachMedia";
 import { useMessageSubmit } from "../useMessageSubmit/useMessageSubmit";
+import { AttachMediaModal } from "../AttachMediaModal/AttachMediaModal";
 
 type MessageInputFormProps = {
   conversationId: string;
@@ -14,14 +15,24 @@ type MessageInputFormProps = {
 
 export function MessageInputForm({ conversationId, threadCacheKey }: MessageInputFormProps) {
   const inputRef = useRef<HTMLTextAreaElement>(null);
-  const { formRef, handleSubmit } = useMessageSubmit({
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+  const { formRef, handleSubmit, submitWithFormData } = useMessageSubmit({
     conversationId,
     threadCacheKey,
   });
   const { fileInputRef, handleAttachClick, handleFileChange } = useAttachMedia({
-    conversationId,
-    onSubmitWithMedia: handleSubmit,
+    onFileSelected: useCallback((file: File) => {
+      setSelectedFile(file);
+      setModalOpen(true);
+    }, []),
   });
+
+  const handleCloseModal = useCallback(() => {
+    setModalOpen(false);
+    setSelectedFile(null);
+  }, []);
 
   const handleFocus = useCallback(() => {
     requestAnimationFrame(() => {
@@ -49,10 +60,17 @@ export function MessageInputForm({ conversationId, threadCacheKey }: MessageInpu
       <input
         ref={fileInputRef}
         type="file"
-        accept={ACCEPT_IMAGES}
+        accept={ACCEPT_MEDIA}
         className="hidden"
         aria-hidden
         onChange={handleFileChange}
+      />
+      <AttachMediaModal
+        open={modalOpen}
+        onClose={handleCloseModal}
+        file={selectedFile}
+        conversationId={conversationId}
+        onSubmitWithMedia={submitWithFormData}
       />
       <div className="flex items-center gap-3.5">
         <button

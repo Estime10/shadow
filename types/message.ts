@@ -11,6 +11,8 @@ export type Message = {
   mediaUrl?: string | null;
   /** Présent si mediaUrl est renseigné. */
   mediaType?: MessageMediaType | null;
+  /** true si l'utilisateur courant a déjà ouvert le média (message_media_views). */
+  mediaViewedByMe?: boolean;
 };
 
 export type Conversation = {

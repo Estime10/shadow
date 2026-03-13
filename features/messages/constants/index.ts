@@ -23,3 +23,9 @@ export const MESSAGES_LIST_KEY = "messages-list";
 
 /** Types MIME acceptés pour la pièce jointe image dans l'input message. */
 export const ACCEPT_IMAGES = "image/jpeg,image/png,image/webp,image/gif";
+
+/** Types MIME acceptés pour la vidéo (miniature = première frame). */
+export const ACCEPT_VIDEO = "video/mp4,video/webm";
+
+/** Image + vidéo pour la modale d’envoi de média. */
+export const ACCEPT_MEDIA = `${ACCEPT_IMAGES},${ACCEPT_VIDEO}`;
