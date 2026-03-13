@@ -9,6 +9,7 @@ import { messagesLogger } from "@/features/messages/lib/logger/logger";
 import { uploadMessageMediaToStorage } from "@/features/messages/lib/uploadMessageMediaToStorage/uploadMessageMediaToStorage";
 import { useMediaThumbnail } from "./useMediaThumbnail/useMediaThumbnail";
 import { getMediaTypeFromFile } from "./getMediaTypeFromFile";
+import Image from "next/image";
 
 export type AttachMediaModalProps = {
   open: boolean;
@@ -71,12 +72,19 @@ export function AttachMediaModal({
     >
       <div className="flex flex-col gap-4 p-4">
         {showPreview && (
-          <div className="relative flex min-h-[140px] w-full items-center justify-center overflow-hidden rounded-lg bg-(--border)/30">
+          <div className="relative flex min-h-[140px] w-full items-center justify-center overflow-hidden  aspect-video">
             {loading ? (
               <p className="text-sm text-(--text-muted)">Chargement de l’aperçu…</p>
             ) : thumbnailUrl ? (
-              // eslint-disable-next-line @next/next/no-img-element -- Aperçu blob/data URL (object URL ou 1ère frame vidéo), next/image non adapté
-              <img src={thumbnailUrl} alt="" className="max-h-48 w-full object-contain" />
+              <Image
+                src={thumbnailUrl}
+                fill
+                alt="Media"
+                className="h-full w-full object-contain"
+                priority
+                sizes="100vw 100vh"
+                unoptimized
+              />
             ) : null}
           </div>
         )}
