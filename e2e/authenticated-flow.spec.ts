@@ -14,7 +14,7 @@ test.describe("Flux authentifié — après login", () => {
   test("login puis affichage de la page d'accueil", async ({ page }) => {
     await page.goto("/login");
     await page.getByRole("textbox", { name: /email|e-mail/i }).fill(E2E_EMAIL!);
-    await page.getByLabel(/mot de passe|password/i).fill(E2E_PASSWORD!);
+    await page.getByRole("textbox", { name: /mot de passe|password/i }).fill(E2E_PASSWORD!);
     await page.getByRole("button", { name: /se connecter/i }).click();
     await expect(page).toHaveURL(/\/(\?.*)?$/, { timeout: 15000 });
     await expect(page.getByText(/what it do|accueil/i)).toBeVisible({ timeout: 5000 });
@@ -23,7 +23,7 @@ test.describe("Flux authentifié — après login", () => {
   test("login puis accès à la page messages", async ({ page }) => {
     await page.goto("/login");
     await page.getByRole("textbox", { name: /email|e-mail/i }).fill(E2E_EMAIL!);
-    await page.getByLabel(/mot de passe|password/i).fill(E2E_PASSWORD!);
+    await page.getByRole("textbox", { name: /mot de passe|password/i }).fill(E2E_PASSWORD!);
     await page.getByRole("button", { name: /se connecter/i }).click();
     await expect(page).toHaveURL(/\/(\?.*)?$/, { timeout: 15000 });
     await page.goto("/messages");
@@ -36,7 +36,7 @@ test.describe("Flux authentifié — après login", () => {
   test("login puis accès au calendrier", async ({ page }) => {
     await page.goto("/login");
     await page.getByRole("textbox", { name: /email|e-mail/i }).fill(E2E_EMAIL!);
-    await page.getByLabel(/mot de passe|password/i).fill(E2E_PASSWORD!);
+    await page.getByRole("textbox", { name: /mot de passe|password/i }).fill(E2E_PASSWORD!);
     await page.getByRole("button", { name: /se connecter/i }).click();
     await expect(page).toHaveURL(/\/(\?.*)?$/, { timeout: 15000 });
     await page.goto("/calendar");
