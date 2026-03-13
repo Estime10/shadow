@@ -1,10 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { createClient } from "@/lib/supabase/client";
-
-const BUCKET = "media";
-const EXPIRES_IN = 3600;
+import { getSignedMediaUrl } from "@/features/messages/lib/getSignedMediaUrl/getSignedMediaUrl";
 
 export type UseSignedMediaUrlReturn = {
   url: string | null;
@@ -13,7 +10,7 @@ export type UseSignedMediaUrlReturn = {
 };
 
 /**
- * Récupère une URL signée pour afficher un fichier du bucket media (privé).
+ * Hook qui expose l’URL signée d’un média (délègue à getSignedMediaUrl).
  */
 export function useSignedMediaUrl(
   storagePath: string | null,
@@ -40,19 +37,12 @@ export function useSignedMediaUrl(
       setUrl(null);
     });
 
-    const supabase = createClient();
-    supabase.storage
-      .from(BUCKET)
-      .createSignedUrl(storagePath.trim(), EXPIRES_IN)
-      .then(({ data, error: err }) => {
-        if (cancelled) return;
-        setLoading(false);
-        if (err) {
-          setError(err.message);
-          return;
-        }
-        if (data?.signedUrl) setUrl(data.signedUrl);
-      });
+    getSignedMediaUrl(storagePath).then((result) => {
+      if (cancelled) return;
+      setLoading(false);
+      if (result.success) setUrl(result.url);
+      else setError(result.error);
+    });
 
     return () => {
       cancelled = true;

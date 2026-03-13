@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { mapMessageRowToMessage } from "@/lib/supabase/CRUD/messages/mappers/mappers";
-import { ROOM_CONVERSATION_ID } from "@/lib/supabase/CRUD/messages/types/types";
+import { ROOM_CONVERSATION_ID } from "@/lib/supabase/constants";
 import type { MessageRow } from "@/lib/supabase/CRUD/messages/types/types";
 
 describe("mapMessageRowToMessage", () => {

@@ -1,9 +1,8 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { useSWRConfig } from "swr";
 import { deleteMessageAction } from "@/features/messages/actions";
-import { MESSAGES_LIST_KEY } from "@/features/messages/constants";
+import { useInvalidateMessagesCache } from "@/features/messages/lib/useInvalidateMessagesCache/useInvalidateMessagesCache";
 import type { MessageIdPageContent } from "@/features/messages/types";
 import type { ThreadCacheKey } from "@/lib/hooks/messages";
 
@@ -26,7 +25,7 @@ export function useMessageBubbleMenuConfirm({
   onClose,
   threadCacheKey,
 }: UseMessageBubbleMenuConfirmParams): UseMessageBubbleMenuConfirmReturn {
-  const { mutate } = useSWRConfig();
+  const invalidate = useInvalidateMessagesCache();
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
 
   const handleConfirmDelete = useCallback(async () => {
@@ -37,18 +36,21 @@ export function useMessageBubbleMenuConfirm({
     setConfirmDeleteOpen(false);
     onClose();
     if (!error) {
-      void mutate(MESSAGES_LIST_KEY);
-      const key = threadCacheKey ?? ["thread", conversationId];
-      void mutate(
-        key,
-        (current: MessageIdPageContent | undefined) =>
-          current
-            ? { ...current, messages: current.messages.filter((m) => m.id !== messageId) }
+      invalidate({
+        conversationId,
+        threadCacheKey,
+        threadUpdater: (current: unknown) =>
+          (current as MessageIdPageContent | undefined)
+            ? {
+                ...(current as MessageIdPageContent),
+                messages: (current as MessageIdPageContent).messages.filter(
+                  (m) => m.id !== messageId
+                ),
+              }
             : undefined,
-        { revalidate: true }
-      );
+      });
     }
-  }, [messageId, conversationId, onClose, threadCacheKey, mutate]);
+  }, [messageId, conversationId, onClose, threadCacheKey, invalidate]);
 
   return { confirmDeleteOpen, setConfirmDeleteOpen, handleConfirmDelete };
 }

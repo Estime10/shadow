@@ -40,6 +40,6 @@ describe("createMessageAction", () => {
     formData.set("text", "Hello");
     const result = await createMessageAction(formData);
     expect(result.error).toBeNull();
-    expect(createMessage).toHaveBeenCalledWith(validConversationId, "Hello");
+    expect(createMessage).toHaveBeenCalledWith(validConversationId, "Hello", undefined);
   });
 });

@@ -1,11 +1,7 @@
 import type { Message, MessageMediaType } from "@/types/message";
 import type { MessageRow } from "../types/types";
 import { ROOM_CONVERSATION_ID } from "../types/types";
-
-function parseMediaType(mediaType: string | null): MessageMediaType | null {
-  if (mediaType === "image" || mediaType === "video") return mediaType;
-  return null;
-}
+import { parseMediaType } from "../parseMediaType/parseMediaType";
 
 /**
  * Mappe une ligne DB message vers le type Message du domaine.

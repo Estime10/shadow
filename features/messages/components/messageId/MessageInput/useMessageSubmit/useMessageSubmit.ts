@@ -1,10 +1,9 @@
 "use client";
 
 import { useRef, useCallback } from "react";
-import { useSWRConfig } from "swr";
 import { createMessageAction } from "@/features/messages/actions";
-import { MESSAGES_LIST_KEY } from "@/features/messages/constants";
-import { messagesLogger } from "@/features/messages/lib/logger/logger";
+import { useInvalidateMessagesCache } from "@/features/messages/lib/useInvalidateMessagesCache/useInvalidateMessagesCache";
+import { log } from "@/lib/logger/logger";
 import type { ThreadCacheKey } from "@/lib/hooks/messages";
 
 export type UseMessageSubmitParams = {
@@ -24,24 +23,23 @@ export function useMessageSubmit({
   threadCacheKey,
 }: UseMessageSubmitParams): UseMessageSubmitReturn {
   const formRef = useRef<HTMLFormElement>(null);
-  const { mutate } = useSWRConfig();
+  const invalidate = useInvalidateMessagesCache();
 
   const submitWithFormData = useCallback(
     async (formData: FormData) => {
-      messagesLogger.submit("Envoi message", {
+      log("messages-submit", "Envoi message", {
         conversationId: formData.get("conversationId"),
         hasMedia: !!formData.get("mediaPath"),
       });
       const { error } = await createMessageAction(formData);
       if (error) {
-        messagesLogger.submit("Erreur envoi", error);
+        log("messages-submit", "Erreur envoi", { error });
         return;
       }
-      messagesLogger.submit("Message envoyé, invalidation cache");
-      void mutate(MESSAGES_LIST_KEY);
-      void mutate(threadCacheKey ?? ["thread", conversationId]);
+      log("messages-submit", "Message envoyé, invalidation cache");
+      invalidate({ conversationId, threadCacheKey });
     },
-    [conversationId, threadCacheKey, mutate]
+    [conversationId, threadCacheKey, invalidate]
   );
 
   const handleSubmit = useCallback(

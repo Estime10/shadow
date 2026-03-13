@@ -4,7 +4,8 @@
  */
 
 export { getCurrentUserProfile } from "./profiles/getCurrentUserProfile/getCurrentUserProfile";
-export { getProfiles, getAllProfiles } from "./profiles/getProfiles/getProfiles";
+export { getProfiles } from "./profiles/getProfiles/getProfiles";
+export { getAllProfiles } from "./profiles/getAllProfiles/getAllProfiles";
 export { updateUserMessageDisappearSetting } from "./profiles/updateUserMessageDisappearSetting/updateUserMessageDisappearSetting";
 export { MESSAGE_DISAPPEAR_MINUTES_OPTIONS } from "./profiles/types/types";
 export type {

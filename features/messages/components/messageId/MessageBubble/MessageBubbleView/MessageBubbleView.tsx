@@ -1,10 +1,8 @@
 "use client";
 
-import { useState, useCallback } from "react";
-import { useSWRConfig } from "swr";
 import type { MessageMediaType } from "@/types";
 import type { ThreadCacheKey } from "@/lib/hooks/messages";
-import { recordMessageMediaViewAction } from "@/features/messages/actions";
+import { useMessageMediaViewer } from "../useMessageMediaViewer/useMessageMediaViewer";
 import { MessageBubbleContent } from "../MessageBubbleContent/MessageBubbleContent";
 import { MessageBubbleFooter } from "../MessageBubbleFooter/MessageBubbleFooter";
 import { MessageMediaViewerModal } from "../MessageMediaViewerModal/MessageMediaViewerModal";
@@ -42,27 +40,8 @@ export function MessageBubbleView({
   setMenuOpen,
   threadCacheKey,
 }: MessageBubbleViewProps) {
-  const { mutate } = useSWRConfig();
-  const [viewerOpen, setViewerOpen] = useState(false);
-  const [viewerPath, setViewerPath] = useState<string | null>(null);
-  const [viewerType, setViewerType] = useState<MessageMediaType | null>(null);
-
-  const handleMediaClick = useCallback(
-    async (storagePath: string, type: MessageMediaType) => {
-      await recordMessageMediaViewAction(messageId);
-      void mutate(threadCacheKey ?? ["thread", conversationId]);
-      setViewerPath(storagePath);
-      setViewerType(type);
-      setViewerOpen(true);
-    },
-    [messageId, conversationId, threadCacheKey, mutate]
-  );
-
-  const handleCloseViewer = useCallback(() => {
-    setViewerOpen(false);
-    setViewerPath(null);
-    setViewerType(null);
-  }, []);
+  const { viewerOpen, viewerPath, viewerType, handleMediaClick, handleCloseViewer } =
+    useMessageMediaViewer({ messageId, conversationId, threadCacheKey });
 
   return (
     <>

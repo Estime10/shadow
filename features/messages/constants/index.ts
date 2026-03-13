@@ -7,8 +7,8 @@ export const FALLBACK_PARTICIPANT_NAME = "Ghost";
 export const FALLBACK_USERNAME = "Sans pseudo";
 export const EMPTY_LAST_MESSAGE_TEXT = "Aucun message";
 
-/** Id de la conversation "room" (une seule pour tout le monde). Doit correspondre à lib/supabase/CRUD. */
-export const ROOM_CONVERSATION_ID = "room";
+/** Réexport (source unique : lib/supabase/constants). */
+export { ROOM_CONVERSATION_ID } from "@/lib/supabase/constants";
 
 /** Nom affiché pour la conversation "room" (une seule pour tout le monde, pas de 1:1). */
 export const ROOM_DISPLAY_NAME = "Messages";

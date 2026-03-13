@@ -1,7 +1,6 @@
 import type { Message } from "@/types/message";
-
-/** Valeur utilisée quand conversation_id est null (room). */
-const FALLBACK_CONVERSATION_ID = "room";
+import { parseMediaType } from "@/lib/supabase/CRUD/messages/parseMediaType/parseMediaType";
+import { ROOM_CONVERSATION_ID } from "@/lib/supabase/constants";
 
 /** Forme minimale du payload Realtime INSERT/UPDATE (messages). */
 export type RealtimeMessageRow = {
@@ -14,16 +13,11 @@ export type RealtimeMessageRow = {
   created_at: string;
 };
 
-function parseMediaType(mediaType: string | null): "image" | "video" | null {
-  if (mediaType === "image" || mediaType === "video") return mediaType;
-  return null;
-}
-
 export function mapRealtimeMessageToMessage(row: RealtimeMessageRow): Message {
   const mediaType = parseMediaType(row.media_type ?? null);
   return {
     id: row.id,
-    conversationId: row.conversation_id ?? FALLBACK_CONVERSATION_ID,
+    conversationId: row.conversation_id ?? ROOM_CONVERSATION_ID,
     senderId: row.user_id,
     text: row.text ?? "",
     createdAt: row.created_at,

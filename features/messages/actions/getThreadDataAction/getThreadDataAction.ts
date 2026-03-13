@@ -1,7 +1,7 @@
 "use server";
 
 import { getConversationWithMessages, getRoomConversation } from "@/features/messages/data";
-import { ROOM_CONVERSATION_ID } from "@/lib/supabase/CRUD";
+import { ROOM_CONVERSATION_ID } from "@/lib/supabase/constants";
 import type { MessageIdPageContent } from "@/features/messages/types";
 
 export type GetThreadDataArgs = {

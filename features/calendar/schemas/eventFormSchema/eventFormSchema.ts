@@ -26,4 +26,8 @@ export const eventFormSchema = z
     path: ["description"],
   });
 
+/** Type des valeurs soumises (après transform). Utiliser pour onValid / buildEventFromForm. */
 export type EventFormValues = z.output<typeof eventFormSchema>;
+
+/** Type des valeurs du formulaire (état). Utiliser pour useForm (description optionnel en entrée). */
+export type EventFormInputValues = z.input<typeof eventFormSchema>;

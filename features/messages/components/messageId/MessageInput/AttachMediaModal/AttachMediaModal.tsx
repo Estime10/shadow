@@ -1,15 +1,10 @@
 "use client";
 
-import { useState, useCallback } from "react";
 import { Send } from "lucide-react";
-import { Modal } from "@/components/ui/Modal/Modal";
-import { useClientUserId } from "@/lib/hooks/messages";
-import { MAX_MESSAGE_LENGTH } from "@/features/messages/constants";
-import { messagesLogger } from "@/features/messages/lib/logger/logger";
-import { uploadMessageMediaToStorage } from "@/features/messages/lib/uploadMessageMediaToStorage/uploadMessageMediaToStorage";
-import { useMediaThumbnail } from "./useMediaThumbnail/useMediaThumbnail";
-import { getMediaTypeFromFile } from "./getMediaTypeFromFile";
 import Image from "next/image";
+import { Modal } from "@/components/ui/Modal/Modal";
+import { MAX_MESSAGE_LENGTH } from "@/features/messages/constants";
+import { useAttachMediaModal } from "./useAttachMediaModal/useAttachMediaModal";
 
 export type AttachMediaModalProps = {
   open: boolean;
@@ -26,40 +21,8 @@ export function AttachMediaModal({
   conversationId,
   onSubmitWithMedia,
 }: AttachMediaModalProps) {
-  const userId = useClientUserId();
-  const [text, setText] = useState("");
-  const [sending, setSending] = useState(false);
-  const { thumbnailUrl, loading } = useMediaThumbnail(file);
-
-  const handleSend = useCallback(async () => {
-    if (!file || !userId) return;
-    const trimmed = text.trim();
-    if (trimmed.length > MAX_MESSAGE_LENGTH) return;
-
-    setSending(true);
-    const mediaType = getMediaTypeFromFile(file);
-    const result = await uploadMessageMediaToStorage(file, userId, mediaType);
-
-    if (!result.success) {
-      messagesLogger.upload("Échec upload depuis modale", result.error);
-      setSending(false);
-      return;
-    }
-
-    const formData = new FormData();
-    formData.set("conversationId", conversationId);
-    formData.set("text", trimmed);
-    formData.set("mediaPath", result.path);
-    formData.set("mediaType", result.type);
-    messagesLogger.submit("Envoi message avec média (modale)", result.path);
-    await onSubmitWithMedia(formData);
-    setSending(false);
-    setText("");
-    onClose();
-  }, [file, userId, text, conversationId, onSubmitWithMedia, onClose]);
-
-  const canSend = Boolean(file && userId && !sending);
-  const showPreview = Boolean(file && (thumbnailUrl || loading));
+  const { text, setText, sending, thumbnailUrl, loading, handleSend, canSend, showPreview } =
+    useAttachMediaModal({ file, conversationId, onSubmitWithMedia, onClose });
 
   return (
     <Modal

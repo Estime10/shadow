@@ -1,9 +1,8 @@
 "use client";
 
 import { useCallback } from "react";
-import { useSWRConfig } from "swr";
 import { updateMessageAction } from "@/features/messages/actions";
-import { MESSAGES_LIST_KEY } from "@/features/messages/constants";
+import { useInvalidateMessagesCache } from "@/features/messages/lib/useInvalidateMessagesCache/useInvalidateMessagesCache";
 import type { ThreadCacheKey } from "@/lib/hooks/messages";
 
 export type UseMessageBubbleEditFormParams = {
@@ -24,18 +23,17 @@ export function useMessageBubbleEditForm({
   onCancel,
   threadCacheKey,
 }: UseMessageBubbleEditFormParams): UseMessageBubbleEditFormReturn {
-  const { mutate } = useSWRConfig();
+  const invalidate = useInvalidateMessagesCache();
 
   const handleSubmit = useCallback(
     async (formData: FormData) => {
       const { error } = await updateMessageAction(formData);
       if (!error) {
         onCancel();
-        void mutate(MESSAGES_LIST_KEY);
-        void mutate(threadCacheKey ?? ["thread", conversationId]);
+        invalidate({ conversationId, threadCacheKey });
       }
     },
-    [conversationId, onCancel, threadCacheKey, mutate]
+    [conversationId, onCancel, threadCacheKey, invalidate]
   );
 
   return { handleSubmit };

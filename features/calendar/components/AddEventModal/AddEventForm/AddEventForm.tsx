@@ -7,18 +7,18 @@ import {
   EventFormTimeField,
   EventFormTitleField,
 } from "@/features/calendar/components/EventFormFields";
-import type { EventFormValues } from "@/features/calendar/schemas/eventFormSchema/eventFormSchema";
+import type { EventFormInputValues } from "@/features/calendar/schemas/eventFormSchema/eventFormSchema";
 import { AddEventFormActions } from "./AddEventFormActions/AddEventFormActions";
 
-type FormErrors = FieldErrors<EventFormValues> & { root?: { message?: string } };
+type FormErrors = FieldErrors<EventFormInputValues> & { root?: { message?: string } };
 
 export type AddEventFormProps = {
-  control: Control<EventFormValues>;
+  control: Control<EventFormInputValues>;
   errors: FormErrors;
   isSubmitting: boolean;
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
   onCancel: () => void;
-  setError: (name: keyof EventFormValues | "root", opts: { message: string }) => void;
+  setError: (name: keyof EventFormInputValues | "root", opts: { message: string }) => void;
 };
 
 export function AddEventForm({
@@ -61,7 +61,7 @@ export function AddEventForm({
         render={({ field }) => (
           <EventFormDescriptionField
             id="add-event-description"
-            value={field.value}
+            value={field.value ?? ""}
             onChange={field.onChange}
             error={errors.description?.message}
           />

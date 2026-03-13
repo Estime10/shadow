@@ -7,7 +7,7 @@ import type { CalendarEvent } from "@/features/calendar/types";
 import { formatDateLabel } from "@/features/calendar/utils";
 import {
   eventFormSchema,
-  type EventFormValues,
+  type EventFormInputValues,
 } from "@/features/calendar/schemas/eventFormSchema/eventFormSchema";
 import { buildEventFromForm } from "@/features/calendar/utils";
 import { AddEventForm } from "./AddEventForm/AddEventForm";
@@ -28,15 +28,15 @@ export function AddEventModal({ open, onClose, selectedDate, onSubmit }: AddEven
     reset,
     formState: { errors, isSubmitting },
     setError,
-  } = useForm<EventFormValues>({
+  } = useForm<EventFormInputValues>({
     resolver: zodResolver(eventFormSchema),
     defaultValues: { title: "", description: "", time: DEFAULT_TIME },
   });
 
-  function onValid(data: EventFormValues) {
+  function onValid(data: EventFormInputValues) {
     const event = buildEventFromForm(selectedDate, {
       title: data.title,
-      description: data.description || "",
+      description: data.description ?? "",
       time: data.time,
     });
     onSubmit(event);

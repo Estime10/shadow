@@ -1,10 +1,9 @@
 "use client";
 
 import { createClient } from "@/lib/supabase/client";
+import { MEDIA_BUCKET } from "@/lib/supabase/constants";
+import { log } from "@/lib/logger/logger";
 import type { MessageMediaType } from "@/types";
-import { messagesLogger } from "../logger/logger";
-
-const BUCKET = "media";
 
 export type UploadMessageMediaResult =
   | { success: true; path: string; mediaId: string; type: MessageMediaType }
@@ -20,22 +19,22 @@ export async function uploadMessageMediaToStorage(
   userId: string,
   type: MessageMediaType
 ): Promise<UploadMessageMediaResult> {
-  messagesLogger.upload("Début upload", { name: file.name, size: file.size, type });
+  log("messages-upload", "Début upload", { name: file.name, size: file.size, type });
 
   const mediaId = crypto.randomUUID();
   const path = `${userId}/${type}/${mediaId}`;
 
   const supabase = createClient();
-  const { error } = await supabase.storage.from(BUCKET).upload(path, file, {
+  const { error } = await supabase.storage.from(MEDIA_BUCKET).upload(path, file, {
     cacheControl: "3600",
     upsert: false,
   });
 
   if (error) {
-    messagesLogger.upload("Erreur upload Storage", error);
+    log("messages-upload", "Erreur upload Storage", { error });
     return { success: false, error: error.message };
   }
 
-  messagesLogger.upload("Upload réussi", { path, mediaId });
+  log("messages-upload", "Upload réussi", { path, mediaId });
   return { success: true, path, mediaId, type };
 }

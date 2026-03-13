@@ -7,7 +7,7 @@ import type { MessagesPageContent, MessageIdPageContent } from "../content/conte
  * Pas d'alias : si un composant reçoit exactement le content, il utilise MessagesPageContent ou MessageIdPageContent.
  */
 
-import type { MessageDisappearAfterMinutes } from "@/lib/supabase/CRUD/profiles/types/types";
+import type { MessageDisappearAfterMinutes } from "@/types";
 
 /** Header liste : callback (état modal dans MessagesView) + réglage disparition après lecture */
 export type MessagesHeaderProps = {

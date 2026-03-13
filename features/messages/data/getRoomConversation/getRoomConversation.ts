@@ -4,8 +4,8 @@ import {
   getMessages,
   getProfiles,
   getReadAtByMessageIds,
-  ROOM_CONVERSATION_ID,
 } from "@/lib/supabase/CRUD";
+import { ROOM_CONVERSATION_ID } from "@/lib/supabase/constants";
 import { ROOM_DISPLAY_NAME } from "@/features/messages/constants";
 import { buildLastMessageFromMessage, getParticipantDisplayName } from "../helpers/helpers";
 

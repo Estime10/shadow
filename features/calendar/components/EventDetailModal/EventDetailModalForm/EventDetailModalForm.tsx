@@ -11,7 +11,7 @@ import {
 } from "@/features/calendar/components/EventFormFields";
 import {
   eventFormSchema,
-  type EventFormValues,
+  type EventFormInputValues,
 } from "@/features/calendar/schemas/eventFormSchema/eventFormSchema";
 import type { CalendarEvent } from "@/features/calendar/types";
 import {
@@ -41,7 +41,7 @@ export function EventDetailModalForm({
     reset,
     formState: { errors, isSubmitting },
     setError,
-  } = useForm<EventFormValues>({
+  } = useForm<EventFormInputValues>({
     resolver: zodResolver(eventFormSchema),
     defaultValues: {
       title: event.title,
@@ -58,10 +58,10 @@ export function EventDetailModalForm({
     });
   }, [event, reset]);
 
-  async function onValid(data: EventFormValues) {
+  async function onValid(data: EventFormInputValues) {
     const { error } = await updateEventAction(event.id, {
       title: data.title,
-      description: data.description?.trim() || null,
+      description: (data.description ?? "").trim() || null,
       eventDate: buildEventDateFromTime(event.eventDate, data.time),
     });
     if (error) {
@@ -107,7 +107,7 @@ export function EventDetailModalForm({
         render={({ field }) => (
           <EventFormDescriptionField
             id="edit-event-description"
-            value={field.value}
+            value={field.value ?? ""}
             onChange={field.onChange}
             error={errors.description?.message}
           />

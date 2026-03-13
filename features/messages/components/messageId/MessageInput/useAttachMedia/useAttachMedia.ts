@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useCallback } from "react";
-import { messagesLogger } from "@/features/messages/lib/logger/logger";
+import { log } from "@/lib/logger/logger";
 
 export type UseAttachMediaParams = {
   onFileSelected: (file: File) => void;
@@ -21,7 +21,7 @@ export function useAttachMedia({ onFileSelected }: UseAttachMediaParams): UseAtt
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleAttachClick = useCallback(() => {
-    messagesLogger.media("Clic pièce jointe, ouverture sélecteur de fichier");
+    log("messages-media", "Clic pièce jointe, ouverture sélecteur de fichier");
     fileInputRef.current?.click();
   }, []);
 
@@ -30,7 +30,10 @@ export function useAttachMedia({ onFileSelected }: UseAttachMediaParams): UseAtt
       const file = e.target.files?.[0];
       e.target.value = "";
       if (!file) return;
-      messagesLogger.media("Fichier sélectionné, ouverture modale", file.name, file.type);
+      log("messages-media", "Fichier sélectionné, ouverture modale", {
+        name: file.name,
+        type: file.type,
+      });
       onFileSelected(file);
     },
     [onFileSelected]

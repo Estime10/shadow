@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef } from "react";
 import useSWR from "swr";
 import { getThreadDataAction, markMessagesAsReadAction } from "@/features/messages/actions";
 import { getNotificationsBadgeAction } from "@/features/messages/actions/getNotificationsBadgeAction/getNotificationsBadgeAction";
-import { ROOM_CONVERSATION_ID } from "@/features/messages/constants";
+import { ROOM_CONVERSATION_ID } from "@/lib/supabase/constants";
 import { useNotificationsOptional } from "@/lib/contexts/NotificationsContext/NotificationsContext";
 import type { MessageIdPageContent } from "@/features/messages/types";
 
