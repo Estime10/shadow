@@ -1,7 +1,14 @@
 import type { NextConfig } from "next";
-// Plugin optionnel chargé dynamiquement (API CJS)
+// Plugins optionnels chargés dynamiquement (API CJS)
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const bundleAnalyzer = require("@next/bundle-analyzer");
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const withPWA = require("next-pwa")({
+  dest: "public",
+  disable: process.env.NODE_ENV === "development",
+  skipWaiting: true,
+  cleanupOutdatedCaches: true,
+});
 
 const nextConfig: NextConfig = {
   trailingSlash: false,
@@ -16,6 +23,10 @@ const nextConfig: NextConfig = {
   },
   async headers() {
     return [
+      {
+        source: "/manifest.json",
+        headers: [{ key: "Content-Type", value: "application/manifest+json" }],
+      },
       {
         source: "/(.*)",
         headers: [
@@ -44,4 +55,4 @@ const withBundleAnalyzer = bundleAnalyzer({
   enabled: process.env.ANALYZE === "true",
 });
 
-export default withBundleAnalyzer(nextConfig);
+export default withPWA(withBundleAnalyzer(nextConfig));
