@@ -1,9 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Oswald, Space_Mono } from "next/font/google";
-import { AppNav } from "@/components/layout/AppNav/AppNav";
 import { PageTransition } from "@/components/animations/PageTransition/PageTransition";
-import { NotificationsRoot } from "@/components/providers/NotificationsRoot/NotificationsRoot";
-import { ToastRoot } from "@/components/providers/ToastRoot/ToastRoot";
 import { ViewportLock } from "@/app/ViewportLock/ViewportLock";
 import { PwaRegister } from "@/components/pwa/PwaRegister/PwaRegister";
 import type { LayoutChildrenProps } from "@/types/layout";
@@ -54,15 +51,10 @@ export default function RootLayout({ children }: Readonly<LayoutChildrenProps>) 
       <body
         className={`${oswald.variable} ${spaceMono.variable} antialiased min-h-screen bg-(--bg) text-(--text)`}
       >
-        <ToastRoot>
-          <NotificationsRoot>
-            <ViewportLock>
-              <PageTransition>{children}</PageTransition>
-              <AppNav />
-              <PwaRegister />
-            </ViewportLock>
-          </NotificationsRoot>
-        </ToastRoot>
+        <ViewportLock>
+          <PageTransition>{children}</PageTransition>
+          <PwaRegister />
+        </ViewportLock>
       </body>
     </html>
   );

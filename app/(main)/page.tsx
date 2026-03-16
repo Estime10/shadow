@@ -1,5 +1,5 @@
 import { createPageMetadata } from "@/lib/metadata/createPageMetadata";
-import { HomeView } from "@/features/home/components";
+import { HomeView } from "@/features/home";
 
 export const metadata = createPageMetadata({
   title: "Événements à venir",

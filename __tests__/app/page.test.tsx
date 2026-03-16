@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
-import { HomeView } from "@/features/home/components";
+import { HomeView } from "@/features/home";
 
 describe("Home", () => {
   it("affiche le titre Événements à venir", () => {
