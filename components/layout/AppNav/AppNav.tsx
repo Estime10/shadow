@@ -30,16 +30,19 @@ export function AppNav() {
         {mainNavItems.map((item) => {
           const isActive = pathname === item.href;
           const badge = item.badge ?? getBadge(item.href);
+          const Icon = item.icon;
           return (
             <Link
               key={item.href}
               href={item.href}
-              className={`relative flex flex-col items-center gap-0.5 px-4 pt-2 pb-3 font-display text-xs font-bold uppercase tracking-wider ${
+              className={`relative flex flex-col items-center justify-center gap-0.5 px-4 py-3 font-display text-xs font-bold uppercase tracking-wider md:pt-2 md:pb-3 ${
                 isActive ? "text-accent" : "text-(--text)"
               }`}
               aria-current={isActive ? "page" : undefined}
+              aria-label={item.label}
             >
-              <span>{item.label}</span>
+              {Icon ? <Icon className="h-5 w-5 shrink-0" aria-hidden /> : null}
+              <span className="hidden md:block">{item.label}</span>
               {isActive ? (
                 <span
                   className="absolute bottom-0 left-1/2 h-0.5 w-8 -translate-x-1/2 bg-accent"
@@ -48,7 +51,7 @@ export function AppNav() {
               ) : null}
               {badge != null && badge > 0 ? (
                 <span
-                  className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-(--error) px-1 text-[10px] font-bold text-(--bg)"
+                  className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center text-[12px] font-bold text-(--error)"
                   aria-label={
                     item.href === MESSAGES_HREF
                       ? `${badge} message${badge > 1 ? "s" : ""} non lu${badge > 1 ? "s" : ""}`

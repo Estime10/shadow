@@ -9,6 +9,7 @@ const CHANNEL_NAME = "global-messages-badge";
 /**
  * S'abonne aux changements sur les tables messages et message_reads pour mettre à jour
  * le badge "messages non lus" partout dans l'app (nouveau message → +, message lu → -).
+ * Toute insertion (direct ou groupe) déclenche refreshBadge(); le count inclut les groupes.
  * Utilisé par NotificationsProvider pour que le badge nav reste cohérent en temps réel.
  */
 export function useGlobalMessagesBadgeRealtime(

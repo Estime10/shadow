@@ -5,6 +5,7 @@ import { getConversationIdsForCurrentUser } from "../getConversationIdsForCurren
 
 /**
  * Nombre de messages non lus pour l'utilisateur connecté (messages reçus dans ses conversations, pas encore lus).
+ * Inclut les conversations directes et les groupes (getConversationIdsForCurrentUser).
  * Utilisé pour le badge notifications (hasUnread = count > 0).
  */
 export async function getUnreadCountForCurrentUser(): Promise<number> {
