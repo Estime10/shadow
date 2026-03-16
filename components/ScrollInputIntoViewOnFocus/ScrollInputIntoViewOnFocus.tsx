@@ -17,7 +17,7 @@ function isFormPage(pathname: string): boolean {
  * scroll pour le garder visible au-dessus du clavier (même logique que l’input message).
  */
 export function ScrollInputIntoViewOnFocus() {
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const timerRef = useRef<number | null>(null);
   const pathname = usePathname();
 
   useEffect(() => {
