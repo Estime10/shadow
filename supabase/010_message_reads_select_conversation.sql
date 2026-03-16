@@ -6,8 +6,10 @@
 -- =============================================================================
 
 -- Remplacer la policy SELECT : autoriser la lecture des lignes pour les messages
--- des conversations dont je suis participant (donc je peux voir si l'autre a lu).
+-- des conversations dont je suis participant (direct ou groupe ; donc je peux voir mes "lu" et ceux des autres).
+-- Sans la branche groupe, getReadAtByMessageIds ne voyait pas nos message_reads pour les groupes → badge restait bloqué.
 drop policy if exists "message_reads_select_own" on public.message_reads;
+drop policy if exists "message_reads_select_conversation" on public.message_reads;
 create policy "message_reads_select_conversation"
   on public.message_reads for select
   to authenticated
@@ -20,6 +22,14 @@ create policy "message_reads_select_conversation"
         m.conversation_id is null
         or c.user_1_id = (select auth.uid())
         or c.user_2_id = (select auth.uid())
+        or (
+          c.type = 'group'
+          and c.group_id is not null
+          and exists (
+            select 1 from public.group_members gm
+            where gm.group_id = c.group_id and gm.user_id = (select auth.uid())
+          )
+        )
       )
     )
   );
