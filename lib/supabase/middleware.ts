@@ -13,9 +13,8 @@ const HTML_HEADERS = { "Content-Type": "text/html; charset=utf-8" } as const;
  * Rafraîchit la session Supabase Auth et met à jour les cookies (request + response).
  * À appeler depuis le middleware sur chaque requête concernée.
  *
- * Utilise getClaims() (et non getSession()) : la doc @supabase/ssr recommande getClaims()
- * en milieu serveur car il valide la signature JWT à chaque fois ; getSession() ne
- * revalide pas le token et ne doit pas être utilisé pour protéger les pages.
+ * Utilise getUser() pour la redirection : il distingue un utilisateur connecté d’une
+ * session anonyme (getClaims() peut retourner des claims même pour anon).
  */
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
@@ -45,16 +44,16 @@ export async function updateSession(request: NextRequest) {
     },
   });
 
-  let user: unknown;
+  let authenticatedUser: { id: string } | null = null;
   try {
-    const { data } = await supabase.auth.getClaims();
-    user = data?.claims;
+    const { data } = await supabase.auth.getUser();
+    authenticatedUser = data?.user ?? null;
   } catch {
     return new NextResponse(UNAVAILABLE_HTML, { status: 503, headers: HTML_HEADERS });
   }
 
   const pathname = request.nextUrl.pathname;
-  if (!user && !isPublicRoute(pathname)) {
+  if (!authenticatedUser && !isPublicRoute(pathname)) {
     const loginUrl = request.nextUrl.clone();
     loginUrl.pathname = "/login";
     return NextResponse.redirect(loginUrl);

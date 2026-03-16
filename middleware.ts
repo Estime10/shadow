@@ -13,6 +13,6 @@ export const config = {
      * - favicon et assets statiques
      * - PWA : sw.js, workbox-*.js, manifest.json (évite getClaims() inutile)
      */
-    "/((?!_next/static|_next/image|favicon.ico|sw\\.js|workbox-[^/]*\\.js|manifest\\.json|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+    "/((?!_next/static|_next/image|favicon.ico|sw\\.js|workbox-[^/]*\\.js|manifest\\.json|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico)$).*)",
   ],
 };

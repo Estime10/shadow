@@ -34,7 +34,8 @@ export const metadata: Metadata = {
   description:
     "App privée : messages éphémères 24h, calendrier partagé, notifications realtime. Installable en PWA.",
   icons: {
-    apple: "/logo/apple-touch-icon.png",
+    icon: "/favicon-for-app/favicon.ico",
+    apple: "/favicon-for-app/apple-icon.png",
   },
   manifest: "/manifest.json",
   other: {
