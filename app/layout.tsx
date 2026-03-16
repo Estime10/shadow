@@ -3,6 +3,7 @@ import { Oswald, Space_Mono } from "next/font/google";
 import { PageTransition } from "@/components/animations/PageTransition/PageTransition";
 import { ViewportLock } from "@/app/ViewportLock/ViewportLock";
 import { PwaRegister } from "@/components/pwa/PwaRegister/PwaRegister";
+import { ScrollInputIntoViewOnFocus } from "@/components/ScrollInputIntoViewOnFocus/ScrollInputIntoViewOnFocus";
 import type { LayoutChildrenProps } from "@/types/layout";
 import "./globals.css";
 
@@ -55,6 +56,7 @@ export default function RootLayout({ children }: Readonly<LayoutChildrenProps>) 
         <ViewportLock>
           <PageTransition>{children}</PageTransition>
           <PwaRegister />
+          <ScrollInputIntoViewOnFocus />
         </ViewportLock>
       </body>
     </html>

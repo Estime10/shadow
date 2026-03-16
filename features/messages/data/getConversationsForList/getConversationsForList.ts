@@ -5,6 +5,7 @@ import {
   getLastMessagesForConversations,
   getProfiles,
   getReadAtByMessageIds,
+  getGroupsByIds,
 } from "@/lib/supabase/CRUD";
 import {
   buildLastMessageFromMessage,
@@ -33,11 +34,16 @@ export async function getConversationsForList(): Promise<{
   const conversationIds = convRows.map((row) => row.id);
   const otherIds = convRows.map((row) => getOtherUserIdFromConvRow(row, currentUserId));
   const validOtherIds = otherIds.filter((id): id is string => id != null);
-  const [profiles, lastMessagesMap] = await Promise.all([
+  const groupIds = convRows
+    .filter((row) => row.type === "group" && row.group_id != null)
+    .map((row) => row.group_id as string);
+  const [profiles, lastMessagesMap, groups] = await Promise.all([
     getProfiles(validOtherIds),
     getLastMessagesForConversations(conversationIds),
+    getGroupsByIds(groupIds),
   ]);
   const profileMap = new Map(profiles.map((p) => [p.id, p]));
+  const groupMap = new Map(groups.map((g) => [g.id, g]));
 
   const lastMessageIdsFromOthers = convRows
     .map((row) => lastMessagesMap.get(row.id))
@@ -52,13 +58,26 @@ export async function getConversationsForList(): Promise<{
       : new Map<string, string>();
 
   const conversationsWithMessages = convRows.map((row) => {
+    const lastMessage = lastMessagesMap.get(row.id) ?? null;
+    const isFromOther =
+      currentUserId != null && lastMessage != null && lastMessage.senderId !== currentUserId;
+    const unreadCount =
+      isFromOther && lastMessage != null && !readAtMap.has(lastMessage.id) ? 1 : 0;
+
+    if (row.type === "group" && row.group_id != null) {
+      const group = groupMap.get(row.group_id);
+      const name = group?.name?.trim() ?? "Groupe";
+      return {
+        id: row.id,
+        participant: { id: row.group_id, name, avatar: null as null },
+        lastMessage: buildLastMessageFromMessage(lastMessage, row.created_at),
+        unreadCount,
+      };
+    }
+
     const otherId = getOtherUserIdFromConvRow(row, currentUserId);
     if (otherId == null) return null;
-    const lastMessage = lastMessagesMap.get(row.id) ?? null;
-    if (!lastMessage) return null;
     const name = getParticipantDisplayName(profileMap.get(otherId)?.username);
-    const isFromOther = currentUserId != null && lastMessage.senderId !== currentUserId;
-    const unreadCount = isFromOther && !readAtMap.has(lastMessage.id) ? 1 : 0;
     return {
       id: row.id,
       participant: { id: otherId, name, avatar: null as null },
