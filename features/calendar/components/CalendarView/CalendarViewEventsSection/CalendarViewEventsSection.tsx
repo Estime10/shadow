@@ -14,7 +14,7 @@ export function CalendarViewEventsSection({
 }: CalendarViewEventsSectionProps) {
   return (
     <section className="flex-1 min-h-0 flex flex-col" aria-label="Événements du mois">
-      <div className="pt-4 sm:pt-10">
+      <div className="pt-18 md:pt-10">
         <EventCarousel events={events} onEventClick={onEventClick} />
       </div>
     </section>
