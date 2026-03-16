@@ -22,7 +22,8 @@ export function AppNav() {
 
   return (
     <nav
-      className="safe-area-bottom fixed bottom-0 left-0 right-0 z-10 rounded-t-xl border-t-2 border-accent bg-(--bg)/95 shadow-(--shadow-accent-nav) backdrop-blur"
+      className="safe-area-bottom fixed bottom-0 left-0 right-0 z-10 rounded-t-xl
+       border-t-2 border-accent bg-(--bg)/95 shadow-(--shadow-accent-nav) backdrop-blur"
       aria-label="Navigation principale"
     >
       <div className="content-max-w flex items-center justify-around content-px py-2">
