@@ -2,6 +2,11 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { createMessageAction } from "@/features/messages/actions/createMessageAction/createMessageAction";
 
 vi.mock("next/cache", () => ({ revalidatePath: vi.fn() }));
+vi.mock("@/lib/rateLimit", () => ({
+  getClientIdentifier: vi.fn().mockResolvedValue("test-client"),
+  isRateLimited: vi.fn().mockReturnValue(false),
+  RATE_LIMIT_MESSAGE: "Trop de tentatives. Réessayez dans 15 minutes.",
+}));
 vi.mock("@/lib/supabase/CRUD", () => ({
   createMessage: vi.fn(),
 }));
