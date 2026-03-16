@@ -31,26 +31,34 @@ export function MessagesHeader({
         ) : null}
       </div>
       {onDisappearSettingChange ? (
-        <div className="mt-3 flex flex-wrap items-center gap-2">
-          <label
-            htmlFor="message-disappear-setting"
-            className="font-display text-xs font-medium uppercase tracking-wider text-(--text-muted)"
-          >
-            Disparition après lecture :
-          </label>
-          <select
-            id="message-disappear-setting"
-            value={messageDisappearAfterMinutes}
-            onChange={(e) => onDisappearSettingChange(Number(e.target.value) as 15 | 30 | 45 | 60)}
-            className="rounded-lg border-2 border-(--border) bg-(--bg) px-2 py-1.5 font-display text-sm text-(--text) focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-            aria-label="Délai avant disparition du message après lecture"
-          >
-            {MESSAGE_DISAPPEAR_MINUTES_OPTIONS.map((min) => (
-              <option key={min} value={min}>
-                {min} min
-              </option>
-            ))}
-          </select>
+        <div
+          className="mt-[26px]"
+          role="group"
+          aria-label="Délai avant disparition du message après lecture"
+        >
+          <p className="mb-4.5 font-display text-xs font-medium uppercase tracking-wider text-(--text-muted)">
+            Disparition après lecture
+          </p>
+          <div className="flex rounded-lg border-2 border-(--border) bg-surface p-0.5">
+            {MESSAGE_DISAPPEAR_MINUTES_OPTIONS.map((min) => {
+              const isSelected = messageDisappearAfterMinutes === min;
+              return (
+                <button
+                  key={min}
+                  type="button"
+                  onClick={() => onDisappearSettingChange(min)}
+                  aria-pressed={isSelected}
+                  className={`flex-1 rounded-md px-3 py-2 font-display text-sm font-bold uppercase tracking-wider transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-(--bg) md:cursor-pointer ${
+                    isSelected
+                      ? "bg-accent text-(--bg) shadow-sm"
+                      : "text-(--text-muted) md:hover:bg-(--surface-hover) md:hover:text-(--text)"
+                  }`}
+                >
+                  {min} min
+                </button>
+              );
+            })}
+          </div>
         </div>
       ) : null}
     </div>

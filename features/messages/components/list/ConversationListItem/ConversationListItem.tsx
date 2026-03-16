@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { ChevronRight } from "lucide-react";
 import type { ConversationListItemProps } from "@/features/messages/types";
 import { getInitial, getLastMessageSenderLabel } from "@/features/messages/utils";
 import { EMPTY_LAST_MESSAGE_TEXT } from "@/features/messages/constants";
@@ -18,8 +17,10 @@ export function ConversationListItem({
 
   const hasUnread = unreadCount > 0;
   return (
-    <div
-      className={`mx-2 flex w-full items-start gap-3 rounded-xl content-px py-3 text-left ${hasUnread ? "bg-(--surface-unread)" : "bg-surface"}`}
+    <Link
+      href={`/messages/${conversation.id}`}
+      className={`flex w-full items-start gap-3 rounded-xl content-px py-3 text-left transition-colors md:cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${hasUnread ? "bg-(--surface-unread)" : "bg-surface"}`}
+      aria-label={`Ouvrir la conversation avec ${participant.name ?? "ce contact"}`}
     >
       <ConversationListItemAvatar
         initial={participant.avatar ? "" : getInitial(participant.name ?? null)}
@@ -32,18 +33,7 @@ export function ConversationListItem({
         isEmpty={isEmpty}
         isFromMe={isFromMe}
         unreadCount={unreadCount}
-        action={
-          <Link
-            href={`/messages/${conversation.id}`}
-            className="inline-flex md:cursor-pointer items-center justify-center rounded-lg p-0.5 transition-colors md:hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-            aria-label={`Ouvrir la conversation avec ${participant.name ?? "ce contact"}`}
-          >
-            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-accent/20 text-accent">
-              <ChevronRight className="h-4 w-4" aria-hidden />
-            </span>
-          </Link>
-        }
       />
-    </div>
+    </Link>
   );
 }
