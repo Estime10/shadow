@@ -1,4 +1,5 @@
 export { APP_NAME, APP_SHORT_NAME } from "./app";
+export { getEnv, type Env } from "./env";
 export { PATHS } from "./paths";
 export { isPublicRoute, PUBLIC_ROUTES } from "./publicRoutes";
 export {

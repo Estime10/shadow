@@ -1,6 +1,13 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { getEnv } from "@/lib/config/env";
 import { isPublicRoute } from "@/lib/config/publicRoutes";
+
+const CONFIG_ERROR_HTML =
+  "<!DOCTYPE html><html><body><h1>Configuration error</h1><p>Missing or invalid Supabase configuration.</p></body></html>";
+const UNAVAILABLE_HTML =
+  "<!DOCTYPE html><html><body><h1>Service temporarily unavailable</h1><p>Please try again later.</p></body></html>";
+const HTML_HEADERS = { "Content-Type": "text/html; charset=utf-8" } as const;
 
 /**
  * Rafraîchit la session Supabase Auth et met à jour les cookies (request + response).
@@ -13,14 +20,14 @@ import { isPublicRoute } from "@/lib/config/publicRoutes";
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
 
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-  if (!url || !anonKey) {
-    return new NextResponse(
-      "<!DOCTYPE html><html><body><h1>Configuration error</h1><p>Missing Supabase configuration.</p></body></html>",
-      { status: 503, headers: { "Content-Type": "text/html; charset=utf-8" } }
-    );
+  let url: string;
+  let anonKey: string;
+  try {
+    const env = getEnv();
+    url = env.NEXT_PUBLIC_SUPABASE_URL;
+    anonKey = env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  } catch {
+    return new NextResponse(CONFIG_ERROR_HTML, { status: 503, headers: HTML_HEADERS });
   }
 
   const supabase = createServerClient(url, anonKey, {
@@ -38,10 +45,15 @@ export async function updateSession(request: NextRequest) {
     },
   });
 
-  const { data } = await supabase.auth.getClaims();
-  const user = data?.claims;
-  const pathname = request.nextUrl.pathname;
+  let user: unknown;
+  try {
+    const { data } = await supabase.auth.getClaims();
+    user = data?.claims;
+  } catch {
+    return new NextResponse(UNAVAILABLE_HTML, { status: 503, headers: HTML_HEADERS });
+  }
 
+  const pathname = request.nextUrl.pathname;
   if (!user && !isPublicRoute(pathname)) {
     const loginUrl = request.nextUrl.clone();
     loginUrl.pathname = "/login";
