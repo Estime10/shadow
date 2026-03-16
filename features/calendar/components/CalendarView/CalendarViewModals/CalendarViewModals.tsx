@@ -1,9 +1,28 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import type { CalendarEvent } from "@/features/calendar/types";
-import { AddEventModal } from "../../AddEventModal/AddEventModal";
-import { DayEventsModal } from "../../DayEventsModal/DayEventsModal";
-import { EventDetailModal } from "../../EventDetailModal/EventDetailModal";
+
+const DayEventsModal = dynamic(
+  () =>
+    import("../../DayEventsModal/DayEventsModal").then((m) => ({
+      default: m.DayEventsModal,
+    })),
+  { ssr: false }
+);
+
+const AddEventModal = dynamic(
+  () => import("../../AddEventModal/AddEventModal").then((m) => ({ default: m.AddEventModal })),
+  { ssr: false }
+);
+
+const EventDetailModal = dynamic(
+  () =>
+    import("../../EventDetailModal/EventDetailModal").then((m) => ({
+      default: m.EventDetailModal,
+    })),
+  { ssr: false }
+);
 
 type CalendarViewModalsProps = {
   dayModalOpen: boolean;

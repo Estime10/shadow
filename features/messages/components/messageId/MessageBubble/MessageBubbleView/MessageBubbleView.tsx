@@ -1,11 +1,19 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import type { MessageMediaType } from "@/types";
 import type { ThreadCacheKey } from "@/lib/hooks/messages";
 import { useMessageMediaViewer } from "../useMessageMediaViewer/useMessageMediaViewer";
 import { MessageBubbleContent } from "../MessageBubbleContent/MessageBubbleContent";
 import { MessageBubbleFooter } from "../MessageBubbleFooter/MessageBubbleFooter";
-import { MessageMediaViewerModal } from "../MessageMediaViewerModal/MessageMediaViewerModal";
+
+const MessageMediaViewerModal = dynamic(
+  () =>
+    import("../MessageMediaViewerModal/MessageMediaViewerModal").then((m) => ({
+      default: m.MessageMediaViewerModal,
+    })),
+  { ssr: false }
+);
 
 type MessageBubbleViewProps = {
   text: string;
