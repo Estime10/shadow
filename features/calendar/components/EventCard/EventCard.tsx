@@ -4,10 +4,18 @@ import { formatEventDayTime } from "@/features/calendar/utils";
 export type EventCardProps = {
   event: CalendarEvent;
   onClick?: (event: CalendarEvent) => void;
+  /** Variante compacte (carousel mobile). */
+  compact?: boolean;
 };
 
-export function EventCard({ event, onClick }: EventCardProps) {
-  const rootClass = onClick ? "event-card event-card--button md:cursor-pointer" : "event-card";
+export function EventCard({ event, onClick, compact }: EventCardProps) {
+  const rootClass = [
+    "event-card",
+    compact ? "event-card--compact" : "",
+    onClick ? "event-card--button md:cursor-pointer" : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   const firstLine = (
     <div className="event-card__first-line">

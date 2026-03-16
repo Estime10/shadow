@@ -18,9 +18,9 @@ export function EventCarouselTrack({ events, cardRefs, onEventClick }: EventCaro
           ref={(el) => {
             cardRefs.current[i] = el;
           }}
-          className="flex-shrink-0 w-[280px] max-w-[85vw] snap-center"
+          className="shrink-0 w-[200px] max-w-[72vw] sm:w-[240px] sm:max-w-[80vw] md:w-[280px] md:max-w-[85vw] snap-center"
         >
-          <EventCard event={event} onClick={onEventClick} />
+          <EventCard event={event} onClick={onEventClick} compact />
         </div>
       ))}
     </div>

@@ -23,7 +23,7 @@ export function CalendarViewMonthSection({
   onDayClick,
 }: CalendarViewMonthSectionProps) {
   return (
-    <section className="shrink-0 max-h-[50vh] lg:max-h-none flex flex-col min-h-0">
+    <section className="shrink-0 max-h-[40vh] sm:max-h-[50vh] lg:max-h-none flex flex-col min-h-0">
       <MonthNav year={year} month={month} onPrev={onPrev} onNext={onNext} />
       <MonthGrid
         year={year}

@@ -163,6 +163,15 @@ button:disabled {
   /* cursor: pointer uniquement via md:cursor-pointer (Tailwind) au-dessus de md */
   text-align: left;
 }
+/* Variante compacte pour le carousel (mobile) : moins de hauteur */
+.event-card--compact {
+  height: 3.5rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+.event-card--compact .event-card__description-block {
+  margin-top: 0.25rem;
+}
 .event-card__first-line {
   display: flex;
   align-items: baseline;

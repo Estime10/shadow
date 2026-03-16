@@ -46,7 +46,7 @@ export function DayEventsModal({
         <DayEventsModalOverlay duration={duration} onOverlayClick={handleOverlayClick}>
           <DayEventsModalPanel duration={duration}>
             <DayEventsModalHeader title={title} onAddEvent={onAddEvent} onClose={onClose} />
-            <div className="flex min-h-0 max-h-[18rem] flex-col overflow-y-auto">
+            <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
               <EventList
                 events={events}
                 emptyMessage="Aucun événement ce jour. Cliquez sur « Ajouter » pour en créer un."

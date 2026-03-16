@@ -27,7 +27,7 @@ export function ModalPanel({
 }: ModalPanelProps) {
   return (
     <motion.div
-      className={`relative z-10 w-full max-w-md flex flex-col rounded-xl border-2 border-(--border) bg-(--surface) shadow-xl ${contentClassName}`.trim()}
+      className={`relative z-10 w-full max-w-md max-h-[85dvh] md:max-h-none flex flex-col min-h-0 rounded-xl border-2 border-(--border) bg-surface shadow-xl ${contentClassName}`.trim()}
       onClick={(e) => e.stopPropagation()}
       initial={{ opacity: 0, scale: 0.96 }}
       animate={{ opacity: 1, scale: 1 }}
@@ -35,7 +35,7 @@ export function ModalPanel({
       transition={{ duration, ease: easing }}
     >
       <ModalPanelHeader title={title} titleId={titleId} subtitle={subtitle} onClose={onClose} />
-      <div className="flex flex-1 flex-col min-h-0">{children}</div>
+      <div className="flex flex-1 flex-col min-h-0 overflow-y-auto">{children}</div>
     </motion.div>
   );
 }

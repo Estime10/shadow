@@ -27,7 +27,7 @@ export function EventCarousel({
   }
 
   return (
-    <div className="relative content-px py-4">
+    <div className="relative content-px py-2 sm:py-4">
       <EventCarouselNav
         onPrev={goPrev}
         onNext={goNext}

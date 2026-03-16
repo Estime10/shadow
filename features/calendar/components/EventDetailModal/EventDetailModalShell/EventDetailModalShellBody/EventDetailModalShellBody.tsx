@@ -24,7 +24,7 @@ export function EventDetailModalShellBody({
   };
 
   return (
-    <div className="content-px py-4 space-y-4">
+    <div className="min-h-0 flex-1 overflow-y-auto content-px py-4 space-y-4">
       {editing ? (
         <EventDetailModalForm
           event={event}
