@@ -1,10 +1,4 @@
 import type { NextConfig } from "next";
-import path from "path";
-
-// Racine du projet (shadow) : toujours absolue ; si cwd = parent "creativity", pointer vers shadow
-const projectRoot = path.resolve(
-  process.cwd().endsWith("shadow") ? process.cwd() : path.join(process.cwd(), "shadow")
-);
 
 // Plugins optionnels chargés dynamiquement (API CJS)
 // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -18,10 +12,6 @@ const withPWA = require("next-pwa")({
 });
 
 const nextConfig: NextConfig = {
-  // Racine du projet pour Turbopack (dossier du config = shadow, pas le parent creativity)
-  turbopack: {
-    root: projectRoot,
-  },
   trailingSlash: false,
   images: {
     remotePatterns: [
@@ -32,16 +22,7 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  // Force la racine du projet pour webpack (shadow) : context + modules pour la résolution
-  webpack: (config) => {
-    config.context = projectRoot;
-    config.resolve = config.resolve ?? {};
-    config.resolve.modules = [
-      path.join(projectRoot, "node_modules"),
-      ...(config.resolve.modules ?? ["node_modules"]),
-    ];
-    return config;
-  },
+  // Pas de custom webpack context/resolve : évite résolution via .pnpm (playwright) qui casse sur Vercel
   async headers() {
     return [
       {
